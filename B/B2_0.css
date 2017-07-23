@@ -1,0 +1,49 @@
+﻿body { 
+	font-family: arial; 
+	font-size: 10pt;
+}
+.BDialog { 
+	z-index: 9999; 
+	display: none; 
+}
+table.BTableData tr.picked { background-color: lightskyblue; }
+table.BTable tr th { font-size: 1.05em; }
+table.BTable tr td, 
+  table.BTable tr th { box-sizing: border-box; }
+.ui-dialog .ui-dialog-titlebar, 
+  .ui-dialog .ui-dialog-buttonpane,
+  .ui-widget-header .ui-priority-primary,
+  .ui-widget,
+  .ui-button { 
+	font-size: 1.05em; 
+}
+.ui-dialog .ui-dialog-content { 
+	font-size: 1em; 
+}
+.no-close .ui-dialog-titlebar-close { display: none; }
+.no-title .ui-dialog .ui-dialog-titlebar { display: none; }
+table.form tr th { 
+	padding-right:.1em; 
+	text-align:right; 
+	font-weight:bold; 
+	background-color:transparent; 
+}
+
+
+ul.BContextMenuItem li a {
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+span.anchor {
+	color: blue;
+	cursor: pointer;
+}
+span.anchor.bad {
+	color: red;
+}
+span.anchor:hover {
+	color: darkgreen;
+	text-decoration: underline;
+}
