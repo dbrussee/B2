@@ -1,5 +1,6 @@
 // Written by Dan Brussee
 // Version 2.0: Released <unreleased>
+// Added to bettway GIT
 //
 window.B = { version: "2.0" }; // B2_0.js
 

@@ -1,10 +1,6 @@
 ﻿// B2.0 Tree
-// UL
-//    LI
-//    UL
-//       LI
-//       LI
-//    LI
+// Added to bettway GIT
+
 B.Tree = function(elementId) {
 	this.element = document.getElementById(elementId);
 	this.nodes = []; // A node can be a B.TreeLeaf or a B.TreeBranch (collection of B.TreeNodes)

@@ -1,4 +1,5 @@
 // B2.0 Table
+// Added to bettway GIT
 B.ScrollingTable = function(rootId, height, dataColumnSet, txt1, txt2) {
 	this.rootId = rootId;
 	this.height = height;

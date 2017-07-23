@@ -1,4 +1,5 @@
 // Form - Simple handling of form data
+// Added to bettway GIT
 B.formsCollection = {};
 B.getForm = function(id) {
 	var frm = B.formsCollection[id];

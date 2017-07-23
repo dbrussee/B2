@@ -1,4 +1,5 @@
 ﻿// B2.0 Data
+// Added to bettway GIT
 B.DataColumn = function(id, typecode, req, autotrim) {
 	// Example typecode: "!t_"
 	// t: Normal text (dflt)	T: Always upper case text

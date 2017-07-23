@@ -1,4 +1,5 @@
 // Dialogs -- These are defined at global level to make the simple to use.
+// Added to bettway GIT
 B.dialogStack = []; // The stack stays in the B domain
 function openDialog(id, btns) {
 	if (btns == undefined) btns = [];

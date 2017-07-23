@@ -1,4 +1,5 @@
-﻿B.ContextMenu = function() {
+﻿// Added to bettway GIT
+B.ContextMenu = function() {
 	this.items = [];
 	this.menuObject = null;
 	this.locationStyle = "context";

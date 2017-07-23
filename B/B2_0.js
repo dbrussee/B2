@@ -1,6 +1,6 @@
 // Written by Dan Brussee
 // Version 2.0: Released <unreleased>
-//
+// Added to bettway GIT
 
 var style = document.createElement('style');
 style.type = 'text/css';
