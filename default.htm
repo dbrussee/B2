@@ -1,0 +1,166 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>B2.0 - Home</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/redmond/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> 
+<link rel="stylesheet" type="text/css" href="B/B2_0.css">
+<script src="B/B2_0-Core.js"></script>
+<script src="B/B2_0-Dialog.js"></script>
+<script src="B/B2_0-Form.js"></script>
+<script src="B/B2_0-Table.js"></script>
+<script src="B/B2_0-Data.js"></script>
+<script src="B/B2_0-Menu.js"></script>
+<script src="B/B2_0-Tree.js"></script>
+<script>
+function init() {
+	var dcs = new B.DataColumnSet("id:*#,fn:t,ln:t,bd:!@,dsc:t_");
+
+	var frm = B.getForm("dlg1");
+	var now = new Date();
+	frm.set("month", now.getMonth()+1, "day", now.getDate());
+	
+	window.tblA = new B.ScrollingTable("tblA", 150, new B.DataColumnSet("fn:!,ln:!,em,age:#!,zip:#"), "row", "rows");
+	tblA.footer.addButton("a", "First", function() { tblA.footer.disableButton("a").enableButton("b"); });
+	tblA.footer.addButton("b", "Second", function() { tblA.footer.disableButton("b").enableButton("a"); });
+	tblA.footer.addButton("c", "Rows", function() { mnuAdd.show(event); });
+	tblA.footer.disableButton("a");
+	tblA.onclick = function(tbl, row, cell, rn, cn, changedRow) {
+
+	}
+	
+	window.mnuDlg = new B.ContextMenu();
+	mnuDlg.addMenu("Say something", function() { say("First menu item"); }, "info");
+	mnuDlg.addMenu("Ask something", function() { ask("Do you think this is cool?"); }, "help");
+	mnuDlg.addMenu("Yes/No/Cancel", function() { askC("Continue to next step?"); }, "help");
+	mnuDlg.addMenu("Choose an item", function() { choose("Pick one of the items", "", "Tom,Dick,Harry", 
+		function(rslt) { say("You chose option " + rslt); }) }, "check");
+	mnuDlg.addMenu("Show Dialog", function() { doDialogTest(); }, "folder-open");
+		
+	window.mnuAdd = new B.ContextMenu();
+	mnuAdd.addMenu("Add 1 row", function() { tblA.addTestRows(1); }, "play");
+	mnuAdd.addMenu("Add 10 rows", function() { tblA.addTestRows(10); }, "seek-next");
+	mnuAdd.addMenu("Unpick", function() { tblA.unpick(); }, "bullet");
+	mnuAdd.addMenu("Clear", function() { tblA.clear(); }, "radio-on");
+
+	window.tree1 = new B.Tree("tree1");
+	tree1.addLeaf("First item in the tree", function() { say("You hit the first leaf!"); });
+	var br1 = tree1.addBranch();
+	br1.addLeaf("First item in the first branch");
+	var br2 = br1.addBranch();
+	br2.addLeaf("First in sub-sub menu");
+	br2.addLeaf("Second in sub-sub menu");
+	br1.addLeaf("Second item in the first branch", function() { sayError("Bummer"); });
+	tree1.addLeaf("Last item in tree");
+	tree1.render();
+
+}
+function doDialogTest() {
+	openDialog("dlg1");
+}
+function doFormDataTest() {
+	var frm = B.getForm("dlg1");
+	var dta = frm.get();
+	dta.frz = "I just got set!";
+	dta.fnam = "Daniel";
+	frm.setFromData(dta);
+	frm.focus("com");
+}
+function doRestTest(typ) {
+	var r = new B.RestfulService("http://numbersapi.com/");
+	var frm = B.getForm("dlg1");
+	var chk = frm.get();
+	var test = "500"
+	var fix = "";
+	if (typ == 1) {
+		if (!B.is.INTEGER(chk.num, 0, 999)) fix += "\nNumber must be an integer netween 0 and 999";
+		if (fix.length > 0) {
+			sayFix(fix);
+			return;
+		}
+		test = chk.num + "?notfound=floor";
+	}
+	if (typ == 2) {
+		if (!B.is.INTEGER(chk.month)) fix += "\nMonth must be an integer";
+		if (fix.length > 0) {
+			sayFix(fix);
+			return;
+		}
+		test = chk.month + "/" + chk.day;
+	}
+	
+	r.getText(test, function(rslt) {
+		$("#divRestResult").html(rslt);
+	});
+}
+</script>
+</head>
+<body>
+<button onclick='mnuDlg.show(event);'>Messaging</button>
+<br>
+
+<table id='tblA'>
+	<tr><th data='fn,100'>First name</th>
+		<th data='ln,120'>Last name</th>
+		<th data='eml,200'>Email</th>
+		<th data='age,65,R'>Age</th>
+		<th data='zip,80,C'>Zip Code</th></tr>
+</table>
+
+<br><br>
+<ul id='tree1'></ul>
+
+
+<form id='dlg1' class='BDialog' title='My First Dialog' style='height: 500px; width: 800px;'>
+	<input name='sec' type='hidden' value='Secret'/>
+	<table class='form'>
+		<tr><td style='vertical-align: top;'>
+			<table class='form'>
+				<tr><th>First Name:</th><td><input class='VK' size='20' name='fnam'></td></tr>
+				<tr><th>Last Name:</th><td><input class='VK' size='20' name='lnam'></td></tr>
+				<tr><th>Current:</th><td><label><input type='checkbox' name='cur'> <i>Check to make current</i></label></td></tr>
+				<tr><th>Address:</th><td><input class='VR' size='25' name='addr'></td></tr>
+				<tr><th>City:</th><td><input size='25' name='city'></td></tr>
+				<tr><th>State, Zip:</th><td><input class='VU' size='2' maxlength='2' name='st'>
+					<input class='VR' size='6' maxlength='5' name='zip'></td></tr>
+				<tr><th>Date:</th><td><input size='14' name='adate' class='VD'></td></tr>
+				<tr><th>Number:</th><td><input name='num' size='5' maxlength='4' value='42'> <button onclick='doRestTest(1);'>get</button></td></tr>
+			</table>
+		</td>
+		<td style='vertical-align: top;'>
+			<table class='form' style='margin-left: 2em;'>
+				<tr><th>Comment:</th><td><input size='25' name='com' readonly></td></tr>
+				<tr><th>Option:</th><td><select class='VR' name='opt'>
+					<option value=''>Select an option</option>
+					<option value='1'>First</option><option value='2'>Second</option>
+					<option value='3'>Third</option><option value='4'>Fourth</option>
+					</select></td></tr>
+				<tr><th>Multiple:</th><td><select multiple name='mult'>
+					<option value='1'>First</option><option value='2'>Second</option>
+					<option value='3'>Third</option><option value='4'>Fourth</option>
+					<option value='5'>Fifth</option><option value='6'>Sixth</option>
+					<option value='7'>Seventh</option><option value='8'>Eigth</option>
+					<option value='9'>Ninth</option><option value='10'>Tenth</option>
+					</select></td></tr>
+				<tr><th>Radio:</th><td>
+					<label><input type='radio' name='rad' value='A'>AAA</label>
+					<label><input type='radio' name='rad' value='B'>BBB</label>
+					<label><input type='radio' name='rad' value='C'>CCC</label>
+					<label><input type='radio' name='rad' value='D'>DDD</label></td></tr>
+				<tr><th>Disabled:</th><td><input size='20' maxlength='20' name='frz' disabled></td></tr>
+				<tr><th>Test Date:</th><td><input name='month' size='4' maxlength='2' value='9'> / <input name='day' size='4' maxlength='2' value='1'> <button onclick='doRestTest(2);'>get</button></td></tr>
+			</table>
+		</td></tr>
+	</table>
+<br>
+<button onclick='B.getForm("dlg1").freeze();'>Freeze</button>,
+<button onclick='B.getForm("dlg1").thaw();'>Thaw</button>,
+<button onclick='doFormDataTest()'>Data Test</button>,
+<button onclick='B.getForm("dlg1").reset();'>Reset</button>
+<br><div id='divRestResult'></div>
+<button class='BDialogButton' onclick='popDialog();'>Close</button>
+</form>
+</body>
+</html>

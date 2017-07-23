@@ -28,12 +28,13 @@ B.Tree.prototype.render = function() {
 	}
 }
 
-B.TreeBranch = function() {
+B.TreeBranch = function(html) {
+	if (html == undefined) html = "Tree Branch";
 	this.nodes = [];
 	return this;
 }
-B.TreeBranch.prototype.addBranch = function() {
-	var branch = new B.TreeBranch();
+B.TreeBranch.prototype.addBranch = function(html) {
+	var branch = new B.TreeBranch(html);
 	this.nodes.push(branch);
 	return branch;
 }
@@ -43,11 +44,16 @@ B.TreeBranch.prototype.addLeaf = function(html, onclick) {
 	return leaf;
 }
 B.TreeBranch.prototype.render = function(parentElement) {
+	var li = document.createElement("li");
+	li.style.fontWeight = "bold";
+	li.innerHTML = this.html;
 	var ul = document.createElement("ul");
+	li.appendChild(ul);
+
 	for (var i = 0; i < this.nodes.length; i++) {
 		this.nodes[i].render(ul);
 	}
-	parentElement.appendChild(ul);
+	parentElement.appendChild(li);
 }
 
 B.TreeLeaf = function(html, onclick) {
