@@ -47,7 +47,7 @@ function init() {
 
 	window.tree1 = new B.Tree("tree1");
 	tree1.addLeaf("First item in the tree", function() { say("You hit the first leaf!"); });
-	var br1 = tree1.addBranch("First Submenu");
+	var br1 = tree1.addBranch("First Submenu", false);
 	br1.addLeaf("First item in the first branch");
 	var br2 = br1.addBranch("Second level<br>submenu", false);
 	br2.addLeaf("First in sub-sub menu");

@@ -37,17 +37,6 @@ ul.BContextMenuItem li a {
 	border: 0;
 }
 
-li.branch span.branch {
-	font-weight: bold;
-	color: red;
-	cursor: pointer;
-}
-li.branch span.branch::before {
-		content: "\25BD\20"
-}
-li.branch.showsub span.branch::before {
-		content: "\25B7\20"
-}
 span.anchor {
 	color: blue;
 	cursor: pointer;

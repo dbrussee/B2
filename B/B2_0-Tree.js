@@ -6,12 +6,12 @@ B.Tree = function(elementId) {
 	this.nodes = []; // A node can be a B.TreeLeaf or a B.TreeBranch (collection of B.TreeNodes)
 	return this;
 };
-B.Tree.prototype.addBranch = function(html, showing) {
+B.Tree.prototype.addBranch = function(this, html, showing) {
 	var branch = new B.TreeBranch(html, showing);
 	this.nodes.push(branch);
 	return branch;
 }
-B.Tree.prototype.addLeaf = function(txt, onclick) {
+B.Tree.prototype.addLeaf = function(this, txt, onclick) {
 	var leaf = new B.TreeLeaf(txt, onclick);
 	this.nodes.push(leaf);
 	return leaf;
@@ -22,7 +22,8 @@ B.Tree.prototype.render = function() {
 	}
 }
 
-B.TreeBranch = function(html, showing) {
+B.TreeBranch = function(tree, html, showing) {
+	this.tree = tree;
 	if (html == undefined) html = "Tree Branch";
 	this.html = html;
 	this.nodes = [];
@@ -31,12 +32,12 @@ B.TreeBranch = function(html, showing) {
 	return this;
 }
 B.TreeBranch.prototype.addBranch = function(html, showing) {
-	var branch = new B.TreeBranch(html, showing);
+	var branch = new B.TreeBranch(this.tree, html, showing);
 	this.nodes.push(branch);
 	return branch;
 }
 B.TreeBranch.prototype.addLeaf = function(html, onclick) {
-	var leaf = new B.TreeLeaf(html, onclick);
+	var leaf = new B.TreeLeaf(this.tree, html, onclick);
 	this.nodes.push(leaf);
 	return leaf;
 }
@@ -44,21 +45,32 @@ B.TreeBranch.prototype.render = function(parentElement) {
 	var li = document.createElement("li");
 	this.li = li;
 	li.className = "branch";
+	li.style.listStyle = "none";
+	li.style.marginLeft = "-1.2em";
+	li.style.paddingLeft = "1.2em";
+	li.style.textIndent = "-1.2em";
 	var spn = document.createElement("span");
-	spn.className = "branch";
-	spn.innerHTML = this.html;
+	//spn.className = "branch";
+	spn.style.fontWeight = "bold";
+	spn.style.cursor = "pointer";
+//	var chr = (this.showing ? "&#x25C7; " : "&#x25C6; ");
+	var chr = (this.showing ? "&#x25B7; " : "&#x25BD; ");
+	spn.innerHTML = chr + this.html;
 	spn.onclick = function() {
+		var spn = $(this).closest("span")[0];
 		var li = $(this).closest("li")[0];
 		var branch = $(li).data("BBranch");
 		// branch is now this object
 		if (branch.showing) {
 			$(branch.ul).hide();
 			branch.showing = false;
-			B.addClass(branch.li, "showsub");
+			spn.innerHTML = "&#x25B7; " + branch.html;
+//			B.addClass(branch.li, "showsub");
 		} else {
 			$(branch.ul).show();
 			branch.showing = true;
-			B.removeClass(branch.li, "showsub");
+			spn.innerHTML = "&#x25BD; " + branch.html;
+//			B.removeClass(branch.li, "showsub");
 		}
 	}
 	li.appendChild(spn);
@@ -66,6 +78,7 @@ B.TreeBranch.prototype.render = function(parentElement) {
 	this.ul = ul;
 	li.appendChild(ul);
 	$(li).data("BBranch", this); // this branch!!!
+	$(li).data("BTree", this); // this branch!!!
 	if (!this.showing) {
 		B.addClass(li, "showsub");
 		ul.style.display = "none";
@@ -76,7 +89,8 @@ B.TreeBranch.prototype.render = function(parentElement) {
 	parentElement.appendChild(li);
 }
 
-B.TreeLeaf = function(html, onclick) {
+B.TreeLeaf = function(tree, html, onclick) {
+	this.tree = tree;
 	if (html == undefined) html = "";
 	this.html = html;
 	if (onclick == undefined || onclick=="") onclick = null;
@@ -85,6 +99,10 @@ B.TreeLeaf = function(html, onclick) {
 }
 B.TreeLeaf.prototype.render = function(branchElement) {
 	var li = document.createElement("li");
+	li.style.listStyle = "initial";
+	li.style.marginLeft = "initial";
+	li.style.paddingLeft = "initial";
+	li.style.textIndent = "initial";
 	li.className = "leaf";
 	if (this.onclick != null) {
 		li.onclick = this.onclick;
