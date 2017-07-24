@@ -45,15 +45,22 @@ function init() {
 	mnuAdd.addMenu("Unpick", function() { tblA.unpick(); }, "bullet");
 	mnuAdd.addMenu("Clear", function() { tblA.clear(); }, "radio-on");
 
-	window.tree1 = new B.Tree("tree1");
+	window.tree1 = new B.Tree("tree1", function(branch) {
+		if (branch.showing) {
+			//branch.parent.closeAllBut(branch);
+		}
+	});
 	tree1.addLeaf("First item in the tree", function() { say("You hit the first leaf!"); });
-	var br1 = tree1.addBranch("First Submenu", false);
+	var br1 = tree1.addBranch("First Submenu", true);
 	br1.addLeaf("First item in the first branch");
 	var br2 = br1.addBranch("Second level<br>submenu", false);
 	br2.addLeaf("First in sub-sub menu");
 	br2.addLeaf("Second in sub-sub menu");
 	br1.addLeaf("Second item in the first branch", function() { sayError("Bummer"); });
 	tree1.addLeaf("Last item in tree");
+	br2 = tree1.addBranch("Second Submenu", true);
+	br2.addLeaf("An item in second submenu");
+	br2.addLeaf("Another item in second submenu");
 	tree1.render();
 
 }
@@ -109,9 +116,10 @@ function doRestTest(typ) {
 		<th data='zip,80,C'>Zip Code</th></tr>
 </table>
 
-<br><br>
+<br>
 <ul id='tree1'></ul>
-
+<button onclick='tree1.openAll();'>Open All</button>
+<button onclick='tree1.closeAll();'>Close All</button>
 
 <form id='dlg1' class='BDialog' title='My First Dialog' style='height: 500px; width: 800px;'>
 	<input name='sec' type='hidden' value='Secret'/>
