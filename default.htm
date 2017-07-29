@@ -45,20 +45,20 @@ function init() {
 	mnuAdd.addMenu("Unpick", function() { tblA.unpick(); }, "bullet");
 	mnuAdd.addMenu("Clear", function() { tblA.clear(); }, "radio-on");
 
-	window.tree1 = new B.Tree("tree1", function(branch) {
-		if (branch.showing) {
-			//branch.parent.closeAllBut(branch);
-		}
-	});
-	tree1.addLeaf("First item in the tree", function() { say("You hit the first leaf!"); });
-	var br1 = tree1.addBranch("First Submenu", true);
+	window.tree1 = new B.Tree("tree1", function(data) {
+		say(data);
+	}, true);
+	tree1.addLeaf("First item in the tree", "First");
+	tree1.addLeaf("Second item in the tree", "Second", B.img("EDIT"));
+	tree1.addLeaf("Third item in the tree", "Third");
+	var br1 = tree1.addBranch("First Submenu");
 	br1.addLeaf("First item in the first branch");
-	var br2 = br1.addBranch("Second level<br>submenu", false);
+	var br2 = br1.addBranch("Second level submenu", false);
 	br2.addLeaf("First in sub-sub menu");
-	br2.addLeaf("Second in sub-sub menu");
-	br1.addLeaf("Second item in the first branch", function() { sayError("Bummer"); });
+	br2.addLeaf("Second in sub-sub menu", "SUB2");
+	br1.addLeaf("Second item in the first branch");
 	tree1.addLeaf("Last item in tree");
-	br2 = tree1.addBranch("Second Submenu", true);
+	br2 = tree1.addBranch("Second Submenu");
 	br2.addLeaf("An item in second submenu");
 	br2.addLeaf("Another item in second submenu");
 	tree1.render();
@@ -117,7 +117,7 @@ function doRestTest(typ) {
 </table>
 
 <br>
-<ul id='tree1'></ul>
+<div id='tree1'></div>
 <button onclick='tree1.openAll();'>Open All</button>
 <button onclick='tree1.closeAll();'>Close All</button>
 
