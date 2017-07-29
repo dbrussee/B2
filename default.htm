@@ -37,7 +37,7 @@ function init() {
 	mnuAdd.addMenu("Unpick", function() { tblA.unpick(); }, "bullet");
 	mnuAdd.addMenu("Clear", function() { tblA.clear(); }, "radio-on");
 
-	window.tree1 = new B.Tree("tree1", "function", false);
+	window.tree1 = new B.Tree("tree1", null, false);
 	var br1 = tree1.addBranch("Using say, ask, choose and openDialog", false);
 	br1.addLeaf("Say something via dialog", function() { say("Ok, I said something. So there."); }, B.img("INFO"));
 	br1.addLeaf("Ask something", function() { ask("I'm doing great. Are you feeling well?") }, B.img("HELP"));
