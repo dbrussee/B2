@@ -203,8 +203,14 @@ B.TreeLeaf.prototype.render = function(branchElement) {
 	h += "<tr><td style='vertical-align:top; width:1.1em; text-align:right; padding-right:3px;'>" + this.icon + "</td>";
 	h += "<td>" + (isLink ? B.format.ASLINK(this.html) : this.html) + "</td></tr></table>";
 	div.innerHTML = h;
-	if (isLink) div.onclick = $.proxy(function() {
-		this.tree.onLeafclick(this.data);
-	}, this);
+	if (isLink) {
+		div.onclick = $.proxy(function(e) {
+			e.stopPropagation();
+			this.tree.onLeafclick(this.data);
+		}, this)
+	} else {
+		div.onclick = function(e) { e.stopPropagation(); }
+	}
+	
 	branchElement.appendChild(div);
 }

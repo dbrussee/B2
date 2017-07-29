@@ -31,14 +31,6 @@ function init() {
 		// Do nothing for now. See if this makes it to GIT
 	}
 	
-	window.mnuDlg = new B.ContextMenu();
-	mnuDlg.addMenu("Say something", function() { say("First menu item"); }, "info");
-	mnuDlg.addMenu("Ask something", function() { ask("Do you think this is cool?"); }, "help");
-	mnuDlg.addMenu("Yes/No/Cancel", function() { askC("Continue to next step?"); }, "help");
-	mnuDlg.addMenu("Choose an item", function() { choose("Pick one of the items", "", "Tom,Dick,Harry", 
-		function(rslt) { say("You chose option " + rslt); }) }, "check");
-	mnuDlg.addMenu("Show Dialog", function() { doDialogTest(); }, "folder-open");
-		
 	window.mnuAdd = new B.ContextMenu();
 	mnuAdd.addMenu("Add 1 row", function() { tblA.addTestRows(1); }, "play");
 	mnuAdd.addMenu("Add 10 rows", function() { tblA.addTestRows(10); }, "seek-next");
@@ -46,21 +38,18 @@ function init() {
 	mnuAdd.addMenu("Clear", function() { tblA.clear(); }, "radio-on");
 
 	window.tree1 = new B.Tree("tree1", function(data) {
-		say(data);
-	}, true);
-	tree1.addLeaf("First item in the tree", "First");
-	tree1.addLeaf("Second item in the tree", "Second", B.img("EDIT"));
-	tree1.addLeaf("Third item in the tree", "Third");
-	var br1 = tree1.addBranch("First Submenu");
-	br1.addLeaf("First item in the first branch");
-	var br2 = br1.addBranch("Second level submenu", false);
-	br2.addLeaf("First in sub-sub menu");
-	br2.addLeaf("Second in sub-sub menu", "SUB2");
-	br1.addLeaf("Second item in the first branch");
-	tree1.addLeaf("Last item in tree");
-	br2 = tree1.addBranch("Second Submenu");
-	br2.addLeaf("An item in second submenu");
-	br2.addLeaf("Another item in second submenu");
+		data.call();
+	}, false);
+	var br1 = tree1.addBranch("Using say, ask and choose", false);
+	br1.addLeaf("Say something via dialog", function() { say("Ok, I said something. So there."); }, B.img("INFO"));
+	br1.addLeaf("Ask something", function() { ask("I'm doing great. Are you feeling well?") }, B.img("HELP"));
+	br1.addLeaf("Yes/No/Cancel (askC)", function() { askC("Continue to next step?"); });
+	br1.addLeaf("Choose an item with choose", 
+		function() { choose("Pick one of the items", "", "Tom,Dick,Harry", 
+			function(rslt) { say("You chose option " + rslt); }) 
+		}
+	, B.img("CHECKY"));
+	tree1.addLeaf("Open up a form dialog", function() { doDialogTest(); });
 	tree1.render();
 
 }
@@ -105,9 +94,6 @@ function doRestTest(typ) {
 </script>
 </head>
 <body>
-<button onclick='mnuDlg.show(event);'>Messaging</button>
-<br>
-
 <table id='tblA'>
 	<tr><th data='fn,100'>First name</th>
 		<th data='ln,120'>Last name</th>
@@ -118,8 +104,6 @@ function doRestTest(typ) {
 
 <br>
 <div id='tree1'></div>
-<button onclick='tree1.openAll();'>Open All</button>
-<button onclick='tree1.closeAll();'>Close All</button>
 
 <form id='dlg1' class='BDialog' title='My First Dialog' style='height: 500px; width: 800px;'>
 	<input name='sec' type='hidden' value='Secret'/>
