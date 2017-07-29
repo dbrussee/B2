@@ -141,20 +141,27 @@ B.Form.prototype.get = function(nam) {
 	}
 };
 B.Form.prototype.set = function() {
-	for (var i = 0; i < arguments.length; i+=2) { // Pairs of key/values
-		var fld = this.fields[arguments[i]];
-		var val = arguments[i+1];
-		if (fld.type == "text") {
-			fld.els[0].value = val;
-		} else if (fld.type == "select") {
-			fld.els[0].value = val;
-		} else if (fld.type == "radio") {
-			fld.els[0].value = val;
-		} else if (fld.type == "checkbox") {
-			if (typeof val == "string") val = (B.is.ONEOF(val,"Y,YES,OK"));
-			fld.els[0].checked = val;
-		} else {
-			// No idea what this thing is!!!!
+	if (typeof arguments[0] == "object") {
+		var data = arguments[0];
+		for (var key in data) {
+			this.set(key, data[key]);
+		}
+	} else {
+		for (var i = 0; i < arguments.length; i+=2) { // Pairs of key/values
+			var fld = this.fields[arguments[i]];
+			var val = arguments[i+1];
+			if (fld.type == "text") {
+				fld.els[0].value = val;
+			} else if (fld.type == "select") {
+				fld.els[0].value = val;
+			} else if (fld.type == "radio") {
+				fld.els[0].value = val;
+			} else if (fld.type == "checkbox") {
+				if (typeof val == "string") val = (B.is.ONEOF(val,"Y,YES,OK"));
+				fld.els[0].checked = val;
+			} else {
+				// No idea what this thing is!!!!
+			}
 		}
 	}
 	return this;
@@ -184,12 +191,6 @@ B.Form.prototype.thaw = function() {
 				if (!fld.disabled) el.removeAttribute("disabled");
 			}
 		}
-	}
-	return this;
-};
-B.Form.prototype.setFromData = function(data) {
-	for (var key in data) {
-		this.set(key, data[key]);
 	}
 	return this;
 };
