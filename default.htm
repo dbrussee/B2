@@ -37,10 +37,8 @@ function init() {
 	mnuAdd.addMenu("Unpick", function() { tblA.unpick(); }, "bullet");
 	mnuAdd.addMenu("Clear", function() { tblA.clear(); }, "radio-on");
 
-	window.tree1 = new B.Tree("tree1", function(data) {
-		data.call();
-	}, false);
-	var br1 = tree1.addBranch("Using say, ask and choose", false);
+	window.tree1 = new B.Tree("tree1", "function", false);
+	var br1 = tree1.addBranch("Using say, ask, choose and openDialog", false);
 	br1.addLeaf("Say something via dialog", function() { say("Ok, I said something. So there."); }, B.img("INFO"));
 	br1.addLeaf("Ask something", function() { ask("I'm doing great. Are you feeling well?") }, B.img("HELP"));
 	br1.addLeaf("Yes/No/Cancel (askC)", function() { askC("Continue to next step?"); });
@@ -49,7 +47,8 @@ function init() {
 			function(rslt) { say("You chose option " + rslt); }) 
 		}
 	, B.img("CHECKY"));
-	tree1.addLeaf("Open up a form dialog", function() { doDialogTest(); });
+	br1.addLeaf("Open up a form dialog", function() { doDialogTest(); });
+	tree1.addLeaf("This line just informative. You cannot click it.")
 	tree1.render();
 
 }
@@ -103,7 +102,7 @@ function doRestTest(typ) {
 </table>
 
 <br>
-<div id='tree1'></div>
+<div id='tree1' style='width:320px; border:1px solid navy; padding:5px;'></div>
 
 <form id='dlg1' class='BDialog' title='My First Dialog' style='height: 500px; width: 800px;'>
 	<input name='sec' type='hidden' value='Secret'/>

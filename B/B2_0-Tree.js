@@ -132,16 +132,18 @@ B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
 	var div = document.createElement("div");
 	div.style.cursor = "pointer";
 	var tbl = document.createElement("table");
-	tbl.style.width = "100%";
-	tbl.style.border = "0";
-	tbl.style.borderCollapse = "collapse";
+	tbl.style.cssText = "width:100%; border:0 border-collapse:collapse";
+//	tbl.style.width = "100%";
+//	tbl.style.border = "0";
+//	tbl.style.borderCollapse = "collapse";
 	var tr = document.createElement("tr");
 	tbl.appendChild(tr);
 	var td = document.createElement("td");
-	td.style.verticalAlign = "top";
-	td.style.width = "1.1em";
-	td.style.textAlign = "right";
-	td.style.paddingRight = "3px";
+	td.style.cssText = "vertical-align:top; width:1.1em; text-align:right; padding-right:3px;";
+//	td.style.verticalAlign = "top";
+//	td.style.width = "1.1em";
+//	td.style.textAlign = "right";
+//	td.style.paddingRight = "3px";
 	this.imgTD = td;
 	tr.appendChild(td);
 	td = document.createElement("td");
@@ -195,21 +197,31 @@ B.TreeLeaf = function(tree, parent, html, data, icon) {
 	return this;
 }
 B.TreeLeaf.prototype.render = function(branchElement) {
-	var isLink = (this.tree.onLeafclick != null);
-	if (isLink) isLink = (this.data != null);
+	var linktype = null;
+	if (this.data instanceof Function) {
+		linktype = "function";
+	} else if (this.tree.onLeafclick != null && this.data != null) {
+		linktype = "leaf";
+	}
+	var isLink = (linktype != null);
 	var div = document.createElement("div");
 	if (isLink) div.style.cursor = "pointer";
 	var h = "<table style='width:100%;border:0;border-collapse:collapse;'>";
 	h += "<tr><td style='vertical-align:top; width:1.1em; text-align:right; padding-right:3px;'>" + this.icon + "</td>";
 	h += "<td>" + (isLink ? B.format.ASLINK(this.html) : this.html) + "</td></tr></table>";
 	div.innerHTML = h;
-	if (isLink) {
+	if (linktype == "function") { // Call the user-defined function
+		div.onclick = $.proxy(function(e) {
+			e.stopPropagation();
+			this.data.call();
+		}, this);
+	} else if (linktype == "leaf") { // call the global functin passing data
 		div.onclick = $.proxy(function(e) {
 			e.stopPropagation();
 			this.tree.onLeafclick(this.data);
 		}, this)
-	} else {
-		div.onclick = function(e) { e.stopPropagation(); }
+	} else { // Do nothing, but stop going up the chain!
+		div.onclick = function(e) { e.stopPropagation(); } 
 	}
 	
 	branchElement.appendChild(div);
