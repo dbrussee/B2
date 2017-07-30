@@ -133,17 +133,10 @@ B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
 	div.style.cursor = "pointer";
 	var tbl = document.createElement("table");
 	tbl.style.cssText = "width:100%; border:0 border-collapse:collapse";
-//	tbl.style.width = "100%";
-//	tbl.style.border = "0";
-//	tbl.style.borderCollapse = "collapse";
 	var tr = document.createElement("tr");
 	tbl.appendChild(tr);
 	var td = document.createElement("td");
 	td.style.cssText = "vertical-align:top; width:1.1em; text-align:right; padding-right:3px;";
-//	td.style.verticalAlign = "top";
-//	td.style.width = "1.1em";
-//	td.style.textAlign = "right";
-//	td.style.paddingRight = "3px";
 	this.imgTD = td;
 	tr.appendChild(td);
 	td = document.createElement("td");
@@ -164,7 +157,7 @@ B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
 		$(div2).hide();
 	}
 
-	this.txtTD.onclick = $.proxy(function(e) {
+	tbl.onclick = $.proxy(function(e) {
 		e.stopPropagation();
 		if (this.showing) {
 			this.close();
