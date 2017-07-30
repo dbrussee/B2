@@ -71,6 +71,7 @@ function sayBase(msg, title, callback, height, width, btns) {
 	if (width == undefined) width = 350;
 	if (height == undefined) height = 250;
 	if (btns.length == 0) btns = [ { text: 'Ok', click: function() { closeDialog("B-Say-Dialog"); } } ];
+	if (btns.length == 1 && btns[0] == "NONE") btns = []; // Freeze?
 	if (title == undefined) title = B.settings.say.defTitle;
 	if (title == "") title = B.settings.say.defTitle;
 
@@ -163,44 +164,35 @@ function askC(msg, t, cb, h, w) { askCIcon("HELP", msg, t, cb, h, w); };
 function askCWarn(msg, t, cb, h, w) { askCIcon("WARN", msg, t, cb, h, w); };
 function askCError(msg, t, cb, h, w) { askCIcon("ERROR", msg, t, cb, h, w); };
 
-function timedFreeze(msg, title) {
-	freeze(msg, title, true, true);
+function timedFreeze(msg, title, height, width) {
+	freeze(msg, title, true, height, width);
 }
-function freeze(msg, title, showSpinner, showTimer) {
-	if (showTimer == undefined) showTimer = false;
-	if (showSpinner == undefined) showSpinner = true;
-	var h = "";
-	if (showSpinner) {
-		h += "<div style='float: left; width: 40px; height: 43px;'>";
-		h += B.img("SPINNER", 24);
-		if (showTimer) {
-			h += "<div style='width: 25px; text-align: center; color: blue; font-size: 6pt; font-weight: bold; padding-bottom: 2px; padding-top: 2px;' id='spnFreezeSpinnerTime'></div>";
-		}
+function freeze(msg, title, with_timer, height, width) {
+	if (with_timer == undefined) with_timer = false;
+	var h = "<div style='float:left; width:40px; text-align:center; padding-right:10px;'>"
+	h += B.img("SPINNER", 28);
+	if (with_timer) {
+		h += "<div id='freezeDialogTimer' style='width:100%; text-align:center; font-size:7pt;'>";
+		h += "&nbsp;"
 		h += "</div>";
-	} else {
-		if (showTimer) {
-			h += "<div style='float: left; width: 40px; height: 13px;'>";
-			h += "<div style='width: 25px; text-align: center; color: blue; font-size: 6pt; font-weight: bold; padding-bottom: 2px; padding-top: 2px;' id='spnFreezeSpinnerTime'></div>";
-			h += "</div>";
-		}
+		B.freezeStart = new Date();
+		B.freezeTimer = setInterval(function() {
+			var et = B.format.ELAPSE(B.freezeStart, new Date());
+			document.getElementById("freezeDialogTimer").innerHTML = et;
+		}, 1005);
 	}
+	h += "</div>";
 	h += "<span id='freezeMessageText'>" + msg + "</span>";
-	var dlg = prepareSayDialog(h, title);
-	dlg.dialog("option", "dialogClass", "no-close");
-	openSayDialog([ ]);
-	if (showTimer) {
-		B.freezeTimer = new B.Timer(1005, function(st) {
-			document.getElementById("spnFreezeSpinnerTime").innerHTML = B.format.ELAPSE(st,new Date()).replace(" ", "&nbsp;");
-		});
-	}
+	sayBase(h, title, null, height, width, ["NONE"]);
 }
+
 function updateFreezeText(msg) {
 	$("#freezeMessageText").html(msg);
 }
 function thaw() { 
 	if (B.freezeTimer != null) {
-		B.freezeTimer.stop();
+		clearInterval(B.freezeTimer);
 		B.freezeTimer = null;
 	}
-	$("#appSayDialog").dialog("close"); 
+	closeDialog("B-Say-Dialog"); 
 }

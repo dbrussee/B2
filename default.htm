@@ -37,17 +37,23 @@ function init() {
 	mnuAdd.addMenu("Unpick", function() { tblA.unpick(); }, "bullet");
 	mnuAdd.addMenu("Clear", function() { tblA.clear(); }, "radio-on");
 
-	window.tree1 = new B.Tree("tree1", null, false);
-	var br1 = tree1.addBranch("Using say, ask, choose and openDialog", false);
-	br1.addLeaf("Say something via dialog", function() { say("Ok, I said something. So there."); }, B.img("INFO"));
-	br1.addLeaf("Ask something", function() { ask("I'm doing great. Are you feeling well?") }, B.img("HELP"));
-	br1.addLeaf("Yes/No/Cancel (askC)", function() { askC("Continue to next step?"); });
-	br1.addLeaf("Choose an item with choose", 
+	window.tree1 = new B.Tree("tree1", null, true);
+	var br = tree1.addBranch("Try dialog actions", false);
+	br.addLeaf("Say something via dialog", function() { say("Ok, I said something. So there."); }, B.img("INFO"));
+	br.addLeaf("Ask something", function() { ask("I'm doing great. Are you feeling well?") }, B.img("HELP"));
+	br.addLeaf("Yes/No/Cancel (askC)", function() { askC("Continue to next step?"); });
+	br.addLeaf("Choose an item with choose", 
 		function() { choose("Pick one of the items", "", "Tom,Dick,Harry", 
-			function(rslt) { say("You chose option " + rslt); }) 
-		}
-	, B.img("CHECKY"));
-	br1.addLeaf("Open up a form dialog", function() { doDialogTest(); });
+			function(rslt) { say("You chose option " + rslt); }
+		); }, B.img("CHECKY"));
+	br.addLeaf("Freeze the screen", function() { 
+		timedFreeze("This message will disappear using the thaw() method in 10 seconds. " +
+			"Use freeze(msg) for normal stuff, but when calling remote operations that may " +
+			"take some time, you may want to include a timer."); 
+		window.setTimeout(function() { thaw(); }, 10000);
+	});
+	br.addLeaf("Open up a form dialog", function() { doDialogTest(); });
+	br = tree1.addBranch("Some Other Actions", false);
 	tree1.addLeaf("This line just informative. You cannot click it.")
 	tree1.render();
 
