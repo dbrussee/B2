@@ -87,7 +87,7 @@ B.TreeBranch.prototype.addLeaf = function(html, data, icon) {
 	return leaf;
 }
 B.TreeBranch.prototype.close = function() {
-	$(this.leafDIV).hide();
+	$(this.leafDIV).hide("fast");
 	this.showing = false;
 	this.imgTD.innerHTML = this.tree.closedBranchIcon;
 }
@@ -115,7 +115,7 @@ B.TreeBranch.prototype.closeAllBut = function(keep) {
 	}
 }
 B.TreeBranch.prototype.open = function() {
-	$(this.leafDIV).show();
+	$(this.leafDIV).show("fast");
 	this.showing = true;
 	this.imgTD.innerHTML = this.tree.openBranchIcon;
 }
