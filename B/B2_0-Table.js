@@ -37,7 +37,7 @@ B.ScrollingTable = function(rootId, height, dataColumnSet, txt1, txt2) {
 		if (data.length > 1) wid = parseInt(data[1],10);
 		this.dataWidth += wid;
 		cell.style.width = wid + "px";
-		cell.style.fontWeight = "normal";
+		cell.style.fontWeight = "bold";
 		var weight = "N";
 		var col = { pos:i, name:nam, width:wid, bold:false, align:'left' };
 		this.columns.push(col);
