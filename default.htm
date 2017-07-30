@@ -52,6 +52,17 @@ function init() {
 			"take some time, you may want to include a timer."); 
 		window.setTimeout(function() { thaw(); }, 10000);
 	});
+	br.addLeaf("Get a value", function() {
+		askValue("Enter a value that will be used to know how intelligent you are.", "Your Number:", "42", "Are you a Hoopy Frood?", function(rslt) {
+			if (rslt != null) {
+				if (rslt == "42") {
+					say("Good answer, but what is the question?", "Life, Don't talk to me about life");
+				} else { 
+					say("Yeah, '" + rslt + "' does not make you very smart.", "IQ: < 100");
+				}
+			}
+		})
+	})
 	br.addLeaf("Open up a form dialog", function() { doDialogTest(); });
 	br = tree1.addBranch("Some Other Actions", false);
 	tree1.addLeaf("This line just informative. You cannot click it.")

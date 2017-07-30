@@ -1,7 +1,6 @@
 // Dialogs -- These are defined at global level to make the simple to use.
 
 // TODO
-// freeze / thaw
 // askValue (get a text value from the user and do callback)
 
 B.dialogStack = []; // The stack stays in the B domain
@@ -75,7 +74,7 @@ function sayBase(msg, title, callback, height, width, btns) {
 	if (title == undefined) title = B.settings.say.defTitle;
 	if (title == "") title = B.settings.say.defTitle;
 
-	var h = "<form id='B-Say-Dialog' class='BDialog' title='" + title + "'>"
+	var h = "<form id='B-Say-Dialog' class='BDialog' title='" + B.settings.say.defTitle + "'>"
 	h += "<div id='B-Say-Dialog-Message' style='width: 100%; height: 100%; overflow-y: auto;'></div>";
 	h += "</form>";
 	$("body").append(h);
@@ -90,7 +89,7 @@ function sayBase(msg, title, callback, height, width, btns) {
 	});
 	dlg.dialog("widget").find('.ui-dialog-titlebar-close').remove()
 	dlg.dialog("open");
-	
+	dlg.dialog('option', 'title', title);
 	$("#B-Say-Dialog-Message").html(msg);
 };
 function sayIcon(icon, msg, title, callback, height, width, btns) {
@@ -164,9 +163,28 @@ function askC(msg, t, cb, h, w) { askCIcon("HELP", msg, t, cb, h, w); };
 function askCWarn(msg, t, cb, h, w) { askCIcon("WARN", msg, t, cb, h, w); };
 function askCError(msg, t, cb, h, w) { askCIcon("ERROR", msg, t, cb, h, w); };
 
-function timedFreeze(msg, title, height, width) {
-	freeze(msg, title, true, height, width);
+askValueIcon = function(icon, msg, prompt, value, title, callback, height, width) {
+	if (callback == undefined) callback = function() { };
+	var h = msg;
+	h += "<table class='form' style='width:98%'>";
+	h += "<tr><th>" + prompt + "</th><td><input id='B-Say-Dialog-Value' size='20'></td></tr>";
+	h += "</table>";
+	var btns = [
+		{ text: "Ok",  click: function() { 
+			var rslt = $("#B-Say-Dialog-Value").val();
+			closeDialog("B-Say-Dialog"); 
+			callback(rslt);  } },
+		{ text: "Cancel",  click: function() { 
+			closeDialog("B-Say-Dialog"); 
+			callback(null);  } }
+	];
+	sayIcon(icon, h, title, callback, height, width, btns);
+	if (value != undefined) $("#B-Say-Dialog-Value").val(value);
 }
+function askValue(msg, p, v, t, cb, h, w) { askValueIcon("HELP", msg, p, v, t, cb, h, w); };
+function askValueWarn(msg, p, v, t, cb, h, w) { askValueIcon("WARN", msg, p, v, t, cb, h, w); };
+function askValueError(msg, p, v, t, cb, h, w) { askValueIcon("ERROR", msg, p, v, t, cb, h, w); };
+
 function freeze(msg, title, with_timer, height, width) {
 	if (with_timer == undefined) with_timer = false;
 	var h = "<div style='float:left; width:40px; text-align:center; padding-right:10px;'>"
@@ -184,6 +202,9 @@ function freeze(msg, title, with_timer, height, width) {
 	h += "</div>";
 	h += "<span id='freezeMessageText'>" + msg + "</span>";
 	sayBase(h, title, null, height, width, ["NONE"]);
+}
+function timedFreeze(msg, title, height, width) {
+	freeze(msg, title, true, height, width);
 }
 
 function updateFreezeText(msg) {
