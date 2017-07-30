@@ -167,6 +167,29 @@ B.ScrollingTable.prototype.setFooterMessage = function(txt) {
 	}
 	this.footerMessageDIV.innerHTML = txt;
 }
+B.ScrollingTable.prototype.addRows = function(dta, clear) {
+	if (clear) this.clear();
+	var dtbl = this.dataTable;
+	var numcells = this.columns.length;
+	var isFirstRow = (dtbl.rows.length ==0);
+	var rows = dta.split("\n");
+	for (var i = 0; i < rows.length; i++) {
+		var tr = document.createElement("tr");
+		var rowcols = rows[i].split("\t");
+		for (var c = 0; c < numcells; c++) {
+			var col = this.columns[c];
+			var td = document.createElement("td");
+			td.style.cssText = "border-left:1px dotted gainsboro; border-right:1px dotted gainsboro; border-bottom:1px dotted gainsboro";
+			if (isFirstRow && i == 0) td.style.width = col.width + "px";
+			td.style.textAlign = col.align;
+			td.style.fontWeight = (col.bold ? "bold" : "normal");
+			td.innerHTML = rowcols[c];
+			tr.appendChild(td);
+		}
+		dtbl.appendChild(tr);	
+	}	
+	this.setFooterMessage();
+}
 B.ScrollingTable.prototype.pick = function(row, cell) {
 	this.unpick();
 	if (typeof row != "object") {

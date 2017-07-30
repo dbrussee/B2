@@ -15,14 +15,53 @@
 <script src="B/B2_0-Menu.js"></script>
 <script src="B/B2_0-Tree.js"></script>
 <script>
+var dta = "Mergerson, S. Epatha\tVan Buren, Anita, Lt.\t391\t1991\t2010\tnm0580924";
+dta += "\nWaterston, Sam\tMcCoy, Jack, Asst DA\t368\t1994\t2010\tnm0001832";
+dta += "\nOrbach, Jerry\tBriscoe, Lennie, Det\t274\t1991\t2004\tnm0001583";
+dta += "\nHill, Steven\tSchiff, Adam, DA\t229\t1990\t2000\tnm0384696";
+dta += "\nMartin, Jesse L\tGreen, Ed, Det\t198\t1999\t2008\tnm0552509";
+dta += "\nHendrix, Leslie\tRodgers, Elizabeth, Dr\t142\t1992\t2010\tnm0376890";
+dta += "\nThompson, Fred Dalton\tBranch, Arthur, DA\t116\t2002\t2007\tnm0000669";
+dta += "\nNoth, Chris\tLogan, Mike, Det\t111\t1990\t1995\tnm0636562";
+dta += "\nBratt, Benjamin\tCurtis, Rey, Det\t95\t1995\t2009\tnm0000973";
+dta += "\nMoriarty, Michael\tStone, Ben, Ex ADA\t88\t1990\t1994\tnm0605363";
+dta += "\nMcCormick, Carolyn\tOlivet, Elizabeth, Dr\t87\t1991\t2009\tnm0566509";
+dta += "\nRohm, Elisabeth\tSotherlyn, Serena, ADA\t85\t2001\t2005\tnm0737533";
+dta += "\nDe La Garza, Alana\tRubirosa, Connie, ADA\t85\t2006\t2010\tnm1004211";
+dta += "\nHarmon, Angie\tCarmichael, Abbie, ADA\t72\t1998\t2001\tnm0004990";
+dta += "\nFlorek, Dann\tCragen, Donald, Capt\t69\t1990\t2004\tnm0282648";
+dta += "\nBrooks, Richard\tRobinette, Paul\t69\t1990\t2006\tnm1444462";
+dta += "\nHennessy, Jill\tKincaid, Claire, ADA\t68\t1993\t1996\tnm0005007";
+dta += "\nSisto, Jeremy\tLupo, Cyrus, Det\t64\t2007\t2010\tnm0005438";
+dta += "\nRoache, Linus\tCutter, Michael, Ex ADA\t63\t2008\t2010\tnm0730070";
+dta += "\nFiore, John\tProfaci, Tony, Det\t53\t1990\t1998\tnm0278468";
+dta += "\nAnderson, Anthony\tBernard, Kevin, Det\t50\t2008\t2010\t";
+dta += "\nLowell, Carey\tRoss, Jamie\t49\t1996\t2001\t";
+dta += "\nWiest, Dianna\tLewin, Nora, DA\t48\t2000\t2002\t";
+dta += "\nFarina, Dennis\tFontana, Joe, Det\t46\t2004\t2006\t";
+dta += "\nSimmons, J.K.\tSkoda, Emil, Dr\t46\t1994\t2010\tnm0799777";
+dta += "\nParise, Annie\tBorgia, Alexandra, ADA\t34\t2002\t2006\t";
+dta += "\nSorvino, Paul\tCereta, Phil, Srgt\t31\t1991\t1992\t";
+dta += "\nLipman, David\tTorledsky, Morris, Judge\t27\t1992\t2005\t";
+dta += "\nCariani, John\tBeck, Julian, CSU\t26\t2002\t2007\t";
+dta += "\nNavedo, Andrea\tCordova, Ana, Det\t24\t2001\t2004\t";
+dta += "\nGovich, Milena\tCassady, Nina, Det\t23\t2005\t2007\t";
+dta += "\nDenver, Bob\tGilligan\t99\t1964\t1992\tnm0001134";
+dta += "\nHale, Alan Jr\tGrumby, Jonus, Skipper\t99\t1964\t1992\tnm0001308";
+dta += "\nBackus, Jim\tHowell, Thurston III\t99\t1964\t1992\tnm0000822";
+dta += "\nSchafer, Natalie\tHowell, Lovey\t99\t1964\t1992\tnm0769791";
+dta += "\nLouise, Tina\tGrant, Ginger\t98\t1964\t1967\tnm0001481";
+dta += "\nJohnson, Russell\tHinkley, Roy Professor\t98\t1964\t1967\tnm0426157";
+dta += "\nGabriel, John\tHinkley, Roy Professor\t1\t1992\t1992\tnm0300235";
+dta += "\nWells, Dawn\tSummers, Mary Ann\t98\t1964\t1967\tnm0920171";
 function init() {
 	var dcs = new B.DataColumnSet("id:*#,fn:t,ln:t,bd:!@,dsc:t_");
 
 	var frm = B.getForm("dlg1");
 	var now = new Date();
 	frm.set("month", now.getMonth()+1, "day", now.getDate());
-	
-	window.tblA = new B.ScrollingTable("tblA", 150, new B.DataColumnSet("fn:!,ln:!,em,age:#!,zip:#"), "row", "rows");
+
+	window.tblA = new B.ScrollingTable("tblA", 150, new B.DataColumnSet("actor,role,episodes,fy,ly,tmdb"), "actor", "actors");
 	tblA.footer.addButton("a", "First", function() { tblA.footer.disableButton("a").enableButton("b"); });
 	tblA.footer.addButton("b", "Second", function() { tblA.footer.disableButton("b").enableButton("a"); });
 	tblA.footer.addButton("c", "Rows", function() { mnuAdd.show(event); });
@@ -30,11 +69,13 @@ function init() {
 	tblA.onclick = function(tbl, row, cell, rn, cn, changedRow) {
 		// Do nothing for now. See if this makes it to GIT
 	}
+	tblA.addRows(dta);
 	
 	window.mnuAdd = new B.ContextMenu();
 	mnuAdd.addMenu("Add 1 row", function() { tblA.addTestRows(1); }, "play");
 	mnuAdd.addMenu("Add 10 rows", function() { tblA.addTestRows(10); }, "seek-next");
 	mnuAdd.addMenu("Unpick", function() { tblA.unpick(); }, "bullet");
+	mnuAdd.addMenu("Reload", function() { tblA.addRows(dta,true); }, "refresh");
 	mnuAdd.addMenu("Clear", function() { tblA.clear(); }, "radio-on");
 
 	window.tree1 = new B.Tree("tree1", null, true);
@@ -65,7 +106,7 @@ function init() {
 	})
 	br.addLeaf("Open up a form dialog", function() { doDialogTest(); });
 	br = tree1.addBranch("Some Other Actions", false);
-	tree1.addLeaf("This line just informative. You cannot click it.")
+	tree1.addLeaf("This line is just informative. You cannot click it.")
 	tree1.render();
 
 }
@@ -107,15 +148,17 @@ function doRestTest(typ) {
 		$("#divRestResult").html(rslt);
 	});
 }
+
 </script>
 </head>
 <body>
 <table id='tblA'>
-	<tr><th data='fn,100'>First name</th>
-		<th data='ln,120'>Last name</th>
-		<th data='eml,200'>Email</th>
-		<th data='age,65,R'>Age</th>
-		<th data='zip,80,C'>Zip Code</th></tr>
+	<tr><th data='actor,160'>Actor</th>
+		<th data='role,160'>Role</th>
+		<th data='episodes,50,C'>Eps</th>
+		<th data='fy,65,R'>First Yr</th>
+		<th data='ly,65,R'>Last Yr</th>
+		<th data='tmdb,100,C'>TMDB</th></tr>
 </table>
 
 <br>
