@@ -410,6 +410,24 @@ B.imgdata = {
 	WRENCH: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAE7ElEQVRoQ+1ZTWwbVRD+Zm2HtpGo+REHBG3DiQMSzgmVQGPHUi8cagu4UfVZiCOiOSRIyAajRKDah6R3pGyOCIRdCQGXYjtq0gMSSe4odVUoEgg1RagktruD1o7Dxrtv3+5mI4iUPXrfzvu++Z8x4ZA/dMjx44jAf23BIwv8by1QqS0niFEhgm5AW8ymzjbDBCs+KCUQoUtgJEBIALwJpiYMntQ/mV7zepfUhSrXl5tEOL0riKGz1iVS9yrc6ZwozsXR6VRASNreMxb12SnhR74bgSIRPhoUxkTZbOrlqp9L+md3tF4DEA8DvClDTqB28wyxccsOlDeZhkeyqdFNPyR6mm/XQJQIC7wrAfNl5fsbOoEuOVxYzaTHsr4IFMqXAcyFCV5NoHYzSWyYJrffy8hl02O6VxKiUKoDNG47H4k+phcnXa0p8lcy+uz7jm6rrAOV2koGButEOGmLBx8kRKF8z9H3wTl9ZlqqCFEoLQAY0Wem7UHvFgNWsJXaahz8QCfgQlASolA2U+OLDrZsIhIbdbJCDzx1s5I+M+WobKUF9hC5viyIYGpkz8MeLCF1IVMSo45oNGslYQUfGoFuYAckIfKleRC9J48ZbpKhFTkWuYaH7bm+5nfOr+szU/bs5dWFBi8NQkIUSgIgm/U8JQGXAufLhfbjTiJfqoAo4wmwzUeR0menHDuAwARU7pT5eexHMDXQ4pOfb73W+O73pGMWURPihiwDKeuAWrhzTBw3fsX5jTcNGKyZMjpDUbxz61Mv4gayA24jGk241Yl9WaB/mzUmTPDpO28hsr21B8wSv4SFu2/4IbGOhyxUnWkoBLruVFtOnGjfbaR/ufjoIHgcI/zx1JP48Id38aBzvEeC+SpAVRCf+bel7jrFJsBVt+Jm1UJoBPhrvIrfqI5Wz212n2MEnIoBEcK1jRSqG2kz7/tum2WmC4+ATn9hi4dl4Pu/f/XTxPLrb3/7ih9fcjsbHoHPqIMOR5w0vwcAm5MXpyjV9jx1HTgBc1A5+8TajVz8i+FYuw3T5/tu43i5SUJDjs61Ag1GocbA4JSVe/pLvHB6A48P/6n2EjJydK7tuSV3ErgvF5KNiCeif+P8qRVceM5xlBjI9axTspVTs3U+EZiAyJeTIFSce/zeZRPPrNy5+Pw3zyrBMa+BW1lKwffmIxABj43ZOiLR5MLEdAasqZu4gHHhm4An8Mz3YSDZr6K8FBOeSHRNZczDaH9MKXhaGvgiEAR83324MVQEyLamkWSpNTDnvKRazwT2A95CogqQbSyVp1qeVGUpTwTCAG+C5BrioKE6iBxmY0moK1KtksDgbCrNKCwfOqzfcC2WgKatKjOT9YBhjMrcyZWAZ/CK1cggWF565DLYYckl184ijbccd6ZSAsK6SWMsdmUT7Fs6n+CDxQOalNwe8VWJRb602t1jWlpfkS/re0m4L6Xc3GQnHpogsi3MbN8xr1Oy5W8rIQpl7gqSEggOftcKS0MZMJnVXPEYV2m8be5WbY+bC1k2abzTcPW2ZOY0pc9OOwpUQbHFQyM2D2jyfRHjNng7IStscgL5KxmQZtdOiNOUJR50OG7B+T6Yk24FzT0L9UgUeztNboB5XrYl9qt5e2aKCRhaEea/QmYrQqjCaBVVDZ6yDuwX2EF/f0TgoDWskn9kAZWGDvr9obfAP7iqOE8jrZkzAAAAAElFTkSuQmCC",
 	X: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAB2klEQVRoQ+2YvVHDQBCF36oB6AASIKUE6MCOGHL+SuIvZ4jsDqAEUiCBDqABLSPPiLFlWbd3+86Mh1Nq6+l991Z7qxNs+CUb7h8F4K8TLAmUBJwr8H9K6HZvclhVMqlrHV+8j1+cC7d0e6q+KYGZuMgTBNtQfNWqx0wIj34QYEG8XTcihFc/CHB/MPkAZGcpcwJEr/nfB+nn2et4N1SqQYDmISJ4FpEtJsSQeVX9VsWRpUyDAI1pNgTLfOPNBMCEYJqPAmBAsM1HA3ggcphPAkiByGU+GSAGIqd5F4AFQoErAa5nO3jnimmVQ3uBuQutEgm0WIUsdzqWeXcCLVQAYqFZM83TAAzlNINgm6cCNGJ3+9MTAR76ygYKVeD0/G30GJpvYn53vwPzZdSO3KoKkR5pwgDYhaMA9LXKdUG4AQZHYkVvF2J+FLkAQpsUIJeA3rBH8fkySgYImW/nefYoTnkHrOaN+4TrGzs6gVjzuSGiAFLN54QwA3jN54IwAbDM54AIArDNsyGCAKvOhRiD2WCLRcZzIYb5oSRi9IMJdEflGHHrVDmfRKy+CaCFqCpM6xojy4mZ1fzCNJugbwaINbSu/xeAda30queUBEoCzhUoJeRcQPftG5/AD1A5K09GOt+SAAAAAElFTkSuQmCC"
 };
+B.char = {
+	NEXT:		"&#x25ba;",		PREV:		"&#x25c4;",
+	LAST:		"&#x25ba;&#x25ba;",		FIRST:	"&#x25c4;&#x25c4;",
+	UP:			"&#x25b2;",		DOWN:		"&#x25bc;",
+	CHECK: 		"&#x2714;",		THINCHECK:	"&#x2713;",		UNCHECK:	"&#9744;",
+	BULLET:		"<span style='font-size:12pt;'>&bull;</span>",		
+	REDBULLET:	"<span style='color:red;font-size:12pt;'>&bull;</span>",
+	BLUEBULLET:	"<span style='color:#0099cc;font-size:12pt;'>&bull;</span>",
+	GREENBULLET:"<span style='color:limegreen;font-size:12pt;'>&bull;</span>",
+	GREYBULLET:	"<span style='color:silver;font-size:12pt;'>&bull;</span>",
+	BLUEKEY: 	"<span style='color:#0099cc;'>&#x1f511;</span>",
+	REDKEY: 	"<span style='color:red'>&#x1f511;</span>",
+	PLUS:		"&#x271a;",		X:			"&#x2717;",	
+	FLAG:		"&#x2690;",		BLACKFLAG:	"&#x2691;", 	BLOCK:		"&#x2716;",
+	RIGHT:		"&#x25ba;",		LEFT:		"&#x25c4;",
+	STAR:		"&#x2606;",		BLACKSTAR:	"&#x2605;",		CLOUD:		"&#x2601;",
+	SPACE:		"&nbsp;"
+};
 B.hasClass = function(el, clsname) {
 	var lst = el.className.split(" ");
 	for (var i = 0; i < lst.length; i++) {

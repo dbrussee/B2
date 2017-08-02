@@ -6,6 +6,7 @@ B.Tree = function(elementId, leaf_click_callback, only_one_open_per_level) {
 	if (only_one_open_per_level == undefined) only_one_open_per_level = true;
 	this.oneBranchPerLevel = only_one_open_per_level;
 	this.element = document.getElementById(elementId);
+	this.tbl = null; // To be created and applied to this.element when rendering
 	this.nodes = []; // A node can be a leaf or a branch (leaves)
 
 	this.closedBranchIcon = B.img("ADD");
@@ -51,14 +52,18 @@ B.Tree.prototype.openAll = function() {
 		}
 	}
 }
-B.Tree.prototype.render = function() {
+B.Tree.prototype.render = function(width) {
 	var prevOpen = false;
+	this.element.innerHTML = ""; // Clean it up first
+	this.tbl = document.createElement("table");
+	this.tbl.style.width = width;
+	this.element.appendChild(this.tbl);
 	for (var i = 0; i < this.nodes.length; i++) {
 		if (this.nodes[i] instanceof B.TreeBranch) {
-			this.nodes[i].render(this.element, prevOpen);
+			this.nodes[i].render(this.tbl, prevOpen);
 			if (this.nodes[i].showing) prevOpen = true;
 		} else {
-			this.nodes[i].render(this.element);
+			this.nodes[i].render(this.tbl);
 		}
 	}
 }
@@ -71,8 +76,7 @@ B.TreeBranch = function(tree, parent, html, showing) {
 	this.nodes = [];
 	if (showing == undefined) showing = true;
 	this.showing = showing;
-	this.imgTD = null;
-	this.txtTD = null;
+	this.tbl = null;
 	this.leafDIV = null;
 	return this;
 }
@@ -87,9 +91,9 @@ B.TreeBranch.prototype.addLeaf = function(html, data, icon) {
 	return leaf;
 }
 B.TreeBranch.prototype.close = function() {
-	$(this.leafDIV).hide("fast");
+	$(this.tbl).hide("slow");
 	this.showing = false;
-	this.imgTD.innerHTML = this.tree.closedBranchIcon;
+	this.tr.cells[0].innerHTML = this.tree.closedBranchIcon;
 }
 B.TreeBranch.prototype.closeAll = function() {
 	this.close();
@@ -115,9 +119,9 @@ B.TreeBranch.prototype.closeAllBut = function(keep) {
 	}
 }
 B.TreeBranch.prototype.open = function() {
-	$(this.leafDIV).show("fast");
+	$(this.tbl).show("slow");
 	this.showing = true;
-	this.imgTD.innerHTML = this.tree.openBranchIcon;
+	this.tr.cells[0].innerHTML = this.tree.openBranchIcon;
 }
 B.TreeBranch.prototype.openAll = function() {
 	this.open();
@@ -129,35 +133,30 @@ B.TreeBranch.prototype.openAll = function() {
 	}
 }
 B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
-	var div = document.createElement("div");
-	div.style.cursor = "pointer";
-	var tbl = document.createElement("table");
-	tbl.style.cssText = "width:100%; border:0 border-collapse:collapse";
 	var tr = document.createElement("tr");
-	tbl.appendChild(tr);
+	parentElement.appendChild(tr)
+	tr.style.cursor = "pointer";
 	var td = document.createElement("td");
 	td.style.cssText = "vertical-align:top; width:1.1em; text-align:right; padding-right:3px;";
-	this.imgTD = td;
 	tr.appendChild(td);
 	td = document.createElement("td");
-	this.txtTD = td;
+	td.style.cssText = "vertical-align:top;";
 	td.innerHTML = "<b>" + this.html + "</b> <span style='font-size:.8em;'><i>(" + this.nodes.length + ")</i></span>";
 	tr.appendChild(td);
-	div.appendChild(tbl);
-	parentElement.appendChild(div);
-	
-	var div2 = document.createElement("div");
 
-	this.leafDIV = div2;
-	this.txtTD.appendChild(div2);
+	this.tbl = document.createElement("table");
+	this.tr = tr;
+	this.tbl.style.cssText = "width:100%; border:0 border-collapse:collapse";
+	td.appendChild(this.tbl);
+
 	if (this.tree.oneBranchPerLevel && previousOpen) {
 		this.showing = false;
 	}
 	if (!this.showing) {
-		$(div2).hide();
+		$(this.tbl).hide();
 	}
 
-	tbl.onclick = $.proxy(function(e) {
+	tr.onclick = $.proxy(function(e) {
 		e.stopPropagation();
 		if (this.showing) {
 			this.close();
@@ -172,19 +171,19 @@ B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
 	var prevOpen = false;
 	for (var i = 0; i < this.nodes.length; i++) {
 		if (this.nodes[i] instanceof B.TreeBranch) {
-			this.nodes[i].render(this.leafDIV, prevOpen);
+			this.nodes[i].render(this.tbl, prevOpen);
 			if (this.nodes[i].showing) prevOpen = true;
 		} else {
-			this.nodes[i].render(this.leafDIV);
+			this.nodes[i].render(this.tbl);
 		}
 	}
-	this.imgTD.innerHTML = (this.showing ? this.tree.openBranchIcon : this.tree.closedBranchIcon);
+	tr.cells[0].innerHTML = (this.showing ? this.tree.openBranchIcon : this.tree.closedBranchIcon);
 }
 
 B.TreeLeaf = function(tree, parent, html, data, icon) {
 	this.tree = tree;
 	this.parent = parent;
-	this.icon = icon || B.img("DIAMOND");
+	this.icon = icon || B.char.BULLET;
 	this.data = data || null;
 	this.html = html || "";
 	return this;
@@ -197,25 +196,29 @@ B.TreeLeaf.prototype.render = function(branchElement) {
 		linktype = "leaf";
 	}
 	var isLink = (linktype != null);
-	var div = document.createElement("div");
-	if (isLink) div.style.cursor = "pointer";
-	var h = "<table style='width:100%;border:0;border-collapse:collapse;'>";
-	h += "<tr><td style='vertical-align:top; width:1.1em; text-align:right; padding-right:3px;'>" + this.icon + "</td>";
-	h += "<td>" + (isLink ? B.format.ASLINK(this.html) : this.html) + "</td></tr></table>";
-	div.innerHTML = h;
+	var tr = document.createElement("tr");
+	if (isLink) tr.style.cursor = "pointer";
+	var td = document.createElement("td");
+	td.style.cssText = "vertical-align:top; width:1.1em; text-align:right; padding-right:3px;";
+	td.innerHTML = this.icon;
+	tr.appendChild(td);
+	td = document.createElement("td");
+	td.innerHTML = (isLink ? B.format.ASLINK(this.html) : this.html);
+	tr.appendChild(td);
+
 	if (linktype == "function") { // Call the user-defined function
-		div.onclick = $.proxy(function(e) {
+		tr.onclick = $.proxy(function(e) {
 			e.stopPropagation();
 			this.data.call();
 		}, this);
 	} else if (linktype == "leaf") { // call the global functin passing data
-		div.onclick = $.proxy(function(e) {
+		tr.onclick = $.proxy(function(e) {
 			e.stopPropagation();
 			this.tree.onLeafclick(this.data);
 		}, this)
 	} else { // Do nothing, but stop going up the chain!
-		div.onclick = function(e) { e.stopPropagation(); } 
+		tr.onclick = function(e) { e.stopPropagation(); } 
 	}
 	
-	branchElement.appendChild(div);
+	branchElement.appendChild(tr);
 }
