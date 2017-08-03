@@ -52,11 +52,16 @@ B.Tree.prototype.openAll = function() {
 		}
 	}
 }
-B.Tree.prototype.render = function(width) {
+B.Tree.prototype.render = function(height,width) {
+	if (height == undefined) height = "";
+	if (width == undefined) width = "";
 	var prevOpen = false;
 	this.element.innerHTML = ""; // Clean it up first
 	this.tbl = document.createElement("table");
-	this.tbl.style.width = width;
+	if (typeof width == "number") width += "px";
+	if (typeof height == "number") height += "px";
+	if (width != "") this.tbl.style.width = width;
+	if (height != "") this.tbl.style.height = height;
 	this.element.appendChild(this.tbl);
 	for (var i = 0; i < this.nodes.length; i++) {
 		if (this.nodes[i] instanceof B.TreeBranch) {
@@ -91,7 +96,7 @@ B.TreeBranch.prototype.addLeaf = function(html, data, icon) {
 	return leaf;
 }
 B.TreeBranch.prototype.close = function() {
-	$(this.tbl).hide("slow");
+	$(this.tbl).hide();
 	this.showing = false;
 	this.tr.cells[0].innerHTML = this.tree.closedBranchIcon;
 }
@@ -119,7 +124,7 @@ B.TreeBranch.prototype.closeAllBut = function(keep) {
 	}
 }
 B.TreeBranch.prototype.open = function() {
-	$(this.tbl).show("slow");
+	$(this.tbl).show();
 	this.showing = true;
 	this.tr.cells[0].innerHTML = this.tree.openBranchIcon;
 }
