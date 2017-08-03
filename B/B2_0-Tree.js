@@ -52,16 +52,10 @@ B.Tree.prototype.openAll = function() {
 		}
 	}
 }
-B.Tree.prototype.render = function(height,width) {
-	if (height == undefined) height = "";
-	if (width == undefined) width = "";
+B.Tree.prototype.render = function() {
 	var prevOpen = false;
 	this.element.innerHTML = ""; // Clean it up first
 	this.tbl = document.createElement("table");
-	if (typeof width == "number") width += "px";
-	if (typeof height == "number") height += "px";
-	if (width != "") this.tbl.style.width = width;
-	if (height != "") this.tbl.style.height = height;
 	this.element.appendChild(this.tbl);
 	for (var i = 0; i < this.nodes.length; i++) {
 		if (this.nodes[i] instanceof B.TreeBranch) {
