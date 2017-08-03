@@ -68,6 +68,7 @@ function init() {
 	})
 	br.addLeaf("Open up a form dialog", function() { doDialogTest(); });
 	br = tree1.addBranch("Some Other Actions", false);
+	br.addLeaf("Show images ", function() { doImageTest(); });
 	tree1.addLeaf("This line is just informative. You cannot click it.")
 	tree1.render();
 
@@ -82,6 +83,21 @@ function doFormDataTest() {
 	dta.fnam = "Daniel";
 	frm.set(dta);
 	frm.focus("com");
+}
+function doImageTest() {
+	openDialog("dlgImages");
+	var el = document.getElementById("dlgImageTarget");
+	el.innerHTML = "";
+	for (var key in B.imgdata) {
+		var fn = function() { $("#dlgImageExample").html("<br>B.img('" + this.data + "');"); };
+		var img = new B.imgObject(key);
+		img.style.width = "2em";
+		img.onclick = fn;
+		img.data = key;
+		img.style.paddingRight = "1em";
+		img.style.cursor = "pointer";
+		el.appendChild(img)
+	}
 }
 function doRestTest(typ) {
 	var r = new B.RestfulService("http://numbersapi.com/");
@@ -175,5 +191,11 @@ function doRestTest(typ) {
 <br><div id='divRestResult'></div>
 <button class='BDialogButton' onclick='popDialog();'>Close</button>
 </form>
+
+<div id='dlgImages' class='BDialog' style='height: 380px; width:550px;' title='Images'>
+<span id='dlgImageTarget'></span>
+<div id='dlgImageExample'></div>
+<button class='BDialogButton' onclick='popDialog();'>Close</button>
+</div>
 </body>
 </html>
