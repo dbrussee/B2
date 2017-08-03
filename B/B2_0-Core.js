@@ -326,6 +326,11 @@ B.img = function(imgname, width, title, onclick, otherStyle, id, classes) {
 	if (id != "") id = " id='" + id + "'";
 	return "<img" + id + classes + " src='" + B.imgdata[B.trim(imgname).toUpperCase()] + "' style='border: 0; margin: 0; " + sty + "' title='" + title + "'" + onclick + ">"; 
 };
+B.imgObject = function(imgname) {
+	var img = document.createElement("img");
+	img.src = B.imgdata[B.trim(imgname).toUpperCase()];
+	return img;
+}
 B.imgsrc = function(el, imgname) {
 	if (typeof el != "object") el = document.getElementById(el);
 	el.setAttribute("src", B.imgdata[B.trim(imgname).toUpperCase()]);
