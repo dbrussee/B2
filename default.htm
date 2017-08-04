@@ -17,13 +17,6 @@
 <script>
 
 function init() {
-	var dcs = new B.DataColumnSet("id:*#,fn:t,ln:t,bd:!@,dsc:t_");
-	var ds = new B.Dataset(dcs, "XX\tJoe\tFrasier\t05/22/1952\tFamous Figher\tExtra data");
-
-	var dr = ds.getRow(0);
-	ds.addRows("\tDan\tBrussee\t9/1/1960\tGreat Programmer");
-	dr = ds.getRow(1);
-
 	var frm = B.getForm("dlg1");
 	var now = new Date();
 	frm.set("month", now.getMonth()+1, "day", now.getDate());
@@ -35,6 +28,9 @@ function init() {
 	tblA.footer.disableButton("a");
 	tblA.onclick = function(tbl, row, cell, rn, cn, changedRow) {
 		// Do nothing for now. See if this makes it to GIT
+	}
+	tblA.onBeforeRowRender = function(rd, tr, tds) {
+		if (rd.tmdb.val == "") tds.tmdb.innerHTML = "Missing";
 	}
 	tblA.addRows(example_data);
 	

@@ -5,10 +5,10 @@
 // Add contextmenu
 // Add B.Form integration
 
-B.ScrollingTable = function(rootId, height, dataColumnSet, txt1, txt2) {
+B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 	this.rootId = rootId;
 	this.height = height;
-	this.dataColumnSet = dataColumnSet;
+	this.dataset = new B.Dataset(ColumnSet);
 	this.txt1 = txt1;
 	this.txt2 = txt2;
 	this.header = document.getElementById(this.rootId);
@@ -29,6 +29,7 @@ B.ScrollingTable = function(rootId, height, dataColumnSet, txt1, txt2) {
 	if (B.settings.ScrollingTable.JQTheme) {
 		B.addClass(row, "ui-widget-header,ui-priority-primary");
 	}
+	this.onBeforeRowRender = function(rd, tr, tds) { return; };
 	for (var i = 0; i < row.cells.length; i++) {
 		var cell = row.cells[i];
 		var data = cell.getAttribute("data").split(","); // columnName, widthInPixels, attributes
@@ -71,9 +72,11 @@ B.ScrollingTable = function(rootId, height, dataColumnSet, txt1, txt2) {
 	this.dataTable.style.cursor = "pointer";
 	this.dataTable.onclick = $.proxy(function() {
 		var el = $(event.target)[0]; // A collection even though only one
-		var cell = $(el).closest("td")[0];
-		var row = $(cell).closest("tr")[0];
-		var rslt = this.onclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, row.rowIndex != this.current.rownum);
+		var cell = $(el).closest("td");
+		if (cell == undefined) return;
+		var row = $(cell).closest("tr");
+		if (row == undefined) return;
+		var rslt = this.onclick(this.dataTable, row[0], cell[0], row.index(), cell.index(), row.index() != this.current.rownum);
 		if (rslt == undefined) rslt = true;
 		if (rslt) {
 			this.pick(row, cell);
@@ -167,41 +170,41 @@ B.ScrollingTable.prototype.setFooterMessage = function(txt) {
 	}
 	this.footerMessageDIV.innerHTML = txt;
 }
-B.ScrollingTable.prototype.addRows = function(dta, clear) {
+B.ScrollingTable.prototype.addRows = function(data, clear) {
 	if (clear) this.clear();
 	var dtbl = this.dataTable;
-	var numcells = this.columns.length;
-	var isFirstRow = (dtbl.rows.length ==0);
-	var rows = dta.split("\n");
+
+	var rows = data.split("\n");
 	for (var i = 0; i < rows.length; i++) {
+		this.dataset.addRows(rows[i]);
+		var dr = this.dataset.getRow(this.dataset.data.length-1);
 		var tr = document.createElement("tr");
-		var rowcols = rows[i].split("\t");
-		for (var c = 0; c < numcells; c++) {
-			var col = this.columns[c];
+		var tds = {};
+		for (var j = 0; j < this.columns.length; j++) {
+			var tblcol = this.columns[j];
 			var td = document.createElement("td");
 			td.style.cssText = "border-left:1px dotted gainsboro; border-right:1px dotted gainsboro; border-bottom:1px dotted gainsboro";
-			if (isFirstRow && i == 0) td.style.width = col.width + "px";
-			td.style.textAlign = col.align;
-			td.style.fontWeight = (col.bold ? "bold" : "normal");
-			td.innerHTML = rowcols[c];
+			if (i == 0 && dtbl.rows.length == 0) td.style.width = tblcol.width + "px";
+			td.style.textAlign = tblcol.align;
+			td.style.fontWeight = (tblcol.bold ? "bold" : "normal");
+			var dcol = dr[tblcol.name];
+			var h = "";
+			if (dcol != null) h = dcol.disp;
+			td.innerHTML = h;
 			tr.appendChild(td);
+			tds[tblcol.name] = td;
 		}
-		dtbl.appendChild(tr);	
-	}	
+		// Call the onbefore method on the Scrolling table object
+		this.onBeforeRowRender(dr, tr, tds);
+		dtbl.appendChild(tr);
+	}
 	this.setFooterMessage();
 }
 B.ScrollingTable.prototype.pick = function(row, cell) {
 	this.unpick();
-	if (typeof row != "object") {
-		row = this.dataTable.rows[parseInt(row,10)];
-	}
-	if (cell == undefined) cell = 0;
-	if (typeof cell != "object") {
-		cell = row.cells[parseInt(cell,10)];
-	}
-	this.current.rownum = row.rowIndex;
-	this.current.cellnum = cell.cellIndex;
-	B.addClass(row, "picked");	
+	this.current.rownum = row.index();
+	this.current.cellnum = cell.index();
+	B.addClass(row[0], "picked");	
 };
 B.ScrollingTable.prototype.unpick = function() {
 	if (this.current.rownum >= 0) {
