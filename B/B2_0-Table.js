@@ -197,8 +197,9 @@ B.ScrollingTable.prototype.addRows = function(data, clear) {
 			tds[tblcol.name] = td;
 		}
 		// Call the onbefore method on the Scrolling table object
-		this.onBeforeRowRender(dtbl.rows.length, dr, tr, tds);
-		this.dataTableBody.appendChild(tr);
+		var rslt = this.onBeforeRowRender(dtbl.rows.length, dr, tr, tds);
+		if (rslt == undefined) rslt = true;
+		if (rslt) this.dataTableBody.appendChild(tr);
 	}
 	this.setFooterMessage();
 }
