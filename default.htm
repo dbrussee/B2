@@ -29,8 +29,8 @@ function init() {
 	tblA.onclick = function(tbl, row, cell, rn, cn, changedRow) {
 		// Do nothing for now. See if this makes it to GIT
 	}
-	tblA.onBeforeRowRender = function(rd, tr, tds) {
-		if (rd.tmdb.val == "") tds.tmdb.innerHTML = "Missing";
+	tblA.onBeforeRowRender = function(rn, rd, tr, tds) {
+		if (rd.tmdb.val == "") { tds.tmdb.innerHTML = "Missing"; tds.tmdb.style.color = "silver"; }
 	}
 	tblA.addRows(example_data);
 	

@@ -29,7 +29,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 	if (B.settings.ScrollingTable.JQTheme) {
 		B.addClass(row, "ui-widget-header,ui-priority-primary");
 	}
-	this.onBeforeRowRender = function(rd, tr, tds) { return; };
+	this.onBeforeRowRender = function(rn, rd, tr, tds) { return; };
 	for (var i = 0; i < row.cells.length; i++) {
 		var cell = row.cells[i];
 		var data = cell.getAttribute("data").split(","); // columnName, widthInPixels, attributes
@@ -63,6 +63,8 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 	this.container.style.width = (this.dataWidth + 17) + "px";
 	
 	this.dataTable = document.createElement("table");
+	this.dataTableBody = document.createElement("tbody");
+	this.dataTable.appendChild(this.dataTableBody);
 	this.dataTable.id = this.rootId + "_data";
 	this.dataTable.style.borderLeft = "2px solid gainsboro";
 	this.dataTable.style.borderRight = "2px solid gainsboro";
@@ -72,11 +74,11 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 	this.dataTable.style.cursor = "pointer";
 	this.dataTable.onclick = $.proxy(function() {
 		var el = $(event.target)[0]; // A collection even though only one
-		var cell = $(el).closest("td");
+		var cell = $(el).closest("td")[0];
 		if (cell == undefined) return;
-		var row = $(cell).closest("tr");
+		var row = $(cell).closest("tr")[0];
 		if (row == undefined) return;
-		var rslt = this.onclick(this.dataTable, row[0], cell[0], row.index(), cell.index(), row.index() != this.current.rownum);
+		var rslt = this.onclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, row.rowIndex != this.current.rownum);
 		if (rslt == undefined) rslt = true;
 		if (rslt) {
 			this.pick(row, cell);
@@ -195,16 +197,16 @@ B.ScrollingTable.prototype.addRows = function(data, clear) {
 			tds[tblcol.name] = td;
 		}
 		// Call the onbefore method on the Scrolling table object
-		this.onBeforeRowRender(dr, tr, tds);
-		dtbl.appendChild(tr);
+		this.onBeforeRowRender(dtbl.rows.length, dr, tr, tds);
+		this.dataTableBody.appendChild(tr);
 	}
 	this.setFooterMessage();
 }
 B.ScrollingTable.prototype.pick = function(row, cell) {
 	this.unpick();
-	this.current.rownum = row.index();
-	this.current.cellnum = cell.index();
-	B.addClass(row[0], "picked");	
+	this.current.rownum = row.rowIndex;
+	this.current.cellnum = cell.cellIndex;
+	B.addClass(row, "picked");	
 };
 B.ScrollingTable.prototype.unpick = function() {
 	if (this.current.rownum >= 0) {
