@@ -416,10 +416,13 @@ B.imgdata = {
 	X: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAB2klEQVRoQ+2YvVHDQBCF36oB6AASIKUE6MCOGHL+SuIvZ4jsDqAEUiCBDqABLSPPiLFlWbd3+86Mh1Nq6+l991Z7qxNs+CUb7h8F4K8TLAmUBJwr8H9K6HZvclhVMqlrHV+8j1+cC7d0e6q+KYGZuMgTBNtQfNWqx0wIj34QYEG8XTcihFc/CHB/MPkAZGcpcwJEr/nfB+nn2et4N1SqQYDmISJ4FpEtJsSQeVX9VsWRpUyDAI1pNgTLfOPNBMCEYJqPAmBAsM1HA3ggcphPAkiByGU+GSAGIqd5F4AFQoErAa5nO3jnimmVQ3uBuQutEgm0WIUsdzqWeXcCLVQAYqFZM83TAAzlNINgm6cCNGJ3+9MTAR76ygYKVeD0/G30GJpvYn53vwPzZdSO3KoKkR5pwgDYhaMA9LXKdUG4AQZHYkVvF2J+FLkAQpsUIJeA3rBH8fkySgYImW/nefYoTnkHrOaN+4TrGzs6gVjzuSGiAFLN54QwA3jN54IwAbDM54AIArDNsyGCAKvOhRiD2WCLRcZzIYb5oSRi9IMJdEflGHHrVDmfRKy+CaCFqCpM6xojy4mZ1fzCNJugbwaINbSu/xeAda30queUBEoCzhUoJeRcQPftG5/AD1A5K09GOt+SAAAAAElFTkSuQmCC"
 };
 B.char = {
-	NEXT:		"&#x25ba;",		PREV:		"&#x25c4;",
+	NEXT:		"&#x25b6;",		PREV:		"&#x25c4;",
 	LAST:		"&#x25ba;&#x25ba;",		FIRST:	"&#x25c4;&#x25c4;",
 	UP:			"&#x25b2;",		DOWN:		"&#x25bc;",
 	CHECK: 		"&#x2714;",		THINCHECK:	"&#x2713;",		UNCHECK:	"&#9744;",
+	DIR_SE:		"&#x25e2;",		DIR_SW:		"&#x25e3;",
+	DIR_NW:		"&#x25e4;",		DIR_NE:		"&#x25e5;",
+	NEXT_CLEAR:	"&#x25b7;",
 	BULLET:		"<span style='font-size:12pt;'>&bull;</span>",		
 	REDBULLET:	"<span style='color:red;font-size:12pt;'>&bull;</span>",
 	BLUEBULLET:	"<span style='color:#0099cc;font-size:12pt;'>&bull;</span>",
@@ -428,7 +431,7 @@ B.char = {
 	BLUEKEY: 	"<span style='color:#0099cc;'>&#x1f511;</span>",
 	REDKEY: 	"<span style='color:red'>&#x1f511;</span>",
 	PLUS:		"&#x271a;",		X:			"&#x2717;",	
-	FLAG:		"&#x2690;",		BLACKFLAG:	"&#x2691;", 	BLOCK:		"&#x2716;",
+	FLAG:		"&#x2690;",		BLACKFLAG:	"&#x2691;", 	BLOCK:		"&#x23f9;",
 	RIGHT:		"&#x25ba;",		LEFT:		"&#x25c4;",
 	STAR:		"&#x2606;",		BLACKSTAR:	"&#x2605;",		CLOUD:		"&#x2601;",
 	SPACE:		"&nbsp;"
