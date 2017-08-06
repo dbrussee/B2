@@ -38,7 +38,7 @@ function init() {
 	mnuAdd.addMenu("Add 1 row", function() { tblA.addTestRows(1); }, "play");
 	mnuAdd.addMenu("Add 10 rows", function() { tblA.addTestRows(10); }, "seek-next");
 	mnuAdd.addMenu("Unpick", function() { tblA.unpick(); }, "bullet");
-	mnuAdd.addMenu("Reload", function() { tblA.addRows(example_data,true); }, "refresh");
+	mnuAdd.addMenu("Reload", function() { tblA.addRows(example_data, true); }, "refresh");
 	mnuAdd.addMenu("Clear", function() { tblA.clear(); }, "radio-on");
 
 	window.tree1 = new B.Tree("tree1", null, true);
@@ -90,7 +90,7 @@ function doImageTest() {
 	var el = document.getElementById("dlgImageTarget");
 	el.innerHTML = "";
 	for (var key in B.imgdata) {
-		var fn = function() { $("#dlgImageExample").html("<br>B.img('" + this.data + "');"); };
+		var fn = function() { $("#dlgImageExample").html("B.img('" + this.data + "');"); };
 		var img = new B.imgObject(key);
 		img.style.width = "2em";
 		img.onclick = fn;
@@ -141,7 +141,7 @@ function doRestTest(typ) {
 </table>
 
 <br>
-<div id='tree1' style='width:320px; border:1px solid navy; padding:5px;'></div>
+<div id='tree1' style='width:320px; padding:5px;'></div>
 
 <form id='dlg1' class='BDialog' title='My First Dialog' style='height: 500px; width: 800px;'>
 	<input name='sec' type='hidden' value='Secret'/>
@@ -184,19 +184,19 @@ function doRestTest(typ) {
 			</table>
 		</td></tr>
 	</table>
-<br>
-<button onclick='B.getForm("dlg1").freeze();'>Freeze</button>,
-<button onclick='B.getForm("dlg1").thaw();'>Thaw</button>,
-<button onclick='doFormDataTest()'>Data Test</button>,
-<button onclick='B.getForm("dlg1").reset();'>Reset</button>
-<br><div id='divRestResult'></div>
-<button class='BDialogButton' onclick='popDialog();'>Close</button>
+	<br>
+	<button onclick='B.getForm("dlg1").freeze();'>Freeze</button>,
+	<button onclick='B.getForm("dlg1").thaw();'>Thaw</button>,
+	<button onclick='doFormDataTest()'>Data Test</button>,
+	<button onclick='B.getForm("dlg1").reset();'>Reset</button>
+	<br><div id='divRestResult'></div>
+	<button class='BDialogButton' onclick='popDialog();'>Close</button>
 </form>
 
 <div id='dlgImages' class='BDialog' style='height: 380px; width:550px;' title='Images'>
-<span id='dlgImageTarget'></span>
-<div id='dlgImageExample'></div>
-<button class='BDialogButton' onclick='popDialog();'>Close</button>
+	<span id='dlgImageTarget'></span>
+	<br><div id='dlgImageExample'></div>
+	<button class='BDialogButton' onclick='popDialog();'>Close</button>
 </div>
 </body>
 </html>

@@ -9,8 +9,8 @@ B.Tree = function(elementId, leaf_click_callback, only_one_open_per_level) {
 	this.tbl = null; // To be created and applied to this.element when rendering
 	this.nodes = []; // A node can be a leaf or a branch (leaves)
 
-	this.closedBranchIcon = B.img("ADD");
-	this.openBranchIcon = B.img("X");
+	this.closedBranchIcon = B.char.PLUS;
+	this.openBranchIcon = B.char.DIR_SE;
 
 	return this;
 };
@@ -56,6 +56,7 @@ B.Tree.prototype.render = function() {
 	var prevOpen = false;
 	this.element.innerHTML = ""; // Clean it up first
 	this.tbl = document.createElement("table");
+	this.tbl.style.cssText = "border-collapse:collapse; border:0; padding:0; margin:0";
 	this.element.appendChild(this.tbl);
 	for (var i = 0; i < this.nodes.length; i++) {
 		if (this.nodes[i] instanceof B.TreeBranch) {
@@ -144,8 +145,8 @@ B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
 	tr.appendChild(td);
 
 	this.tbl = document.createElement("table");
+	this.tbl.style.cssText = "width:100%; border:0; border-collapse:collapse; padding:0; margin:0";
 	this.tr = tr;
-	this.tbl.style.cssText = "width:100%; border:0 border-collapse:collapse";
 	td.appendChild(this.tbl);
 
 	if (this.tree.oneBranchPerLevel && previousOpen) {
@@ -182,7 +183,7 @@ B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
 B.TreeLeaf = function(tree, parent, html, data, icon) {
 	this.tree = tree;
 	this.parent = parent;
-	this.icon = icon || B.char.BULLET;
+	this.icon = icon || B.char.NEXT_CLEAR;
 	this.data = data || null;
 	this.html = html || "";
 	return this;

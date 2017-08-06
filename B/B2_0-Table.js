@@ -12,9 +12,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 	this.txt1 = txt1;
 	this.txt2 = txt2;
 	this.header = document.getElementById(this.rootId);
-	this.header.style.borderCollapse = "collapse";
-	this.header.style.borderRight = "2px solid transparent";
-	this.header.style.borderLeft = "2px solid transparent";
+	this.header.style.cssText = "border-collapse:collapse; border-right:2px solid transparent; border-left:2px solid transparent";
 	// Create the container div
 	this.container = document.createElement("div");
 	this.container.id = rootId + "_container";
@@ -54,24 +52,20 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 
 	this.surround = document.createElement("div");
 	this.surround.id = this.rootId + "_surround";
+	this.surround.style.cssText = "position:relative; overflow-x:hidden; overflow-y:auto";
 	this.surround.style.height = this.height + "px";
 	this.surround.style.width = (this.dataWidth + 17) + "px"; // Add width for the scroll bar
-	this.surround.style.position = "relative";
-	this.surround.style.overflowX = "hidden";
-	this.surround.style.overflowY = "auto";
 	this.surround.style.backgroundColor = B.settings.ScrollingTable.fieldBackgroundColor;
+
 	this.container.style.width = (this.dataWidth + 17) + "px";
 	
 	this.dataTable = document.createElement("table");
 	this.dataTableBody = document.createElement("tbody");
 	this.dataTable.appendChild(this.dataTableBody);
 	this.dataTable.id = this.rootId + "_data";
-	this.dataTable.style.borderLeft = "2px solid gainsboro";
-	this.dataTable.style.borderRight = "2px solid gainsboro";
+	this.dataTable.style.cssText = "border-left:2px solid gainsboro; border-right:2px solid gainsboro; " +
+		"border-collapse:collapse; table-layout:fixed; cursor:pointer";
 	this.dataTable.style.width = this.dataWidth + "px";
-	this.dataTable.style.borderCollapse = "collapse";
-	this.dataTable.style.tableLayout = "fixed";
-	this.dataTable.style.cursor = "pointer";
 	this.dataTable.onclick = $.proxy(function() {
 		var el = $(event.target)[0]; // A collection even though only one
 		var cell = $(el).closest("td")[0];
@@ -96,22 +90,12 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 	this.footerDIV.style.backgroundColor = B.settings.ScrollingTable.footerBackgroundColor;
 	this.footerDIV.style.height = "25px";
 	this.footerButtonsDIV = document.createElement("div");
-	this.footerButtonsDIV.style.height = "23px";
-	this.footerButtonsDIV.style.display = "inline-block";
-	this.footerButtonsDIV.style.backgroundColor = "transparent";
+	this.footerButtonsDIV.style.cssText = "height:23px; display:inline-block; background-color:transparent";
 	this.footerDIV.appendChild(this.footerButtonsDIV);
 	
 	this.footerMessageDIV = document.createElement("div");
-	this.footerMessageDIV.style.textAlign = "right";
-	this.footerMessageDIV.style.display = "inline-block";
-	this.footerMessageDIV.style.float = "right";
-	this.footerMessageDIV.style.height = "19px";
-	this.footerMessageDIV.style.verticalAlign = "middle";
-	this.footerMessageDIV.style.paddingRight = "5px";
-	this.footerMessageDIV.style.paddingTop = "6px";
-	this.footerMessageDIV.style.color = "navy";
-	this.footerMessageDIV.style.backgroundColor = "transparent";
-	this.footerMessageDIV.style.fontSize = "9pt";
+	this.footerMessageDIV.style.cssText = "text-align:right; display:inline-block; float:right; height:19px; " +
+		"vertical-align:middle; padding-right:5px; padding-top:5px; color:navy; background-color:transparent; font-size:9pt";
 	this.footerMessageDIV.innerHTML = "Howdy";
 	this.footerDIV.appendChild(this.footerMessageDIV);
 	this.container.appendChild(this.footerDIV);
@@ -121,18 +105,8 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 		buttons: {},
 		addButton: function(id, txt, onclick) {
 			var div = document.createElement("div");
-			div.style.display = "inline-block";
-			div.style.backgroundColor = "transparent";
-			div.style.verticalAlign = "middle";
-			div.style.height = "17px";
-			div.style.paddingRight = "5px";
-			div.style.paddingLeft = "5px";
-			div.style.paddingTop = "4px";
-			div.style.border = "1px solid transparent";
-			div.style.color = "navy";
-			div.style.backgroundColor = "transparent";
-			div.style.fontSize = "9pt";
-			div.style.cursor = "pointer";
+			div.style.cssText = "display:inline-block; background-color:transparent; vertical-align:middle; height:17px; " +
+				"padding-right:5px; padding-left: 5px; padding-top: 4px; border:1px solid transparent: color:navy; font-size:9pt; cursor:pointer";
 			div.id = this.rootId + "_footer_" + id;
 			div.onmouseover = function() { this.style.backgroundColor = B.settings.ScrollingTable.footerHoverColor; }
 			div.onmouseout = function() { this.style.backgroundColor = "transparent"; }
@@ -218,7 +192,7 @@ B.ScrollingTable.prototype.unpick = function() {
 };
 B.ScrollingTable.prototype.clear = function() {
 	this.unpick();
-	this.dataTable.innerHTML = "";
+	this.dataTableBody.innerHTML = "";
 	this.setFooterMessage();
 }
 B.ScrollingTable.prototype.addTestRows = function(numrows) {
@@ -230,12 +204,10 @@ B.ScrollingTable.prototype.addTestRows = function(numrows) {
 		for (var c = 0; c < numcells; c++) {
 			var col = this.columns[c];
 			var td = document.createElement("td");
+			td.style.cssText = "border-left:1px dotted gainsboro; border-right::1px dotted gainsboro; border-bottom::1px dotted gainsboro";
 			td.style.width = col.width + "px";
 			td.style.textAlign = col.align;
 			td.style.fontWeight = (col.bold ? "bold" : "normal");
-			td.style.borderLeft = "1px dotted gainsboro";
-			td.style.borderRight = "1px dotted gainsboro";
-			td.style.borderBottom = "1px dotted gainsboro";
 			td.innerHTML = this.dataTable.rows.length + "." + c;
 
 			tr.appendChild(td);
