@@ -66,7 +66,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 	this.dataTable.style.cssText = "border-left:2px solid gainsboro; border-right:2px solid gainsboro; " +
 		"border-collapse:collapse; table-layout:fixed; cursor:pointer";
 	this.dataTable.style.width = this.dataWidth + "px";
-	this.dataTable.onclick = $.proxy(function() {
+	this.dataTable.onclick = $.proxy(function(event) {
 		var el = $(event.target)[0]; // A collection even though only one
 		var cell = $(el).closest("td")[0];
 		if (cell == undefined) return;
@@ -106,7 +106,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 		addButton: function(id, txt, onclick) {
 			var div = document.createElement("div");
 			div.style.cssText = "display:inline-block; background-color:transparent; vertical-align:middle; height:17px; " +
-				"padding-right:5px; padding-left: 5px; padding-top: 4px; border:1px solid transparent: color:navy; font-size:9pt; cursor:pointer";
+				"padding-right:5px; padding-left: 5px; padding-top: 4px; padding-bottom: 4px; border:1px solid transparent: color:navy; font-size:9pt; cursor:pointer";
 			div.id = this.rootId + "_footer_" + id;
 			div.onmouseover = function() { this.style.backgroundColor = B.settings.ScrollingTable.footerHoverColor; }
 			div.onmouseout = function() { this.style.backgroundColor = "transparent"; }
@@ -193,26 +193,5 @@ B.ScrollingTable.prototype.unpick = function() {
 B.ScrollingTable.prototype.clear = function() {
 	this.unpick();
 	this.dataTableBody.innerHTML = "";
-	this.setFooterMessage();
-}
-B.ScrollingTable.prototype.addTestRows = function(numrows) {
-	var dtbl = this.dataTable;
-	var numcells = this.columns.length;
-	var isFirstRow = (dtbl.rows.length ==0);
-	for (var i = 0; i < numrows; i++) {
-		var tr = document.createElement("tr");
-		for (var c = 0; c < numcells; c++) {
-			var col = this.columns[c];
-			var td = document.createElement("td");
-			td.style.cssText = "border-left:1px dotted gainsboro; border-right::1px dotted gainsboro; border-bottom::1px dotted gainsboro";
-			td.style.width = col.width + "px";
-			td.style.textAlign = col.align;
-			td.style.fontWeight = (col.bold ? "bold" : "normal");
-			td.innerHTML = this.dataTable.rows.length + "." + c;
-
-			tr.appendChild(td);
-		}
-		dtbl.appendChild(tr);	
-	}	
 	this.setFooterMessage();
 }
