@@ -137,7 +137,7 @@ B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
 	parentElement.appendChild(tr)
 	tr.style.cursor = "pointer";
 	var td = document.createElement("td");
-	td.style.cssText = "vertical-align:top; width:1.1em; text-align:right; padding-right:3px;";
+	td.style.cssText = "color:darkgreen; vertical-align:top; width:1.1em; text-align:right; padding-right:3px;";
 	tr.appendChild(td);
 	td = document.createElement("td");
 	td.style.cssText = "vertical-align:top;";
@@ -199,7 +199,7 @@ B.TreeLeaf.prototype.render = function(branchElement) {
 	var tr = document.createElement("tr");
 	if (isLink) tr.style.cursor = "pointer";
 	var td = document.createElement("td");
-	td.style.cssText = "vertical-align:top; width:1.1em; text-align:right; padding-right:3px;";
+	td.style.cssText = "color:darkgreen;vertical-align:top; width:1.1em; text-align:right; padding-right:3px;";
 	td.innerHTML = this.icon;
 	tr.appendChild(td);
 	td = document.createElement("td");

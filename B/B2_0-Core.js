@@ -40,6 +40,7 @@ B.getDateParts = function(d) {
 		ret.H = d.getHours(); 
 		ret.HH = B.format.LEFTZEROPAD(ret.H, 2);
 		if (ret.H < 12) { ret.ap = "a"; } else { ret.ap = "p"; ret.H -= 12; }
+		ret.AP = ret.ap.toUpperCase();
 		if (ret.H == 0) { ret.H = 12; ret.HH = "12"; }
 		ret.NN = B.format.LEFTZEROPAD(d.getMinutes(), 2);
 		ret.SS = B.format.LEFTZEROPAD(d.getSeconds(), 2);
@@ -417,22 +418,22 @@ B.imgdata = {
 };
 B.char = {
 	NEXT:		"&#x25b6;",		PREV:		"&#x25c4;",
-	LAST:		"&#x25ba;&#x25ba;",		FIRST:	"&#x25c4;&#x25c4;",
+	RIGHT:		"&#x25b6;",		LEFT:		"&#x25c4;",
+	LAST:		"&#x23e9;",		FIRST:		"&#x23ea;",
 	UP:			"&#x25b2;",		DOWN:		"&#x25bc;",
 	CHECK: 		"&#x2714;",		THINCHECK:	"&#x2713;",		UNCHECK:	"&#9744;",
 	DIR_SE:		"&#x25e2;",		DIR_SW:		"&#x25e3;",
 	DIR_NW:		"&#x25e4;",		DIR_NE:		"&#x25e5;",
 	NEXT_CLEAR:	"&#x25b7;",
-	BULLET:		"<span style='font-size:12pt;'>&bull;</span>",		
+	BULLET:		"&#x23fa",		KEY:		"&#x",
 	REDBULLET:	"<span style='color:red;font-size:12pt;'>&bull;</span>",
 	BLUEBULLET:	"<span style='color:#0099cc;font-size:12pt;'>&bull;</span>",
 	GREENBULLET:"<span style='color:limegreen;font-size:12pt;'>&bull;</span>",
 	GREYBULLET:	"<span style='color:silver;font-size:12pt;'>&bull;</span>",
 	BLUEKEY: 	"<span style='color:#0099cc;'>&#x1f511;</span>",
 	REDKEY: 	"<span style='color:red'>&#x1f511;</span>",
-	PLUS:		"&#x271a;",		X:			"&#x2717;",	
+	PLUS:		"&#x2795;",		X:			"&#x2717;",		MINUS:		"&#x2796",		DIVIDE:		"&#x2797",
 	FLAG:		"&#x2690;",		BLACKFLAG:	"&#x2691;", 	BLOCK:		"&#x23f9;",
-	RIGHT:		"&#x25ba;",		LEFT:		"&#x25c4;",
 	STAR:		"&#x2606;",		BLACKSTAR:	"&#x2605;",		CLOUD:		"&#x2601;",
 	SPACE:		"&nbsp;"
 };

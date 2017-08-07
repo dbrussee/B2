@@ -49,7 +49,7 @@ function init() {
 	br.addLeaf("Choose an item with choose", 
 		function() { choose("Pick one of the items", "", "Tom,Dick,Harry", 
 			function(rslt) { say("You chose option " + rslt); }
-		); }, B.img("CHECKY"));
+		); }, B.char.CHECK);
 	br.addLeaf("Freeze the screen", function() { 
 		timedFreeze("This message will disappear using the thaw() method in 10 seconds. " +
 			"Use freeze(msg) for normal stuff, but when calling remote operations that may " +
