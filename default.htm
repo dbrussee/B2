@@ -30,13 +30,17 @@ function init() {
 		// Do nothing for now. See if this makes it to GIT
 	}
 	tblA.onBeforeRowRender = function(rn, rd, tr, tds) {
-		if (rd.tmdb.val == "") { tds.tmdb.innerHTML = "Missing"; tds.tmdb.style.color = "silver"; }
+		tds.tmdb.innerHTML = B.char.CLOUD;
+		if (rd.tmdb.val == "") {
+			tds.tmdb.style.color = "silver";
+		} else {
+			tds.tmdb.style.color = "navy";
+		}
+		
 	}
 	tblA.addRows(example_data);
 	
 	window.mnuAdd = new B.ContextMenu();
-	mnuAdd.addMenu("Add 1 row", function() { tblA.addTestRows(1); }, "play");
-	mnuAdd.addMenu("Add 10 rows", function() { tblA.addTestRows(10); }, "seek-next");
 	mnuAdd.addMenu("Unpick", function() { tblA.unpick(); }, "bullet");
 	mnuAdd.addMenu("Reload", function() { tblA.addRows(example_data, true); }, "refresh");
 	mnuAdd.addMenu("Clear", function() { tblA.clear(); }, "radio-on");
@@ -69,7 +73,8 @@ function init() {
 	})
 	br.addLeaf("Open up a form dialog", function() { doDialogTest(); });
 	br = tree1.addBranch("Some Other Actions", false);
-	br.addLeaf("Show images ", function() { doImageTest(); });
+	br.addLeaf("Show images", function() { doImageTest(); });
+	br.addLeaf("Show chars", function() { doCharTest(); });
 	tree1.addLeaf("This line is just informative. You cannot click it.")
 	tree1.render();
 
@@ -98,6 +103,28 @@ function doImageTest() {
 		img.style.paddingRight = "1em";
 		img.style.cursor = "pointer";
 		el.appendChild(img)
+	}
+}
+function doCharTest() {
+	openDialog("dlgImages");
+	var el = document.getElementById("dlgImageTarget");
+	el.style.fontSize = "14pt";
+	el.innerHTML = "";
+	var cnt = 0;
+	for (var key in B.char) {
+		var fn = function() { $("#dlgImageExample").html("B.char." + this.data + ";"); };
+		var spn = document.createElement("span");
+		if (cnt++ == 8) {
+			spn.innerHTML = B.char[key] + "<br>";
+			cnt = 0;
+		} else {
+			spn.innerHTML = B.char[key];			
+		}
+		spn.style.paddingRight = "1.5em";
+		spn.onclick = fn;
+		spn.data = key;
+		spn.style.cursor = "pointer";
+		el.appendChild(spn)
 	}
 }
 function doRestTest(typ) {
