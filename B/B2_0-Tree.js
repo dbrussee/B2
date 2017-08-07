@@ -10,7 +10,7 @@ B.Tree = function(elementId, leaf_click_callback, only_one_open_per_level) {
 	this.nodes = []; // A node can be a leaf or a branch (leaves)
 
 	this.closedBranchIcon = B.char.PLUS;
-	this.openBranchIcon = B.char.DIR_SE;
+	this.openBranchIcon = B.char.MINUS;
 
 	return this;
 };
@@ -183,7 +183,7 @@ B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
 B.TreeLeaf = function(tree, parent, html, data, icon) {
 	this.tree = tree;
 	this.parent = parent;
-	this.icon = icon || B.char.NEXT_CLEAR;
+	this.icon = icon || B.char.RIGHT;
 	this.data = data || null;
 	this.html = html || "";
 	return this;
