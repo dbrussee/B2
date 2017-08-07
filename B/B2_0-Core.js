@@ -138,32 +138,32 @@ B.format = {
 		rslt += scs + "s";
 		return B.trim(rslt);
 	},
-	HHMMSS: function(d) {
+	HHNNSS: function(d) {
 		var parts = B.getDateParts(d);
 		if (d == null) return "";
 		return parts.HH + ":" + parts.NN + ":" + parts.SS;
 	},
-	HHMMSSsss: function(d) {
+	HHNNSSsss: function(d) {
 		var parts = B.getDateParts(d);
 		if (d == null) return "";
 		return parts.HH + ":" + parts.NN + ":" + parts.SS + "." + parts.sss;
 	},
-	HMMSS: function(d) {
+	HNNSS: function(d) {
 		var parts = B.getDateParts(d);
 		if (d == null) return "";
 		return parts.H + ":" + parts.NN + ":" + parts.SS + parts.ap;
 	},
-	HMMSSsss: function(d) {
+	HNNSSsss: function(d) {
 		var parts = B.getDateParts(d);
 		if (d == null) return "";
 		return parts.H + ":" + parts.NN + ":" + parts.SS + "." + parts.sss + parts.ap;
 	},
-	HHMM: function(d) {
+	HHNN: function(d) {
 		var parts = B.getDateParts(d);
 		if (d == null) return "";
 		return parts.HH + ":" + parts.NN;
 	},
-	HMM: function(d) {
+	HNN: function(d) {
 		var parts = B.getDateParts(d);
 		if (d == null) return "";
 		return parts.H + ":" + parts.NN + parts.ap;
@@ -193,43 +193,43 @@ B.format = {
 		if (d == null) return "";
 		return parts.MM + "/" + parts.YYYY;
 	},
-	MMDDYYYYHHMMSS: function(d,dsep,tsep) {
+	MMDDYYYYHHNNSS: function(d,dsep,tsep) {
 		var parts = B.getDateParts(d);
 		if (d == null) return "";
 		return parts.MM + "/" + parts.DD + "/" + parts.YYYY + " " + parts.HH + ":" + parts.NN + ":" + parts.SS;
 	},
-	MDYYYYHHMMSS: function(d,dsep,tsep) {
+	MDYYYYHHNNSS: function(d,dsep,tsep) {
 		var parts = B.getDateParts(d);
 		if (d == null) return "";
 		return parts.M + "/" + parts.D + "/" + parts.YYYY + " " + parts.HH + ":" + parts.NN + ":" + parts.SS;
 	},
-	MDYYYYHMMSS: function(d,dsep,tsep) {
+	MDYYYYHNNSS: function(d,dsep,tsep) {
 		var parts = B.getDateParts(d);
 		if (d == null) return "";
 		return parts.M + "/" + parts.D + "/" + parts.YYYY + " " + parts.H + ":" + parts.NN + ":" + parts.SS + parts.ap;
 	},
-	MDYYYYHMM: function(d,dsep,tsep) {
+	MDYYYYHNN: function(d,dsep,tsep) {
 		var parts = B.getDateParts(d);
 		if (d == null) return "";
 		return parts.M + "/" + parts.D + "/" + parts.YYYY + " " + parts.H + ":" + parts.NN + parts.ap;
 	},
-	MDYYYYHMMSSsss: function(d,dsep,tsep) {
+	MDYYYYHNNSSsss: function(d,dsep,tsep) {
 		var parts = B.getDateParts(d);
 		if (d == null) return "";
 		return parts.M + "/" + parts.D + "/" + parts.YYYY + " " + parts.H + ":" + parts.NN + ":" + parts.SS + "." + parts.sss + parts.ap;
 	},
-	MMDDYYYYHHMM: function(d,dsep,tsep) {
+	MMDDYYYYHHNN: function(d,dsep,tsep) {
 		var parts = B.getDateParts(d);
 		if (d == null) return "";
 		return parts.MM + "/" + parts.DD + "/" + parts.YYYY + " " + parts.HH + ":" + parts.NN;
 	},
-	MDYYYYHHMM: function(d,dsep,tsep) {
+	MDYYYYHHNN: function(d,dsep,tsep) {
 		var parts = B.getDateParts(d);
 		if (d == null) return "";
 		return parts.M + "/" + parts.D + "/" + parts.YYYY + " " + parts.HH + ":" + parts.NN;
 	},
 	DATE: function(d) { return B.format.MDYYYY(d); },
-	TS: function(d) { return B.format.MDYYYYHMMSS(d); }
+	TS: function(d) { return B.format.MDYYYYHNNSS(d); }
 };
 
 B.whichOneOf = function(txt) {
@@ -425,7 +425,7 @@ B.char = {
 	DIR_SE:		"&#x25e2;",		DIR_SW:		"&#x25e3;",
 	DIR_NW:		"&#x25e4;",		DIR_NE:		"&#x25e5;",
 	NEXT_CLEAR:	"&#x25b7;",
-	BULLET:		"&#x23fa",		KEY:		"&#x",
+	BULLET:		"&#x23fa",		
 	REDBULLET:	"<span style='color:red;font-size:12pt;'>&bull;</span>",
 	BLUEBULLET:	"<span style='color:#0099cc;font-size:12pt;'>&bull;</span>",
 	GREENBULLET:"<span style='color:limegreen;font-size:12pt;'>&bull;</span>",
