@@ -141,7 +141,7 @@ B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
 	tr.appendChild(td);
 	td = document.createElement("td");
 	td.style.cssText = "vertical-align:top;";
-	td.innerHTML = "<b>" + this.html + "</b> <span style='font-size:.8em;'><i>(" + this.nodes.length + ")</i></span>";
+	td.innerHTML = "<b>" + this.html + "</b> <span style='font-size:.8em;text-decooration:italic'>(" + this.nodes.length + ")</span>";
 	tr.appendChild(td);
 
 	this.tbl = document.createElement("table");
