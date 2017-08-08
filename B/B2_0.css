@@ -8,6 +8,11 @@
 	display: none; 
 }
 table.BTableData tr.picked { background-color: lightskyblue; }
+table.BTableData tr td {
+	border-left:1px dotted gainsboro; 
+	border-right:1px dotted gainsboro; 
+	border-bottom:1px dotted gainsboro;
+}
 table.BTable tr th { font-size: 1.05em; }
 table.BTable tr td, 
   table.BTable tr th { box-sizing: border-box; }

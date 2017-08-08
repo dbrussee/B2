@@ -72,7 +72,12 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 		if (cell == undefined) return;
 		var row = $(cell).closest("tr")[0];
 		if (row == undefined) return;
-		var rslt = this.onclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, row.rowIndex != this.current.rownum);
+		this.unpick();
+		var rd = this.dataset.getRow(row.rowIndex);
+		for (var key in this.footer.buttons) {
+			if (this.footer.buttons[key].watchpick) this.footer.enableButton(key);
+		}
+		var rslt = this.onclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd, row.rowIndex != this.current.rownum);
 		if (rslt == undefined) rslt = true;
 		if (rslt) {
 			this.pick(row, cell);
@@ -103,7 +108,8 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 	this.footer = {
 		table: this,
 		buttons: {},
-		addButton: function(id, txt, onclick) {
+		addButton: function(id, txt, onclick, watchpick) {
+			if (watchpick == undefined) watchpick = false;
 			var div = document.createElement("div");
 			div.style.cssText = "display:inline-block; background-color:transparent; vertical-align:middle; height:17px; " +
 				"padding-right:5px; padding-left: 5px; padding-top: 4px; padding-bottom: 4px; border:1px solid transparent: color:navy; font-size:9pt; cursor:pointer";
@@ -114,8 +120,14 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 			if (onclick == undefined) onclick = function() {};
 			div.onclick = onclick;
 			this.table.footerButtonsDIV.appendChild(div);
-			this.buttons[id] = { id:id, div:div, onclick:onclick, disabled: false };
-			return this; // The footer
+			this.buttons[id] = { id:id, table:this.table, div:div, onclick:onclick, disabled: false, watchpick:watchpick };
+			this.buttons[id].disable = function() {
+				this.table.footer.disableButton(this.id);
+			};
+			this.buttons[id].enable = function() {
+				this.table.footer.enableButton(this.id);
+			};
+			return this.buttons[id]; // The footer
 		},
 		disableButton: function(id) {
 			var div = this.buttons[id].div;
@@ -146,44 +158,63 @@ B.ScrollingTable.prototype.setFooterMessage = function(txt) {
 	}
 	this.footerMessageDIV.innerHTML = txt;
 }
+B.ScrollingTable.prototype.getDataRow = function(rownum) {
+	if (rownum == undefined) rownum = this.current.rownum;
+	return this.dataset.getRow(rownum);
+}
 B.ScrollingTable.prototype.addRows = function(data, clear) {
 	if (clear) this.clear();
-	var dtbl = this.dataTable;
-
 	var rows = data.split("\n");
 	for (var i = 0; i < rows.length; i++) {
 		this.dataset.addRows(rows[i]);
 		var dr = this.dataset.getRow(this.dataset.data.length-1);
 		var tr = document.createElement("tr");
 		var tds = {};
+		var h = "";
 		for (var j = 0; j < this.columns.length; j++) {
 			var tblcol = this.columns[j];
-			var td = document.createElement("td");
-			td.style.cssText = "border-left:1px dotted gainsboro; border-right:1px dotted gainsboro; border-bottom:1px dotted gainsboro";
-			if (i == 0 && dtbl.rows.length == 0) td.style.width = tblcol.width + "px";
-			td.style.textAlign = tblcol.align;
-			td.style.fontWeight = (tblcol.bold ? "bold" : "normal");
+			h += "<td";
+			//var td = document.createElement("td");
+			var sty = "";
+			if (i == 0 && this.dataTableBody.rows.length == 0) {
+				//td.style.width = tblcol.width + "px";
+				sty += "width:" + tblcol.width + "px;";
+			}
+			if (tblcol.align != "left") {
+				//td.style.textAlign = tblcol.align;
+				sty += "text-align:" + tblcol.align + ";";
+			}
+			if (tblcol.bold) {
+				//td.style.fontWeight = "bold";
+				sty += "font-weight:bold;";
+			}
 			var dcol = dr[tblcol.name];
-			var h = "";
-			if (dcol != null) h = dcol.disp;
-			td.innerHTML = h;
-			tr.appendChild(td);
-			tds[tblcol.name] = td;
+			if (sty.length > 0) h += " style='" + sty + "'";
+			h += ">" + (dcol == null ? "" : dcol.disp) + "</td>";
+			//td.innerHTML = (dcol == null ? "" : dcol.disp);
+			//tr.appendChild(td);
+			//tds[tblcol.name] = td;
+		}
+		tr.innerHTML = h;
+		for (var j = 0; j < this.columns.length; j++) {
+			tds[this.columns[j].name] = tr.cells[j];
 		}
 		// Call the onbefore method on the Scrolling table object
-		var rslt = this.onBeforeRowRender(dtbl.rows.length, dr, tr, tds);
+		var rslt = this.onBeforeRowRender(this.dataTableBody.rows.length, dr, tr, tds);
 		if (rslt == undefined) rslt = true;
 		if (rslt) this.dataTableBody.appendChild(tr);
 	}
 	this.setFooterMessage();
 }
 B.ScrollingTable.prototype.pick = function(row, cell) {
-	this.unpick();
 	this.current.rownum = row.rowIndex;
 	this.current.cellnum = cell.cellIndex;
 	B.addClass(row, "picked");	
 };
 B.ScrollingTable.prototype.unpick = function() {
+	for (var key in this.footer.buttons) {
+		if (this.footer.buttons[key].watchpick) this.footer.disableButton(key);
+	}
 	if (this.current.rownum >= 0) {
 		B.removeClass(this.dataTable.rows[this.current.rownum], "picked");
 	}

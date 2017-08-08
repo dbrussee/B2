@@ -25,9 +25,18 @@ function init() {
 	tblA.footer.addButton("a", "First", function() { tblA.footer.disableButton("a").enableButton("b"); });
 	tblA.footer.addButton("b", "Second", function() { tblA.footer.disableButton("b").enableButton("a"); });
 	tblA.footer.addButton("c", "Rows", function() { mnuAdd.show(event); });
+	tblA.footer.addButton("imdb", "IMDb", function() {
+		var d = tblA.getDataRow();
+		if (d != null) {
+			if (d.imdb != "") {
+				window.open("http://imdb.com/name/" + d.tmdb.raw);			
+			}
+		}
+	}, true).disable();
+
 	tblA.footer.disableButton("a");
-	tblA.onclick = function(tbl, row, cell, rn, cn, changedRow) {
-		// Do nothing for now. See if this makes it to GIT
+	tblA.onclick = function(tbl, row, cell, rn, cn, rd, changedRow) {
+		if (rd.tmdb.val == "") tblA.footer.buttons["imdb"].disable();
 	}
 	tblA.onBeforeRowRender = function(rn, rd, tr, tds) {
 		tds.tmdb.innerHTML = B.char.CLOUD;
@@ -104,6 +113,7 @@ function doImageTest() {
 		img.style.cursor = "pointer";
 		el.appendChild(img)
 	}
+	$("#dlgImageExample").html("Click an image above to see the code here.");
 }
 function doCharTest() {
 	openDialog("dlgImages");
@@ -126,6 +136,7 @@ function doCharTest() {
 		spn.style.cursor = "pointer";
 		el.appendChild(spn)
 	}
+	$("#dlgImageExample").html("Click a character above to see the code here.");
 }
 function doRestTest(typ) {
 	var r = new B.RestfulService("http://numbersapi.com/");
@@ -222,7 +233,7 @@ function doRestTest(typ) {
 
 <div id='dlgImages' class='BDialog' style='height: 380px; width:550px;' title='Images'>
 	<span id='dlgImageTarget'></span>
-	<br><div id='dlgImageExample'></div>
+	<br><br><div id='dlgImageExample'></div>
 	<button class='BDialogButton' onclick='popDialog();'>Close</button>
 </div>
 </body>
