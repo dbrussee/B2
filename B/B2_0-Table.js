@@ -27,6 +27,8 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 	if (B.settings.ScrollingTable.JQTheme) {
 		B.addClass(row, "ui-widget-header,ui-priority-primary");
 	}
+	this.contextMenu = new B.ContextMenu();
+
 	this.onBeforeRowRender = function(rn, rd, tr, tds) { return; };
 	for (var i = 0; i < row.cells.length; i++) {
 		var cell = row.cells[i];
@@ -82,7 +84,51 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 		if (rslt) {
 			this.pick(row, cell);
 		}
+	}, this);	
+	$(this.dataTable).on("contextmenu", $.proxy(function(event) {
+		var el = $(event.target)[0]; // A collection even though only one
+		var cell = $(el).closest("td")[0];
+		if (cell == undefined) return;
+		var row = $(cell).closest("tr")[0];
+		if (row == undefined) return;
+		this.unpick();
+		var rd = this.dataset.getRow(row.rowIndex);
+		for (var key in this.footer.buttons) {
+			if (this.footer.buttons[key].watchpick) this.footer.enableButton(key);
+		}
+		var rslt = this.onclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd, row.rowIndex != this.current.rownum);
+		if (rslt == undefined) rslt = true;
+		if (rslt) {
+			this.pick(row, cell);
+			if (this.contextMenu.items.length > 0)	{
+				this.onBeforeRightClick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd, row.rowIndex != this.current.rownum);
+				this.contextMenu.show(event);
+			}
+		}
+	}, this));
+	this.onBeforeRightClick = function(rownum, tr, td, dataRow, changed, event) {
+		try {event.preventDefault();} catch(e) {;}
+		if (this.contextMenu.items.length > 0) this.contextMenu.show(event); 
+	};
+	this.dataTable.ondblclick = $.proxy(function(event) {
+		var el = $(event.target)[0]; // A collection even though only one
+		var cell = $(el).closest("td")[0];
+		if (cell == undefined) return;
+		var row = $(cell).closest("tr")[0];
+		if (row == undefined) return;
+		this.unpick();
+		var rd = this.dataset.getRow(row.rowIndex);
+		for (var key in this.footer.buttons) {
+			if (this.footer.buttons[key].watchpick) this.footer.enableButton(key);
+		}
+		var rslt = this.onclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd, row.rowIndex != this.current.rownum);
+		if (rslt == undefined) rslt = true;
+		if (rslt) {
+			this.pick(row, cell);
+			this.ondblclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd);
+		}
 	}, this);		
+
 	this.surround.appendChild(this.dataTable);
 	
 	this.container.appendChild(this.surround);

@@ -22,21 +22,23 @@ function init() {
 	frm.set("month", now.getMonth()+1, "day", now.getDate());
 
 	window.tblA = new B.ScrollingTable("tblA", 150, new B.DataColumnSet("actor,role,episodes,fy,ly,imdb"), "actor", "actors");
-	tblA.footer.addButton("a", "First", function() { tblA.footer.disableButton("a").enableButton("b"); });
-	tblA.footer.addButton("b", "Second", function() { tblA.footer.disableButton("b").enableButton("a"); });
-	tblA.footer.addButton("c", "Rows", function() { mnuAdd.show(event); });
-	tblA.footer.addButton("imdb", "IMDb", function() {
-		var d = tblA.getDataRow();
-		if (d != null) {
-			if (d.imdb != "") {
-				window.open("http://imdb.com/name/" + d.imdb.raw);			
-			}
-		}
-	}, true).disable();
+	tblA.footer.addButton("a", "First", function(event) { tblA.footer.disableButton("a").enableButton("b"); }).disable();
+	tblA.footer.addButton("b", "Second", function(event) { tblA.footer.disableButton("b").enableButton("a"); });
+	tblA.footer.addButton("c", "Rows", function(event) { mnuAdd.show(event); });
+	tblA.footer.addButton("imdb", "IMDb", function(event) { doIMDB(); }, true).disable();
 
-	tblA.footer.disableButton("a");
 	tblA.onclick = function(tbl, row, cell, rn, cn, rd, changedRow) {
 		if (rd.imdb.val == "") tblA.footer.buttons["imdb"].disable();
+	}
+	tblA.ondblclick = function(tbl, row, cell, rn, cn, rd) {
+		say("You double-clicked on '" + rd.role.val + "'!!!!");
+	}
+	tblA.onBeforeRightClick = function(tbl, row, cell, rn, cn, rd, changedRow) {
+		if (rd.imdb.val == "") {
+			tblA.contextMenu.disable(0);
+		} else {
+			tblA.contextMenu.enable(0);
+		}
 	}
 	tblA.onBeforeRowRender = function(rn, rd, tr, tds) {
 		tds.imdb.innerHTML = B.char.CLOUD;
@@ -47,6 +49,10 @@ function init() {
 		}
 		
 	}
+	tblA.contextMenu.addMenu("Trivia about First Year", function() { doRestTest(3); }, "help");
+	tblA.contextMenu.addMenu("Trivia about Episode count", function() { doRestTest(4); }, "help");
+	tblA.contextMenu.addMenu("IMDb actor link", function() { doIMDB(); }, "newwin");
+
 	tblA.addRows(example_data);
 	
 	window.mnuAdd = new B.ContextMenu();
@@ -87,6 +93,16 @@ function init() {
 	tree1.addLeaf("This line is just informative. You cannot click it.")
 	tree1.render();
 
+}
+function doIMDB() {
+	var d = tblA.getDataRow();
+	if (d != null) {
+		if (d.imdb.val != "") {
+			window.open("http://imdb.com/name/" + d.imdb.val);			
+		} else {
+			say("Actor '" + d.actor.val + "' does not have an IMDb page.");
+		}
+	}
 }
 function doDialogTest() {
 	openDialog("dlg1");
@@ -160,9 +176,17 @@ function doRestTest(typ) {
 		}
 		test = chk.month + "/" + chk.day;
 	}
+	if (typ == 3) {
+		var d = tblA.getDataRow();
+		test = d.fy.raw + "/year";
+	}
+	if (typ == 4) {
+		var d = tblA.getDataRow();
+		test = d.episodes.raw;
+	}
 	
 	r.getText(test, function(rslt) {
-		$("#divRestResult").html(rslt);
+		say(rslt, "Trivia");
 	});
 }
 
