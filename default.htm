@@ -21,7 +21,7 @@ function init() {
 	var now = new Date();
 	frm.set("month", now.getMonth()+1, "day", now.getDate());
 
-	window.tblA = new B.ScrollingTable("tblA", 150, new B.DataColumnSet("actor,role,episodes,fy,ly,tmdb"), "actor", "actors");
+	window.tblA = new B.ScrollingTable("tblA", 150, new B.DataColumnSet("actor,role,episodes,fy,ly,imdb"), "actor", "actors");
 	tblA.footer.addButton("a", "First", function() { tblA.footer.disableButton("a").enableButton("b"); });
 	tblA.footer.addButton("b", "Second", function() { tblA.footer.disableButton("b").enableButton("a"); });
 	tblA.footer.addButton("c", "Rows", function() { mnuAdd.show(event); });
@@ -29,21 +29,21 @@ function init() {
 		var d = tblA.getDataRow();
 		if (d != null) {
 			if (d.imdb != "") {
-				window.open("http://imdb.com/name/" + d.tmdb.raw);			
+				window.open("http://imdb.com/name/" + d.imdb.raw);			
 			}
 		}
 	}, true).disable();
 
 	tblA.footer.disableButton("a");
 	tblA.onclick = function(tbl, row, cell, rn, cn, rd, changedRow) {
-		if (rd.tmdb.val == "") tblA.footer.buttons["imdb"].disable();
+		if (rd.imdb.val == "") tblA.footer.buttons["imdb"].disable();
 	}
 	tblA.onBeforeRowRender = function(rn, rd, tr, tds) {
-		tds.tmdb.innerHTML = B.char.CLOUD;
-		if (rd.tmdb.val == "") {
-			tds.tmdb.style.color = "silver";
+		tds.imdb.innerHTML = B.char.CLOUD;
+		if (rd.imdb.val == "") {
+			tds.imdb.style.color = "silver";
 		} else {
-			tds.tmdb.style.color = "navy";
+			tds.imdb.style.color = "navy";
 		}
 		
 	}
@@ -175,7 +175,7 @@ function doRestTest(typ) {
 		<th data='episodes,50,C'>Eps</th>
 		<th data='fy,65,R'>First Yr</th>
 		<th data='ly,65,R'>Last Yr</th>
-		<th data='tmdb,100,C'>TMDB</th></tr>
+		<th data='imdb,100,C'>IMDB</th></tr>
 </table>
 
 <br>
