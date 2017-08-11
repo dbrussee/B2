@@ -58,12 +58,14 @@ B.Tree.prototype.render = function() {
 	this.tbl = document.createElement("table");
 	this.tbl.style.cssText = "border-collapse:collapse; border:0; padding:0; margin:0";
 	this.element.appendChild(this.tbl);
+	var tbody = document.createElement("tbody");
+	this.tbl.appendChild(tbody);
 	for (var i = 0; i < this.nodes.length; i++) {
 		if (this.nodes[i] instanceof B.TreeBranch) {
-			this.nodes[i].render(this.tbl, prevOpen);
+			this.nodes[i].render(tbody, prevOpen);
 			if (this.nodes[i].showing) prevOpen = true;
 		} else {
-			this.nodes[i].render(this.tbl);
+			this.nodes[i].render(tbody);
 		}
 	}
 }
@@ -145,6 +147,8 @@ B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
 	tr.appendChild(td);
 
 	this.tbl = document.createElement("table");
+	var tbody = document.createElement("tbody");
+	this.tbl.appendChild(tbody);
 	this.tbl.style.cssText = "width:100%; border:0; border-collapse:collapse; padding:0; margin:0";
 	this.tr = tr;
 	td.appendChild(this.tbl);
@@ -157,7 +161,8 @@ B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
 	}
 
 	tr.onclick = $.proxy(function(e) {
-		e.stopPropagation();
+		try{e.stopPropagation();}catch(e){}			
+		try{event.cancelBubble = true;}catch(e){}
 		if (this.showing) {
 			this.close();
 		} else {
@@ -171,10 +176,10 @@ B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
 	var prevOpen = false;
 	for (var i = 0; i < this.nodes.length; i++) {
 		if (this.nodes[i] instanceof B.TreeBranch) {
-			this.nodes[i].render(this.tbl, prevOpen);
+			this.nodes[i].render(tbody, prevOpen);
 			if (this.nodes[i].showing) prevOpen = true;
 		} else {
-			this.nodes[i].render(this.tbl);
+			this.nodes[i].render(tbody);
 		}
 	}
 	tr.cells[0].innerHTML = (this.showing ? this.tree.openBranchIcon : this.tree.closedBranchIcon);
@@ -208,16 +213,21 @@ B.TreeLeaf.prototype.render = function(branchElement) {
 
 	if (linktype == "function") { // Call the user-defined function
 		tr.onclick = $.proxy(function(e) {
-			e.stopPropagation();
+			try{e.stopPropagation();}catch(e){}			
+			try{event.cancelBubble = true;}catch(e){}
 			this.data.call();
 		}, this);
 	} else if (linktype == "leaf") { // call the global functin passing data
 		tr.onclick = $.proxy(function(e) {
-			e.stopPropagation();
+			try{e.stopPropagation();}catch(e){}			
+			try{event.cancelBubble = true;}catch(e){}
 			this.tree.onLeafclick(this.data);
 		}, this)
 	} else { // Do nothing, but stop going up the chain!
-		tr.onclick = function(e) { e.stopPropagation(); } 
+		tr.onclick = function(e) { 
+			try{e.stopPropagation();}catch(e){}			
+			try{event.cancelBubble = true;}catch(e){}
+		} 
 	}
 	
 	branchElement.appendChild(tr);
