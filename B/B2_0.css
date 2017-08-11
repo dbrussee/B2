@@ -35,6 +35,32 @@ table.form tr th {
 	background-color:transparent; 
 }
 
+.BTab {
+	z-index: 90;
+	background-color: gainsboro;
+	border-left: 1px solid silver;
+	border-right: 1px solid silver;
+	border-bottom: 1px solid navy;
+	border-top: 5px solid silver;
+	text-align: center;
+	cursor: pointer;
+	margin-right: 50px;
+}
+.BTab:hover {
+	background-color: aqua;
+}
+.BTab.current {
+	z-index: 100;
+	background-color: transparent;
+	border-top: 5px solid brown;
+	border-left: 1px solid navy;
+	border-right: 1px solid brown;
+	border-bottom: 1px solid white !important;
+	cursor: default;
+}
+.BTab.current:hover {
+	background-color: lightcyan;
+}
 
 ul.BContextMenuItem li a {
 	padding: 0;

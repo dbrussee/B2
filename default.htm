@@ -14,6 +14,7 @@
 <script src="B/B2_0-Data.js"></script>
 <script src="B/B2_0-Menu.js"></script>
 <script src="B/B2_0-Tree.js"></script>
+<script src="B/B2_0-Tabset.js"></script>
 <script>
 
 function init() {
@@ -54,7 +55,10 @@ function init() {
 	tblA.contextMenu.addMenu("IMDb actor link", function() { doIMDB(); }, "newwin");
 
 	tblA.addRows(example_data);
-	
+
+	window.tblB = new B.ScrollingTable("tblB", 120, new B.DataColumnSet("a,b,c"), "row", "rows");
+	tblB.addRows(example_data);
+
 	window.mnuAdd = new B.ContextMenu();
 	mnuAdd.addMenu("Unpick", function() { tblA.unpick(); }, "bullet");
 	mnuAdd.addMenu("Reload", function() { tblA.addRows(example_data, true); }, "refresh");
@@ -92,6 +96,17 @@ function init() {
 	br.addLeaf("Show chars", function() { doCharTest(); });
 	tree1.addLeaf("This line is just informative. You cannot click it.")
 	tree1.render();
+
+	window.ts1 = new B.TabSet("tabset1", "500px", "200px");
+	ts1.addTab("first", "5em", "First");
+	ts1.addTab("second", "6.5em", "Second");
+	ts1.addTab("third", "5em", "Last One", "testTab");
+	ts1.render();
+	ts1.setCurrentTab(ts1.tabs["second"]);
+	var div = ts1.tabs["first"].div;
+	var h = div.innerHTML + "<br>";
+	for (var i = 0; i < 50; i++) { h += i + "<br>"}
+	div.innerHTML = h;
 
 }
 function doIMDB() {
@@ -203,7 +218,13 @@ function doRestTest(typ) {
 </table>
 
 <br>
-<div id='tree1' style='width:320px; padding:5px;'></div>
+<table>
+	<tr>
+		<td style='vertical-align:top;'><div id='tree1' style='width:320px; padding:5px;'></div></td>
+		<td style='vertical-align:top;'><div id='tabset1'></div></td>
+	</tr>
+</table>
+
 
 <form id='dlg1' class='BDialog' title='My First Dialog' style='height: 500px; width: 800px;'>
 	<input name='sec' type='hidden' value='Secret'/>
@@ -258,6 +279,17 @@ function doRestTest(typ) {
 	<span id='dlgImageTarget'></span>
 	<br><br><div id='dlgImageExample'></div>
 	<button class='BDialogButton' onclick='popDialog();'>Close</button>
+</div>
+
+<div id='testTab'>
+	<table id='tblB'>
+		<tr>
+			<th data='a,150'>Actor</th>
+			<th data='b,150'>Role</th>
+			<th data='c,100,C'>Episodes</th>
+		</tr>
+	</table>
+			
 </div>
 </body>
 </html>
