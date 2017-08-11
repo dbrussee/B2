@@ -1,8 +1,23 @@
-﻿body { 
+﻿.ui-dialog .ui-dialog-titlebar, 
+.ui-dialog .ui-dialog-buttonpane,
+.ui-widget-header .ui-priority-primary,
+.ui-widget,
+.ui-button { 
+  font-size: 1.05em; 
+}
+.ui-dialog .ui-dialog-content { 
+  font-size: 1em; 
+}
+.no-close .ui-dialog-titlebar-close { display: none; }
+.no-title .ui-dialog .ui-dialog-titlebar { display: none; }
+
+
+body { 
 	font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
 	font-size: 10pt;
 	
 }
+
 .BDialog { 
 	z-index: 9999; 
 	display: none; 
@@ -14,20 +29,7 @@ table.BTableData tr td {
 	border-bottom:1px dotted gainsboro;
 }
 table.BTable tr th { font-size: 1.05em; }
-table.BTable tr td, 
-  table.BTable tr th { box-sizing: border-box; }
-.ui-dialog .ui-dialog-titlebar, 
-  .ui-dialog .ui-dialog-buttonpane,
-  .ui-widget-header .ui-priority-primary,
-  .ui-widget,
-  .ui-button { 
-	font-size: 1.05em; 
-}
-.ui-dialog .ui-dialog-content { 
-	font-size: 1em; 
-}
-.no-close .ui-dialog-titlebar-close { display: none; }
-.no-title .ui-dialog .ui-dialog-titlebar { display: none; }
+table.BTable tr td, table.BTable tr th { box-sizing: border-box; }
 table.form tr th { 
 	padding-right:.1em; 
 	text-align:right; 
@@ -36,7 +38,6 @@ table.form tr th {
 }
 
 .BTab {
-	z-index: 90;
 	background-color: gainsboro;
 	border-left: 1px solid silver;
 	border-right: 1px solid silver;
@@ -50,7 +51,6 @@ table.form tr th {
 	background-color: aqua;
 }
 .BTab.current {
-	z-index: 100;
 	background-color: transparent;
 	border-top: 5px solid brown;
 	border-left: 1px solid navy;
