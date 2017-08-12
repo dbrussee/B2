@@ -14,6 +14,14 @@ B.settings = {
 		footerBackgroundColor: 'gainsboro',
 		footerHoverColor: 'aqua',
 		JQTheme: true // false for using stylesheet (BQTable, BQTableHeader)
+	},
+	SlideMenu: {
+		PushStyle: false, // true pushes page content to the right when Slide Menu opens (Not ready for use)
+		Multisection: false,  // Only one section open at a time on SlideMenu
+		Slidetime: 250, SectionSlidetime: 200,
+		FG: "white", BG: "black",
+		SectionFG: "navy", SectionBG: "lightyellow",
+		ItemFG: "white", ItemBG: "navy", ItemHoverFG: "yellow", ItemHoverBG: "navy"
 	}
 };
 B.choiceValue = null;
@@ -23,7 +31,27 @@ $(document).ready(function() {
 	$('form.block, form.BDialog').bind('submit',function(e){e.preventDefault();});
     $( document ).tooltip({ track: true });
 	$(":button").button();
-    $("input[type='text'], textarea").attr('spellcheck',false);
+	$("input[type='text'], textarea").attr('spellcheck',false);
+	$("*[class*='BIMG-']").each(function(i) {
+		var el = this;
+		var parts = el.className.split("-");
+		var kind = parts[1].toUpperCase();
+		var w = el.getAttribute("width");
+		var t = el.getAttribute("title");
+		var xs = el.getAttribute("xstyle");
+		var xc = el.getAttribute("xclass");
+		var oc = el.getAttribute("onclick");
+		if (oc == undefined) oc = function() { return true; };
+		if (w == "") w = undefined;
+		var h = "";
+		if (B.imgdata[kind] == undefined) {
+			h = B.img("ERROR", w, "ERROR: BIMG-" + kind + " - " + t, oc, xs, el.id);
+		} else {
+			h = B.img(kind, w, t, oc, xs, el.id);
+		}
+		el.outerHTML = h;	
+		if (xc != undefined) B.addClass(el, xc);
+	});
     if (typeof init === 'function') init();
 });
 B.months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -54,6 +82,11 @@ B.getDateParts = function(d) {
 	return ret;
 }
 B.format = {
+	RED: function(txt) { return "<span style='color:red;'>" + txt + "</span>"; },
+	BLUE: function(txt) { return "<span style='color:blue;'>" + txt + "</span>"; },
+	BLACK: function(txt) { return "<span style='color:black;'>" + txt + "</span>"; },
+	YELLOW: function(txt) { return "<span style='color:yellow;'>" + txt + "</span>"; },
+	GREEN: function(txt) { return "<span style='color:green;'>" + txt + "</span>"; },
 	DECIMALPLACES: function(amt, places) {
 		if (isNaN(amt)) amt = 0;
 		var rslt = Number(parseFloat(amt).toFixed(places)).toLocaleString();

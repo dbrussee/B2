@@ -89,7 +89,7 @@ function init() {
 			}
 		})
 	})
-	br = tree1.addBranch("Some Other Actions", false);
+	br = tree1.addBranch("Some Other Features", false);
 	br.addLeaf("Show images", function() { doImageTest(); });
 	br.addLeaf("Show chars", function() { doCharTest(); });
 	tree1.addLeaf("This line is just informative. You cannot click it.")
@@ -97,11 +97,25 @@ function init() {
 
 	window.ts1 = new B.TabSet("tabset1", "700px", "250px");
 	ts1.addTab("a", "9em", "Tree View", "tree1");
-	ts1.addTab("b", "5em", "Stupid", "testTableDiv");
+	ts1.addTab("b", "7em", "Stupid", "testTableDiv");
 	ts1.addTab("c", "6.5em", "Last Tab");
 	ts1.render(0);
 	ts1.tabs.b.setTitle("Table");
-	//ts1.setCurrentTab(ts1.tabs["second"]);
+	
+	window.smnu = new B.SlideMenu("Sample Slide Menu");
+	smnu.addMenu("Toggle Section 2, item 3", function() { smnu.setSection('s2'); smnu.setDisabled(!smnu.items[4].disabled, 4);	return false; }, "FAVE");
+	smnu.addMenu("Test the menu system", function() { say("Looks like it works!"); });
+	sect = smnu.addSection("s2", "A Sub-Section");
+	sect.addMenu("Show information...", function() { say("'Show information...'"); }, "INFO");
+	sect.addMenu("Tell me a joke...", function() { say("<b>\"Why don't you ever see elephants hiding in trees?\"</b><br><br>" + B.format.RED("Because they're really good at it") + "."); }, "HAPPY");
+	sect.addMenu("Create something that may take 2 or three lines in the menu...", function() { say("'Create something...'"); }, "NEW");
+	sect.addMenu("Doodle...", function() { say("'Doodle...'"); }, "PENCIL");
+	sect.addMenu("Check your schedule...", function() { say("'Check your schedule...'"); }, "CALENDAR");
+	sect = smnu.addSection("s3", "Option Selections");
+	sect.addMenu("<label><input type='checkbox' name='cbA'>Storm the castle?</label>", function() { return false; }, "");
+	sect.addMenu("<label><input type='checkbox' name='cbB'>Plunder and loot?</label>", function() { return false; }, "");
+	//smnu.onafterclose = function(mnu) { checkOptions(); }
+
 
 }
 function doIMDB() {
@@ -203,7 +217,7 @@ function doRestTest(typ) {
 </script>
 </head>
 <body>
-	<h2>B2 Library Test Page</h2>
+	<h2 onclick='smnu.show()' style='cursor:pointer;'><img class='BIMG-MENU'> B2 Library Test Page</h2>
 <div id='testTableDiv'>
 <table id='tblA'>
 	<tr><th data='actor,160'>Actor</th>
