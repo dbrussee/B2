@@ -57,6 +57,7 @@ function init() {
 	tblA.addRows(example_data);
 
 	window.tblB = new B.ScrollingTable("tblB", 120, new B.DataColumnSet("a,b,c"), "row", "rows");
+	tblB.setMaxSelectedRows(0);
 	tblB.addRows(example_data);
 
 	window.mnuAdd = new B.ContextMenu();
@@ -102,7 +103,7 @@ function init() {
 	ts1.addTab("second", "6.5em", "Second");
 	ts1.addTab("third", "5em", "Last One", "testTab");
 	ts1.render();
-	ts1.tablist[2].setTitle("Table");
+	ts1.tabs.third.setTitle("Table");
 	ts1.setCurrentTab(ts1.tabs["second"]);
 	var div = ts1.tabs["first"].div;
 	var h = div.innerHTML + "<br>";
