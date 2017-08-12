@@ -417,25 +417,21 @@ B.imgdata = {
 	X: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAB2klEQVRoQ+2YvVHDQBCF36oB6AASIKUE6MCOGHL+SuIvZ4jsDqAEUiCBDqABLSPPiLFlWbd3+86Mh1Nq6+l991Z7qxNs+CUb7h8F4K8TLAmUBJwr8H9K6HZvclhVMqlrHV+8j1+cC7d0e6q+KYGZuMgTBNtQfNWqx0wIj34QYEG8XTcihFc/CHB/MPkAZGcpcwJEr/nfB+nn2et4N1SqQYDmISJ4FpEtJsSQeVX9VsWRpUyDAI1pNgTLfOPNBMCEYJqPAmBAsM1HA3ggcphPAkiByGU+GSAGIqd5F4AFQoErAa5nO3jnimmVQ3uBuQutEgm0WIUsdzqWeXcCLVQAYqFZM83TAAzlNINgm6cCNGJ3+9MTAR76ygYKVeD0/G30GJpvYn53vwPzZdSO3KoKkR5pwgDYhaMA9LXKdUG4AQZHYkVvF2J+FLkAQpsUIJeA3rBH8fkySgYImW/nefYoTnkHrOaN+4TrGzs6gVjzuSGiAFLN54QwA3jN54IwAbDM54AIArDNsyGCAKvOhRiD2WCLRcZzIYb5oSRi9IMJdEflGHHrVDmfRKy+CaCFqCpM6xojy4mZ1fzCNJugbwaINbSu/xeAda30queUBEoCzhUoJeRcQPftG5/AD1A5K09GOt+SAAAAAElFTkSuQmCC"
 };
 B.char = {
-	NEXT:		"&#x25b6;",		PREV:		"&#x25c4;",
-	RIGHT:		"&#x25b6;",		LEFT:		"&#x25c4;",
-	LAST:		"&#x23e9;",		FIRST:		"&#x23ea;",
-	UP:			"&#x25b2;",		DOWN:		"&#x25bc;",
-	CHECK: 		"&#x2714;",		THINCHECK:	"&#x2713;",		UNCHECK:	"&#9744;",
-	DIR_SE:		"&#x25e2;",		DIR_SW:		"&#x25e3;",
-	DIR_NW:		"&#x25e4;",		DIR_NE:		"&#x25e5;",
-	NEXT_CLEAR:	"&#x25b7;",
-	BULLET:		"&#x23fa",		
-	REDBULLET:	"<span style='color:red;font-size:12pt;'>&bull;</span>",
-	BLUEBULLET:	"<span style='color:#0099cc;font-size:12pt;'>&bull;</span>",
-	GREENBULLET:"<span style='color:limegreen;font-size:12pt;'>&bull;</span>",
-	GREYBULLET:	"<span style='color:silver;font-size:12pt;'>&bull;</span>",
-	BLUEKEY: 	"<span style='color:#0099cc;'>&#x1f511;</span>",
-	REDKEY: 	"<span style='color:red'>&#x1f511;</span>",
-	PLUS:		"&#x2795;",		X:			"&#x2717;",		MINUS:		"&#x2796",		DIVIDE:		"&#x2797",
-	FLAG:		"&#x2690;",		BLACKFLAG:	"&#x2691;", 	BLOCK:		"&#x23f9;",
+	SPACE:		"&nbsp;",
+	RIGHT:		"&#x25b6;",		LEFT:		"&#x25c4;",		UP:			"&#x25b2;",		DOWN:		"&#x25bc;",
+	RIGHT_CLR:	"&#x25b7;",
+	FF:			"&#x23e9;",		REWIND:		"&#x23ea;",		LAST:		"&#x23ed;",		FIRST:		"&#x23ee;",
+	PAUSE:		"&#x23f8;", 	RECORD:		"&#x23fa;",		SHARP:		"&#x266f;",		FLAT:		"&#x266d;",
+	TURNR:		"&#8635;",		TURNL:		"&#8634;",		NEWLINE:	"&#x21b2;",
+	CHECK: 		"&#x2714;",		THINCHECK:	"&#x2713;",		CHECKN:		"&#9744;",		CHECKY:		"&#9745;",
+	DELETE:		"&#x2717;",		NOTES:		"&#x266b;",		RECYCLE:	"&#x267b;",
+	QUESTION:	"&#x2753;",		EXCLAIM:	"&#x2757;",		WARN:		"&#x26A0;",		TRASH:		"&#x1f5d1;",
+	DIR_SE:		"&#x25e2;",		DIR_SW:		"&#x25e3;",		DIR_NW:		"&#x25e4;",		DIR_NE:		"&#x25e5;",
+	BULLET:		"&#x23fa",		KEY:		"&#x1f511;",	FOLDER:		"&#128193",
+	PLUS:		"&#x2795;",		TIMES:		"&#x2716;",		MINUS:		"&#x2796",		DIVIDE:		"&#x2797",
+	FLAG:		"&#x2690;",		BLACKFLAG:	"&#x2691;", 	BLOCK:		"&#x23f9;",		X:			"&#x2718;",
 	STAR:		"&#x2606;",		BLACKSTAR:	"&#x2605;",		CLOUD:		"&#x2601;",
-	SPACE:		"&nbsp;"
+	CARDSP:		"&#9824;",		CARDCL:		"&#9827;",		CARDHA:		"&#9829;",		CARDDI:		"&#9830"
 };
 B.hasClass = function(el, clsname) {
 	var lst = el.className.split(" ");
