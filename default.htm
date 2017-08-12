@@ -102,6 +102,7 @@ function init() {
 	ts1.addTab("second", "6.5em", "Second");
 	ts1.addTab("third", "5em", "Last One", "testTab");
 	ts1.render();
+	ts1.tablist[2].setTitle("Table");
 	ts1.setCurrentTab(ts1.tabs["second"]);
 	var div = ts1.tabs["first"].div;
 	var h = div.innerHTML + "<br>";

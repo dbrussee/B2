@@ -93,3 +93,6 @@ B.Tab = function(id, width, title, div) {
     }
     this.tab = null; // Will be matched up with a visual tab element
 }
+B.Tab.prototype.setTitle =function(title) {
+    this.tab.innerHTML = title;
+}
