@@ -28,6 +28,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 		B.addClass(row, "ui-widget-header,ui-priority-primary");
 	}
 	this.contextMenu = new B.ContextMenu();
+	this.maxSelectedRows = 1;
 
 	this.onBeforeRowRender = function(rn, rd, tr, tds) { return; };
 	for (var i = 0; i < row.cells.length; i++) {
@@ -69,6 +70,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 		"border-collapse:collapse; table-layout:fixed; cursor:pointer";
 	this.dataTable.style.width = this.dataWidth + "px";
 	this.dataTable.onclick = $.proxy(function(event) {
+		if (this.maxSelectedRows == 0) return;
 		var el = $(event.target)[0]; // A collection even though only one
 		var cell = $(el).closest("td")[0];
 		if (cell == undefined) return;
@@ -86,6 +88,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 		}
 	}, this);	
 	$(this.dataTable).on("contextmenu", $.proxy(function(event) {
+		if (this.maxSelectedRows == 0) return;
 		var el = $(event.target)[0]; // A collection even though only one
 		var cell = $(el).closest("td")[0];
 		if (cell == undefined) return;
@@ -111,6 +114,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 		if (this.contextMenu.items.length > 0) this.contextMenu.show(event); 
 	};
 	this.dataTable.ondblclick = $.proxy(function(event) {
+		if (this.maxSelectedRows == 0) return;
 		var el = $(event.target)[0]; // A collection even though only one
 		var cell = $(el).closest("td")[0];
 		if (cell == undefined) return;
@@ -197,6 +201,11 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 	this.onclick = function() {};
 	this.current = { rownum:-1, cellnum:-1 };
 	this.setFooterMessage();
+}
+B.ScrollingTable.prototype.setMaxSelectedRows = function(num) {
+	this.maxSelectedRows = num;
+	this.dataTable.style.cursor = (num == 0 ? "default" : "pointer");
+
 }
 B.ScrollingTable.prototype.setFooterMessage = function(txt) {
 	if (txt == undefined) {
