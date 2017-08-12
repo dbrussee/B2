@@ -56,10 +56,6 @@ function init() {
 
 	tblA.addRows(example_data);
 
-	window.tblB = new B.ScrollingTable("tblB", 120, new B.DataColumnSet("a,b,c"), "row", "rows");
-	tblB.setMaxSelectedRows(0);
-	tblB.addRows(example_data);
-
 	window.mnuAdd = new B.ContextMenu();
 	mnuAdd.addMenu("Unpick", function() { tblA.unpick(); }, "bullet");
 	mnuAdd.addMenu("Reload", function() { tblA.addRows(example_data, true); }, "refresh");
@@ -70,17 +66,19 @@ function init() {
 	br.addLeaf("Say something via dialog", function() { say("Ok, I said something. So there."); }, B.img("INFO"));
 	br.addLeaf("Ask something", function() { ask("I'm doing great. Are you feeling well?") }, B.img("HELP"));
 	br.addLeaf("Yes/No/Cancel (askC)", function() { askC("Continue to next step?"); });
-	br.addLeaf("Choose an item with choose", 
-		function() { choose("Pick one of the items", "", "Tom,Dick,Harry", 
-			function(rslt) { say("You chose option " + rslt); }
-		); }, B.char.CHECK);
-	br.addLeaf("Freeze the screen", function() { 
+	var br2 = br.addBranch("Other Form Items", false);
+	br2.addLeaf("Freeze the screen", function() { 
 		timedFreeze("This message will disappear using the thaw() method in 10 seconds. " +
 			"Use freeze(msg) for normal stuff, but when calling remote operations that may " +
 			"take some time, you may want to include a timer."); 
 		window.setTimeout(function() { thaw(); }, 10000);
 	});
-	br.addLeaf("Get a value", function() {
+	br2.addLeaf("Open up a form dialog", function() { doDialogTest(); });
+	br.addLeaf("Choose an item with choose", 
+		function() { choose("Pick one of the items", "", "Tom,Dick,Harry", 
+			function(rslt) { say("You chose option " + rslt); }
+		); }, B.char.CHECK);
+		br.addLeaf("Get a value", function() {
 		askValue("Enter a value that will be used to know how intelligent you are.", "Your Number:", "42", "Are you a Hoopy Frood?", function(rslt) {
 			if (rslt != null) {
 				if (rslt == "42") {
@@ -91,24 +89,19 @@ function init() {
 			}
 		})
 	})
-	br.addLeaf("Open up a form dialog", function() { doDialogTest(); });
 	br = tree1.addBranch("Some Other Actions", false);
 	br.addLeaf("Show images", function() { doImageTest(); });
 	br.addLeaf("Show chars", function() { doCharTest(); });
 	tree1.addLeaf("This line is just informative. You cannot click it.")
 	tree1.render();
 
-	window.ts1 = new B.TabSet("tabset1", "500px", "200px");
-	ts1.addTab("first", "5em", "First");
-	ts1.addTab("second", "6.5em", "Second");
-	ts1.addTab("third", "5em", "Last One", "testTab");
-	ts1.render();
-	ts1.tabs.third.setTitle("Table");
-	ts1.setCurrentTab(ts1.tabs["second"]);
-	var div = ts1.tabs["first"].div;
-	var h = div.innerHTML + "<br>";
-	for (var i = 0; i < 50; i++) { h += i + "<br>"}
-	div.innerHTML = h;
+	window.ts1 = new B.TabSet("tabset1", "700px", "250px");
+	ts1.addTab("a", "9em", "Tree View", "tree1");
+	ts1.addTab("b", "5em", "Stupid", "testTableDiv");
+	ts1.addTab("c", "6.5em", "Last Tab");
+	ts1.render(0);
+	ts1.tabs.b.setTitle("Table");
+	//ts1.setCurrentTab(ts1.tabs["second"]);
 
 }
 function doIMDB() {
@@ -210,6 +203,8 @@ function doRestTest(typ) {
 </script>
 </head>
 <body>
+	<h2>B2 Library Test Page</h2>
+<div id='testTableDiv'>
 <table id='tblA'>
 	<tr><th data='actor,160'>Actor</th>
 		<th data='role,160'>Role</th>
@@ -218,14 +213,9 @@ function doRestTest(typ) {
 		<th data='ly,65,R'>Last Yr</th>
 		<th data='imdb,100,C'>IMDb</th></tr>
 </table>
+</div>
 
-<br>
-<table>
-	<tr>
-		<td style='vertical-align:top;'><div id='tree1' style='width:320px; padding:5px;'></div></td>
-		<td style='vertical-align:top;'><div id='tabset1'></div></td>
-	</tr>
-</table>
+<div id='tabset1'></div>
 
 
 <form id='dlg1' class='BDialog' title='My First Dialog' style='height: 500px; width: 800px;'>
@@ -282,16 +272,6 @@ function doRestTest(typ) {
 	<br><br><div id='dlgImageExample'></div>
 	<button class='BDialogButton' onclick='popDialog();'>Close</button>
 </div>
-
-<div id='testTab'>
-	<table id='tblB'>
-		<tr>
-			<th data='a,150'>Actor</th>
-			<th data='b,150'>Role</th>
-			<th data='c,100,C'>Episodes</th>
-		</tr>
-	</table>
-			
-</div>
+<div id='tree1' style='width:320px; padding:5px;'></div>
 </body>
 </html>

@@ -27,13 +27,13 @@ B.TabSet.prototype.addTab = function(id, width, title, div) {
     this.tabs[id] = new B.Tab(id, width, title, div);
     this.tablist.push(this.tabs[id]);
 }
-B.TabSet.prototype.render = function() {
+B.TabSet.prototype.render = function(showtab) {
     this.target.innerHTML = "";
     this.tbl = document.createElement("table");
     this.tbl.style.borderCollapse = "collapse";
     this.tbl.style.borderSpacing = "5px";
-    this.tbl.style.height = "100%";
-    this.tbl.style.width = "100%";
+    //this.tbl.style.height = "100%";
+    //this.tbl.style.width = "100%";
     this.tbody = document.createElement("tbody");
     this.tbl.appendChild(this.tbody);
     this.tabrow = document.createElement("tr")
@@ -76,6 +76,7 @@ B.TabSet.prototype.render = function() {
     this.contentrow.appendChild(td)
 
     this.target.appendChild(this.tbl);
+    if (showtab != undefined) this.setCurrentTab(this.tablist[showtab]);
 }
 
 
