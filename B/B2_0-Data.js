@@ -170,7 +170,8 @@ B.Dataset.prototype.addRows = function(data, clearFirst) {
  * Returns a collection of items in the format:
  * id: { raw:'str', val:<obj>, disp:'str', err:'str' }
  */
-B.Dataset.prototype.getRow = function(rownum) {
+B.Dataset.prototype.getRow = function(rownum, valsonly) {
+	if (valsonly == undefined) valsonly = false;
 	if (rownum == undefined) rownum = this.rownumber; // Whatever row is current
 	var row = this.data[rownum];
 	if (row == null) return null; // Row not found
@@ -185,10 +186,15 @@ B.Dataset.prototype.getRow = function(rownum) {
 		} else {
 			rslt[col.id] = col.parse(rawcols[i]);
 		}
+		if (valsonly) rslt[col.id] = rslt.val;
 	}
 	// There may be more in the data than in the colset
 	for (var i = i; i < rawcols.length; i++) {
-		rslt["COL_" + (i+1)] = { "raw":rawcols[i], "val":rawcols[i], "disp":rawcols[i], "err":"" };
+		if (valsonly) {
+			rslt["COL_" + (i+1)] = rawcols[i];
+		} else {
+			rslt["COL_" + (i+1)] = { "raw":rawcols[i], "val":rawcols[i], "disp":rawcols[i], "err":"" };
+		}
 	}
 	return rslt;
 }
