@@ -7,6 +7,24 @@ B.TabSet = function(target, contentWidth, contentHeight) {
     this.tabs = {}; // Collection of tabs by id
     this.tablist = []; // Keeps the correct order
     this.currentTab = null;
+    var kids = this.target.childNodes;
+    if (kids.length > 0) {
+        var w = parseInt(this.contentWidth / (kids.length + 1) * 100);
+        for (var i = 0; i < kids.length; i++) {
+            var kid = kids[i];
+            if (kid.tagName == "DIV") {
+                var title = "Tab " + (i+1);
+                var width = "100px";
+                var dta = kid.getAttribute("data");
+                if (dta != null) {
+                    var parts = dta.split(",");
+                    title = parts[0];
+                    if (parts.length > 1) width = parts[1];
+                }
+                this.addTab(kid.id, width, title, kid);
+            }
+        }
+    }
 }
 B.TabSet.prototype.setCurrentTab = function(tab) {
     if (this.currentTab != null) {
@@ -27,13 +45,11 @@ B.TabSet.prototype.addTab = function(id, width, title, div) {
     this.tabs[id] = new B.Tab(id, width, title, div);
     this.tablist.push(this.tabs[id]);
 }
-B.TabSet.prototype.render = function() {
+B.TabSet.prototype.render = function(itm) {
     this.target.innerHTML = "";
     this.tbl = document.createElement("table");
     this.tbl.style.borderCollapse = "collapse";
     this.tbl.style.borderSpacing = "5px";
-    this.tbl.style.height = "100%";
-    this.tbl.style.width = "100%";
     this.tbody = document.createElement("tbody");
     this.tbl.appendChild(this.tbody);
     this.tabrow = document.createElement("tr")
@@ -71,11 +87,15 @@ B.TabSet.prototype.render = function() {
     this.contentContainer.style.position = "relative";
     this.contentContainer.style.overflowY = "auto";
     this.contentContainer.style.padding = "3px";
-    //this.contentContainer.style.backgroundColor = "ivory";
     td.appendChild(this.contentContainer);
     this.contentrow.appendChild(td)
 
     this.target.appendChild(this.tbl);
+    if (itm == undefined) itm = 0;
+    if (typeof itm == "number") itm = this.tablist[0];
+    if (itm != null) {
+        this.setCurrentTab(itm);
+    }
 }
 
 
@@ -93,6 +113,6 @@ B.Tab = function(id, width, title, div) {
     }
     this.tab = null; // Will be matched up with a visual tab element
 }
-B.Tab.prototype.setTitle =function(title) {
+B.Tab.prototype.setTitle = function(title) {
     this.tab.innerHTML = title;
 }

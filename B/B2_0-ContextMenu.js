@@ -1,4 +1,4 @@
-﻿// Added to bettway GIT
+﻿﻿// Added to bettway GIT
 B.ContextMenu = function() {
 	this.items = [];
 	this.menuObject = null;
@@ -77,6 +77,13 @@ B.ContextMenu.prototype.enable = function(itm) {
 	if (mnu.disabled) {
 		mnu.disabled = false;
 		this.reset();
+	}
+}
+B.ContextMenu.prototype.setEnabled = function(itm, state) {
+	if (state) {
+		this.enable(itm);
+	} else {
+		this.disable(itm);
 	}
 }
 B.ContextMenu.prototype.reset = function() {

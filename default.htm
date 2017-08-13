@@ -35,30 +35,17 @@ function init() {
 		say("You double-clicked on '" + rd.role.val + "'!!!!");
 	}
 	tblA.onBeforeRightClick = function(tbl, row, cell, rn, cn, rd, changedRow) {
-		if (rd.imdb.val == "") {
-			tblA.contextMenu.disable(0);
-		} else {
-			tblA.contextMenu.enable(0);
-		}
+		tblA.contextMenu.setEnabled(2, (rd.imdb.val != ""));
 	}
 	tblA.onBeforeRowRender = function(rn, rd, tr, tds) {
 		tds.imdb.innerHTML = B.char.CLOUD;
-		if (rd.imdb.val == "") {
-			tds.imdb.style.color = "silver";
-		} else {
-			tds.imdb.style.color = "navy";
-		}
-		
+		tds.imdb.style.color = (rd.imdb.val == "" ? "silver" : "navy");
 	}
 	tblA.contextMenu.addMenu("Trivia about First Year", function() { doRestTest(3); }, "help");
 	tblA.contextMenu.addMenu("Trivia about Episode count", function() { doRestTest(4); }, "help");
 	tblA.contextMenu.addMenu("IMDb actor link", function() { doIMDB(); }, "newwin");
 
 	tblA.addRows(example_data);
-
-	window.tblB = new B.ScrollingTable("tblB", 120, new B.DataColumnSet("a,b,c"), "row", "rows");
-	tblB.setMaxSelectedRows(0);
-	tblB.addRows(example_data);
 
 	window.mnuAdd = new B.ContextMenu();
 	mnuAdd.addMenu("Unpick", function() { tblA.unpick(); }, "bullet");
@@ -98,17 +85,8 @@ function init() {
 	tree1.addLeaf("This line is just informative. You cannot click it.")
 	tree1.render();
 
-	window.ts1 = new B.TabSet("tabset1", "500px", "200px");
-	ts1.addTab("first", "5em", "First");
-	ts1.addTab("second", "6.5em", "Second");
-	ts1.addTab("third", "5em", "Last One", "testTab");
-	ts1.render();
-	ts1.tabs.third.setTitle("Table");
-	ts1.setCurrentTab(ts1.tabs["second"]);
-	var div = ts1.tabs["first"].div;
-	var h = div.innerHTML + "<br>";
-	for (var i = 0; i < 50; i++) { h += i + "<br>"}
-	div.innerHTML = h;
+	window.ts1 = new B.TabSet("tabset1", "650px", "250px");
+	ts1.render(0);
 
 }
 function doIMDB() {
@@ -210,22 +188,21 @@ function doRestTest(typ) {
 </script>
 </head>
 <body>
-<table id='tblA'>
-	<tr><th data='actor,160'>Actor</th>
-		<th data='role,160'>Role</th>
-		<th data='episodes,50,C'>Eps</th>
-		<th data='fy,65,R'>First Yr</th>
-		<th data='ly,65,R'>Last Yr</th>
-		<th data='imdb,100,C'>IMDb</th></tr>
-</table>
+<div id='tabset1'>
+	<div id='tree1' data='Tree,6em' style='width:320px; padding:5px;'></div>
+	<div id='tableDIV' data='Table,9em'>
+		<table id='tblA'>
+			<tr><th data='actor,160'>Actor</th>
+				<th data='role,160'>Role</th>
+				<th data='episodes,50,C'>Eps</th>
+				<th data='fy,65,R'>First Yr</th>
+				<th data='ly,65,R'>Last Yr</th>
+				<th data='imdb,100,C'>IMDb</th></tr>
+		</table>
+	</div>
+	<div id='another' data='Unused,6em'></div>
+</div>
 
-<br>
-<table>
-	<tr>
-		<td style='vertical-align:top;'><div id='tree1' style='width:320px; padding:5px;'></div></td>
-		<td style='vertical-align:top;'><div id='tabset1'></div></td>
-	</tr>
-</table>
 
 
 <form id='dlg1' class='BDialog' title='My First Dialog' style='height: 500px; width: 800px;'>
@@ -283,15 +260,5 @@ function doRestTest(typ) {
 	<button class='BDialogButton' onclick='popDialog();'>Close</button>
 </div>
 
-<div id='testTab'>
-	<table id='tblB'>
-		<tr>
-			<th data='a,150'>Actor</th>
-			<th data='b,150'>Role</th>
-			<th data='c,100,C'>Episodes</th>
-		</tr>
-	</table>
-			
-</div>
 </body>
 </html>

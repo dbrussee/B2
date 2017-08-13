@@ -1,6 +1,5 @@
 // Written by Dan Brussee
 // Version 2.0: Released <unreleased>
-// Added to bettway GIT
 //
 window.B = { version: "2.0" }; // B2_0.js
 
@@ -14,6 +13,14 @@ B.settings = {
 		footerBackgroundColor: 'gainsboro',
 		footerHoverColor: 'aqua',
 		JQTheme: true // false for using stylesheet (BQTable, BQTableHeader)
+	},
+	SlideMenu: {
+		PushStyle: false, // true pushes page content to the right when Slide Menu opens (Not ready for use)
+		Multisection: false,  // Only one section open at a time on SlideMenu
+		Slidetime: 250, SectionSlidetime: 200,
+		FG: "white", BG: "black",
+		SectionFG: "navy", SectionBG: "lightyellow",
+		ItemFG: "white", ItemBG: "navy", ItemHoverFG: "yellow", ItemHoverBG: "navy"
 	}
 };
 B.choiceValue = null;
@@ -23,7 +30,17 @@ $(document).ready(function() {
 	$('form.block, form.BDialog').bind('submit',function(e){e.preventDefault();});
     $( document ).tooltip({ track: true });
 	$(":button").button();
-    $("input[type='text'], textarea").attr('spellcheck',false);
+	$("input[type='text'], textarea").attr('spellcheck',false);
+	$("*[class*='BIMG-']").each(function() {
+		var parts = el.className.split("-");
+		var kind = parts[1].toUpperCase();
+		if (B.imgdata[kind] == undefined) {
+			h = B.img("ERROR");
+		} else {
+			h = B.img(kind);
+		}
+		this.outerHTML = h;	
+	});
     if (typeof init === 'function') init();
 });
 B.months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
