@@ -26,7 +26,6 @@ function init() {
 	window.tblA = new B.ScrollingTable("tblA", 150, new B.DataColumnSet("actor,role,episodes,fy,ly,imdb"), "actor", "actors");
 	tblA.footer.addButton("a", "First", function(event) { tblA.footer.disableButton("a").enableButton("b"); }).disable();
 	tblA.footer.addButton("b", "Second", function(event) { tblA.footer.disableButton("b").enableButton("a"); });
-	tblA.footer.addButton("c", "Rows", function(event) { mnuAdd.show(event); });
 	tblA.footer.addButton("imdb", "IMDb", function(event) { doIMDB(); }, true).disable();
 
 	tblA.onclick = function(tbl, row, cell, rn, cn, rd, changedRow) {
@@ -47,11 +46,6 @@ function init() {
 	tblA.contextMenu.addMenu("IMDb actor link", function() { doIMDB(); }, "newwin");
 
 	tblA.addRows(example_data);
-
-	window.mnuAdd = new B.ContextMenu();
-	mnuAdd.addMenu("Unpick", function() { tblA.unpick(); }, "bullet");
-	mnuAdd.addMenu("Reload", function() { tblA.addRows(example_data, true); }, "refresh");
-	mnuAdd.addMenu("Clear", function() { tblA.clear(); }, "radio-on");
 
 	window.tree1 = new B.Tree("tree1", null, true);
 	var br = tree1.addBranch("Dialog actions", false);
