@@ -13,6 +13,7 @@
 <script src="B/B2_0-Table.js"></script><script src="B/ExampleData.js"></script>
 <script src="B/B2_0-Data.js"></script>
 <script src="B/B2_0-ContextMenu.js"></script>
+<script src="B/B2_0-SlideMenu.js"></script>
 <script src="B/B2_0-Tree.js"></script>
 <script src="B/B2_0-Tabset.js"></script>
 <script>
@@ -53,11 +54,32 @@ function init() {
 	mnuAdd.addMenu("Clear", function() { tblA.clear(); }, "radio-on");
 
 	window.tree1 = new B.Tree("tree1", null, true);
-	var br = tree1.addBranch("Try dialog actions", false);
-	br.addLeaf("Say something via dialog", function() { say("Ok, I said something. So there."); }, B.img("INFO"));
-	br.addLeaf("Ask something", function() { ask("I'm doing great. Are you feeling well?") }, B.img("HELP"));
-	br.addLeaf("Yes/No/Cancel (askC)", function() { askC("Continue to next step?"); });
-	br.addLeaf("Choose an item with choose", 
+	var br = tree1.addBranch("Dialog actions", false);
+	var b2 = br.addBranch("General messages", false);
+	b2.addLeaf("Say something via dialog", function() { say("Ok, I said something. So there."); }, B.img("INFO"));
+	b2.addLeaf("Ask something",
+		function() { ask("Are you happy you chose to have me ask you something?", "",
+			function(rslt) {
+				if (rslt == "YES") {
+					say("I'm glad to hear that.");
+				} else {
+					say("Well, you might want to try another item then.");
+				}
+			}); 
+		}, B.img("HELP"));
+	b2.addLeaf("Yes/No/Cancel (askC)",
+		function() { askC("Let's say you are on step 3 of 10. Do you want to continue?", "",
+			function(rslt) {
+				if (rslt == "YES") {
+					say("Ok, you would now be on step 4.");
+				} else if (rslt == "NO") {
+					say("You said no, so you are still on step 3.");
+				} else {
+					say("You cancelled... you are now back to step 1.");
+				}
+			}); 
+		});
+	b2.addLeaf("Choose an item with choose", 
 		function() { choose("Pick one of the items", "", "Tom,Dick,Harry", 
 			function(rslt) { say("You chose option " + rslt); }
 		); }, B.char.CHECK);
@@ -84,6 +106,25 @@ function init() {
 	br.addLeaf("Show chars", function() { doCharTest(); });
 	tree1.addLeaf("This line is just informative. You cannot click it.")
 	tree1.render();
+
+
+	window.smnu = new B.SlideMenu("Sample Slide Menu");
+	smnu.addMenu("Toggle Section 2, item 2", function() { smnu.setSection('s2'); smnu.setDisabled(!smnu.items[4].disabled, 4);	return false; }, "FAVE");
+	smnu.addMenu("Test the menu system", function() { say("Looks like it is working."); });
+	var sect = smnu.addSection("s1", "Dialog Features").show();
+	sect.addMenu("General form dialog...", function() { openDialog("dlg1"); }, "POPUP");
+
+	sect = smnu.addSection("s2", "Second Section");
+	sect.addMenu("Show information...", function() { say("'Show information...'"); }, "INFO");
+	sect.addMenu("Tell me a joke...", function() { 
+		say("<b>\"Why don't you ever see elephants hiding in trees?\"</b><br><br>" + B.format.RED("Because they're really good at it") + ".");
+	}, "HAPPY");
+	sect.addMenu("Scrolling Tables...", function() { ts1.setCurrentTab(1); }, "NEW");
+	sect = smnu.addSection("s3", "Option Selections");
+	sect.addMenu("<label><input type='checkbox' name='cbA'>Storm the castle?</label>", function() { return false; }, "");
+	sect.addMenu("<label><input type='checkbox' name='cbB'>Plunder and loot?</label>", function() { return false; }, "");
+	//smnu.onafterclose = function(mnu) { say("You closed the menu"); }
+	
 
 	window.ts1 = new B.TabSet("tabset1", "650px", "250px");
 	ts1.render(0);
@@ -188,6 +229,7 @@ function doRestTest(typ) {
 </script>
 </head>
 <body>
+<h2 onclick='smnu.show()' style='cursor:pointer'><img class='BIMG-MENU'> B 2.0 Library Demo</h2>
 <div id='tabset1'>
 	<div id='tree1' data='Tree,6em' style='width:320px; padding:5px;'></div>
 	<div id='tableDIV' data='Table,9em'>

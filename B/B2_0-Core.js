@@ -32,7 +32,7 @@ $(document).ready(function() {
 	$(":button").button();
 	$("input[type='text'], textarea").attr('spellcheck',false);
 	$("*[class*='BIMG-']").each(function() {
-		var parts = el.className.split("-");
+		var parts = this.className.split("-");
 		var kind = parts[1].toUpperCase();
 		if (B.imgdata[kind] == undefined) {
 			h = B.img("ERROR");
@@ -71,6 +71,25 @@ B.getDateParts = function(d) {
 	return ret;
 }
 B.format = {
+	RED: function(txt, bgclr) { return B.format.COLOR(txt, "red", bgclr); },
+	GREEN: function(txt, bgclr) { return B.format.COLOR(txt, "green", bgclr); },
+	YELLOW: function(txt, bgclr) { return B.format.COLOR(txt, "yellow", bgclr); },
+	BLUE: function(txt, bgclr) { return B.format.COLOR(txt, "blue", bgclr); },
+	BROWN: function(txt, bgclr) { return B.format.COLOR(txt, "brown", bgclr); },
+	BLACK: function(txt, bgclr) { return B.format.COLOR(txt, "black", bgclr); },
+	COLOR: function(txt, clr, bgclr) {
+		if (bgclr == undefined) bgclr = "";
+		if (clr == undefined) clr = "";
+		var h = "";
+		if (clr != "") h += "color:" + clr + ";";
+		if (bgclr != "") h += "background-color:" + bgclor + ";";
+		if (h != "") {
+			h = "<span style='" + h + "'>" + txt + "</span>";
+		} else {
+			h = txt;
+		}
+		return h;
+	},
 	DECIMALPLACES: function(amt, places) {
 		if (isNaN(amt)) amt = 0;
 		var rslt = Number(parseFloat(amt).toFixed(places)).toLocaleString();
@@ -434,7 +453,6 @@ B.imgdata = {
 	X: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAB2klEQVRoQ+2YvVHDQBCF36oB6AASIKUE6MCOGHL+SuIvZ4jsDqAEUiCBDqABLSPPiLFlWbd3+86Mh1Nq6+l991Z7qxNs+CUb7h8F4K8TLAmUBJwr8H9K6HZvclhVMqlrHV+8j1+cC7d0e6q+KYGZuMgTBNtQfNWqx0wIj34QYEG8XTcihFc/CHB/MPkAZGcpcwJEr/nfB+nn2et4N1SqQYDmISJ4FpEtJsSQeVX9VsWRpUyDAI1pNgTLfOPNBMCEYJqPAmBAsM1HA3ggcphPAkiByGU+GSAGIqd5F4AFQoErAa5nO3jnimmVQ3uBuQutEgm0WIUsdzqWeXcCLVQAYqFZM83TAAzlNINgm6cCNGJ3+9MTAR76ygYKVeD0/G30GJpvYn53vwPzZdSO3KoKkR5pwgDYhaMA9LXKdUG4AQZHYkVvF2J+FLkAQpsUIJeA3rBH8fkySgYImW/nefYoTnkHrOaN+4TrGzs6gVjzuSGiAFLN54QwA3jN54IwAbDM54AIArDNsyGCAKvOhRiD2WCLRcZzIYb5oSRi9IMJdEflGHHrVDmfRKy+CaCFqCpM6xojy4mZ1fzCNJugbwaINbSu/xeAda30queUBEoCzhUoJeRcQPftG5/AD1A5K09GOt+SAAAAAElFTkSuQmCC"
 };
 B.char = {
-	SPACE:		"&nbsp;",
 	RIGHT:		"&#x25b6;",		LEFT:		"&#x25c4;",		UP:			"&#x25b2;",		DOWN:		"&#x25bc;",
 	RIGHT_CLR:	"&#x25b7;",
 	FF:			"&#x23e9;",		REWIND:		"&#x23ea;",		LAST:		"&#x23ed;",		FIRST:		"&#x23ee;",
@@ -448,7 +466,7 @@ B.char = {
 	PLUS:		"&#x2795;",		TIMES:		"&#x2716;",		MINUS:		"&#x2796",		DIVIDE:		"&#x2797",
 	FLAG:		"&#x2690;",		BLACKFLAG:	"&#x2691;", 	BLOCK:		"&#x23f9;",		X:			"&#x2718;",
 	STAR:		"&#x2606;",		BLACKSTAR:	"&#x2605;",		CLOUD:		"&#x2601;",
-	CARDSP:		"&#9824;",		CARDCL:		"&#9827;",		CARDHA:		"&#9829;",		CARDDI:		"&#9830"
+	CARD_S:		"&#9824;",		CARD_C:		"&#9827;",		CARD_H:		"&#9829;",		CARD_D:		"&#9830"
 };
 B.hasClass = function(el, clsname) {
 	var lst = el.className.split(" ");

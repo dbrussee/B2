@@ -30,12 +30,15 @@ B.TabSet.prototype.setCurrentTab = function(tab) {
     if (this.currentTab != null) {
         this.contentContainer.removeChild(this.currentTab.div);
     }
+    if (typeof tab == "number") {
+        tab = this.tablist[tab];
+    }
     for (var key in this.tabs) {
         var itm = this.tabs[key];
         if (itm == tab) {
             B.addClass(itm.tab, "current");
             this.contentContainer.appendChild(itm.div);
-        } else {
+            } else {
             B.removeClass(itm.tab, "current");
         }
     }
