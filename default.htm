@@ -36,19 +36,14 @@ function init() {
 	}
 	tblA.onBeforeRightClick = function(tbl, row, cell, rn, cn, rd, changedRow) {
 		if (rd.imdb.val == "") {
-			tblA.contextMenu.disable(0);
+			tblA.contextMenu.disable(2);
 		} else {
-			tblA.contextMenu.enable(0);
+			tblA.contextMenu.enable(2);
 		}
 	}
 	tblA.onBeforeRowRender = function(rn, rd, tr, tds) {
 		tds.imdb.innerHTML = B.char.CLOUD;
-		if (rd.imdb.val == "") {
-			tds.imdb.style.color = "silver";
-		} else {
-			tds.imdb.style.color = "navy";
-		}
-		
+		tds.imdb.style.color = (rd.imdb.val=="" ? "silver":"navy");
 	}
 	tblA.contextMenu.addMenu("Trivia about First Year", function() { doRestTest(3); }, "help");
 	tblA.contextMenu.addMenu("Trivia about Episode count", function() { doRestTest(4); }, "help");
