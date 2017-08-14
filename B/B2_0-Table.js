@@ -27,7 +27,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 	if (B.settings.ScrollingTable.JQTheme) {
 		B.addClass(row, "ui-widget-header,ui-priority-primary");
 	}
-	this.contextMenu = new B.ContextMenu();
+	this.contextMenu = new B.PopupMenu();
 	this.maxSelectedRows = 1;
 
 	this.onBeforeRowRender = function(rn, rd, tr, tds) { return; };
@@ -103,7 +103,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 		if (rslt == undefined) rslt = true;
 		if (rslt) {
 			this.pick(row, cell);
-			if (this.contextMenu.items.length > 0)	{
+			if (this.contextMenu.itemlist.length > 0)	{
 				this.onBeforeRightClick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd, row.rowIndex != this.current.rownum);
 				this.contextMenu.show(event);
 			}

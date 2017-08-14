@@ -37,21 +37,25 @@ B.PopupMenu.prototype.show = function(event) {
 	} catch(e) {;}    
     if (this.object == null) {
         this.object = document.createElement("div");
-        this.object.style.cssText = "position:absolute; display:none; border:1px dotted navy; padding:3px; background-color:white;";
+        this.object.style.cssText = "position:absolute; display:none; border:1px dotted navy; padding:3px; background-color:white; boxShadow: 5px 5px 10px 6px rgba(0, 0, 0, 0.4);";
         $(this.object).appendTo("body")
     }
     this.object.innerHTML = ""; // Clean it out each time!
     var tree = new B.Tree(this.object, null, false);
     for (var i = 0; i < this.itemlist.length; i++) {
         var itm = this.itemlist[i];
+        itm.tree = this;
         if (itm.kind == "space") {
             tree.addLeaf("<span style='color:silver;'><hr></span>", null,"&nbsp;");
         } else if (itm.kind == "menu") {
             if (itm.disabled) {
                 tree.addLeaf("<span style='color:silver;'>" + itm.text + "</span>", null, "&nbsp;");
             } else {
-                if (itm.img == "") itm.img = B.char.EXCLAIM;
-                tree.addLeaf(itm.text, itm.func, itm.img);
+                if (itm.img == "") itm.img = B.char.RIGHT_CLR;
+                tree.addLeaf(itm.text, $.proxy(function() { 
+                    this.tree.hide(); 
+                    this.func(); 
+                }, itm), itm.img);
             }
         } else {
             // What kind if thing are you!?

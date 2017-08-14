@@ -217,6 +217,7 @@ B.TreeLeaf.prototype.render = function(branchElement) {
 	td.innerHTML = this.icon;
 	tr.appendChild(td);
 	td = document.createElement("td");
+	td.style.cssText = "padding-left:2px;"
 	//td.innerHTML = (isLink ? B.format.ASLINK(this.html) : this.html);
 	td.innerHTML = this.html;
 	tr.appendChild(td);

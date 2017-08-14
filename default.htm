@@ -16,6 +16,7 @@
 <script src="B/B2_0-SlideMenu.js"></script>
 <script src="B/B2_0-Tree.js"></script>
 <script src="B/B2_0-Tabset.js"></script>
+<script src="B/B2_0-PopupMenu.js"></script>
 <script>
 
 function init() {
@@ -35,15 +36,19 @@ function init() {
 		say("You double-clicked on '" + rd.role.val + "'!!!!");
 	}
 	tblA.onBeforeRightClick = function(tbl, row, cell, rn, cn, rd, changedRow) {
-		tblA.contextMenu.setEnabled(2, (rd.imdb.val != ""));
+		if (rd.imdb.val == "") {
+			tblA.contextMenu.disable("imdb");
+		} else {
+			tblA.contextMenu.enable("imdb");
+		}
 	}
 	tblA.onBeforeRowRender = function(rn, rd, tr, tds) {
 		tds.imdb.innerHTML = B.char.CLOUD;
 		tds.imdb.style.color = (rd.imdb.val == "" ? "silver" : "navy");
 	}
-	tblA.contextMenu.addMenu("Trivia about First Year", function() { doRestTest(3); }, "help");
-	tblA.contextMenu.addMenu("Trivia about Episode count", function() { doRestTest(4); }, "help");
-	tblA.contextMenu.addMenu("IMDb actor link", function() { doIMDB(); }, "newwin");
+	tblA.contextMenu.addMenu("a", B.char.QUESTION, "Trivia about First Year", function() { tblA.contextMenu.hide(); doRestTest(3); });
+	tblA.contextMenu.addMenu("b", B.char.QUESTION, "Trivia about Episode count", function() { tblA.contextMenu.hide(); doRestTest(4); });
+	tblA.contextMenu.addMenu("imdb", B.char.FLAG, "IMDb actor link", function() { tblA.contextMenu.hide(); doIMDB(); });
 
 	tblA.addRows(example_data);
 
