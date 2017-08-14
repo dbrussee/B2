@@ -1,0 +1,72 @@
+B.PopupMenu = function(onbeforeshow) {
+    this.items = {};
+    this.itemlist = [];
+    this.showing = false;
+    this.object = null;
+    if (onbeforeshow == undefined) onbeforeshow = function() { return true; };
+    this.onbeforeshow = onbeforeshow;
+}
+B.PopupMenu.prototype.addMenu = function(id, img, txt, func, disabled) {
+    if (disabled == undefined) disabled = false;
+    if (func == undefined) func = function() { return true; };
+    var itm = { kind:'menu', id:id, img:img, text:txt, func:func, disabled:disabled };
+    this.items[id] = itm;
+    this.itemlist.push(itm);
+}
+B.PopupMenu.prototype.addSpace = function() {
+    var itm = { kind:'space' };
+    // No reference in items collection
+    this.itemlist.push(itm); 
+}
+B.PopupMenu.prototype.enable = function() {
+    for (arg in arguments) {
+        var itm = this.items[arg];
+        itm.disabled = false;
+    }
+}
+B.PopupMenu.prototype.disable = function() {
+    for (arg in arguments) {
+        var itm = this.items[arg];
+        itm.disabled = true;
+    }
+}
+B.PopupMenu.prototype.show = function(event) {
+    if (this.object == null) {
+        this.object = document.createElement("div");
+        this.object.style.cssText = "position:absolute; display:none; border:1px dotted navy; padding:3px; background-color:white;";
+        $(this.object).appendTo("body")
+    }
+    this.object.innerHTML = ""; // Clean it out each time!
+    var tree = new B.Tree(this.object, null, false);
+    for (var i = 0; i < this.itemlist.length; i++) {
+        var itm = this.itemlist[i];
+        if (itm.kind == "space") {
+            tree.addLeaf("<hr>", null,"&nbsp;");
+        } else if (itm.kind == "menu") {
+            if (itm.disabled) {
+                tree.addLeaf("<span style='color:silver;'>" + itm.text + "</span>", null, "&nbsp;");
+            } else {
+                if (itm.img == "") itm.img = B.char.EXCLAIM;
+                tree.addLeaf(itm.text, itm.func, itm.img);
+            }
+        } else {
+            // What kind if thing are you!?
+        }
+    }
+    tree.render();
+    if (B.is.IE()) {
+        $(this.object).css("top", event.clientY+5).css("left", event.clientX+5);
+    } else {
+        $(this.object).css("top", event.pageY-5).css("left", event.pageX-5);
+    }
+
+    $(this.object).show();
+	window.setTimeout($.proxy(function() {
+		$("html").one("click", $.proxy(function(event) { 
+			this.hide(); 
+		}, this));		
+	}, this), 10);
+}
+B.PopupMenu.prototype.hide = function() {
+    $(this.object).hide();
+}
