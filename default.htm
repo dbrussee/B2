@@ -46,9 +46,9 @@ function init() {
 		tds.imdb.innerHTML = B.char.CLOUD;
 		tds.imdb.style.color = (rd.imdb.val == "" ? "silver" : "navy");
 	}
-	tblA.contextMenu.addMenu("a", B.char.QUESTION, "Trivia about First Year", function() { tblA.contextMenu.hide(); doRestTest(3); });
-	tblA.contextMenu.addMenu("b", B.char.QUESTION, "Trivia about Episode count", function() { tblA.contextMenu.hide(); doRestTest(4); });
-	tblA.contextMenu.addMenu("imdb", B.char.FLAG, "IMDb actor link", function() { tblA.contextMenu.hide(); doIMDB(); });
+	tblA.contextMenu.addMenu("a", B.char.QUESTION, "Trivia about First Year", function() { doRestTest(3); });
+	tblA.contextMenu.addMenu("b", B.char.QUESTION, "Trivia about Episode count", function() { doRestTest(4); });
+	tblA.contextMenu.addMenu("imdb", B.char.FLAG, "IMDb actor link", function() { doIMDB(); });
 
 	tblA.addRows(example_data);
 
@@ -116,10 +116,11 @@ function init() {
 	sect = smnu.addSection("s2", "Second Section");
 	sect.addMenu("Show information...", function() { say("'Show information...'"); }, "INFO");
 	sect.addMenu("Tell me a joke...", function() { 
-		say("<b>\"Why don't you ever see elephants hiding in trees?\"</b><br><br>" + B.format.RED("Because they're really good at it") + ".");
+		say("<b>\"Why don't you ever see elephants hiding in trees?\"</b><br><br><span style='font-size:1.3em;'>" + B.format.YELLOW("&nbsp;Because they're really good at it!&nbsp;", "brown") + "</span>");
 	}, "HAPPY");
 	sect.addMenu("Scrolling Tables...", function() { ts1.setCurrentTab(1); }, "NEW");
 	sect = smnu.addSection("s3", "Option Selections");
+	sect.addMenu("Note that the checkboxes below do not close the menu when they are clicked!", null, "");
 	sect.addMenu("<label><input type='checkbox' name='cbA'>Storm the castle?</label>", function() { return false; }, "");
 	sect.addMenu("<label><input type='checkbox' name='cbB'>Plunder and loot?</label>", function() { return false; }, "");
 	//smnu.onafterclose = function(mnu) { say("You closed the menu"); }

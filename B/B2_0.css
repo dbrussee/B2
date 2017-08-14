@@ -62,12 +62,6 @@ table.form tr th {
 	background-color: lightcyan;
 }
 
-ul.BContextMenuItem li a {
-	padding: 0;
-	margin: 0;
-	border: 0;
-}
-
 tr.BAction, td.BAction, span.BAction {
 	cursor: pointer;
 }
