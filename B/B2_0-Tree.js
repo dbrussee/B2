@@ -207,7 +207,11 @@ B.TreeLeaf.prototype.render = function(branchElement) {
 	}
 	var isLink = (linktype != null);
 	var tr = document.createElement("tr");
-	if (isLink) tr.className = "BAction";
+	if (isLink) {
+		tr.className = "BAction";
+	} else {
+		tr.style.cursor = "default";
+	}
 	var td = document.createElement("td");
 	td.style.cssText = "color:darkgreen;vertical-align:top; width:1.1em; text-align:center;";
 	td.innerHTML = this.icon;

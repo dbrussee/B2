@@ -19,18 +19,22 @@ B.PopupMenu.prototype.addSpace = function() {
     this.itemlist.push(itm); 
 }
 B.PopupMenu.prototype.enable = function() {
-    for (arg in arguments) {
-        var itm = this.items[arg];
+    for (var i = 0; i < arguments.length; i++) {
+        var itm = this.items[arguments[i]];
         itm.disabled = false;
     }
 }
 B.PopupMenu.prototype.disable = function() {
-    for (arg in arguments) {
-        var itm = this.items[arg];
+    for (var i = 0; i < arguments.length; i++) {
+        var itm = this.items[arguments[i]];
         itm.disabled = true;
     }
 }
 B.PopupMenu.prototype.show = function(event) {
+	try {
+		event.preventDefault();
+		$("*").tooltip("close");
+	} catch(e) {;}    
     if (this.object == null) {
         this.object = document.createElement("div");
         this.object.style.cssText = "position:absolute; display:none; border:1px dotted navy; padding:3px; background-color:white;";
@@ -41,7 +45,7 @@ B.PopupMenu.prototype.show = function(event) {
     for (var i = 0; i < this.itemlist.length; i++) {
         var itm = this.itemlist[i];
         if (itm.kind == "space") {
-            tree.addLeaf("<hr>", null,"&nbsp;");
+            tree.addLeaf("<span style='color:silver;'><hr></span>", null,"&nbsp;");
         } else if (itm.kind == "menu") {
             if (itm.disabled) {
                 tree.addLeaf("<span style='color:silver;'>" + itm.text + "</span>", null, "&nbsp;");
