@@ -42,11 +42,11 @@ function init() {
 		}
 	}
 	tblA.onBeforeRowRender = function(rn, rd, tr, tds) {
-		tds.imdb.innerHTML = B.char.CLOUD;
-		tds.imdb.style.color = (rd.imdb.val == "" ? "silver" : "navy");
+		tds.imdb.innerHTML = (rd.imdb.val == "" ? "&nbsp;" : "IMDB");
+		tds.fy.innerHTML = rd.fy.val + "-" + rd.ly.val;
 	}
-	tblA.contextMenu.addMenu("a", B.char.QUESTION, "Trivia about First Year", function() { doRestTest(3); });
-	tblA.contextMenu.addMenu("b", B.char.QUESTION, "Trivia about Episode count", function() { doRestTest(4); });
+	tblA.contextMenu.addMenu("a", B.char.QUESTION, "Trivia about Episode count", function() { doRestTest(4); });
+	tblA.contextMenu.addMenu("b", B.char.QUESTION, "Trivia about First Year", function() { doRestTest(3); });
 	tblA.contextMenu.addMenu("imdb", B.char.FLAG, "IMDb actor link", function() { doIMDB(); });
 
 	tblA.addRows(example_data);
@@ -236,8 +236,7 @@ function doRestTest(typ) {
 			<tr><th data='actor,160'>Actor</th>
 				<th data='role,160'>Role</th>
 				<th data='episodes,50,C'>Eps</th>
-				<th data='fy,65,R'>First Yr</th>
-				<th data='ly,65,R'>Last Yr</th>
+				<th data='fy,85,C'>Years</th>
 				<th data='imdb,100,C'>IMDb</th></tr>
 		</table>
 	</div>
