@@ -10,17 +10,27 @@ B.SlideMenu = function(title, width, multi, clr, bgclr) {
 	if (width == "") width = "240px";
 	if (typeof width == "number") width += "px";
 	var div = document.createElement("div");
-	div.style.cssText = "position:absolute; height:93%; overflow:hidden; left:5px; top:5px; margin:0; boxShadow: 5px 5px 10px gray;";
 	$(div).on("click", $.proxy(function() { this.close(); }, this));
+	div.style.position = "absolute";
+	div.style.height = "93%";
+	div.style.overflow = "hidden";
 	div.style.width = width;
 	div.style.backgroundColor = this.bgclr;
 	div.style.color = this.clr;
+	div.style.left = "5px";
+	div.style.top = "5px";
+	div.style.margin = "0";
+	div.style.boxShadow = "5px 5px 10px gray";
 	var topdiv = document.createElement("div");
-	topdiv.style.cssText = "padding-bottom:0; margin-bottom:0; text-align:right;";
+	topdiv.style.paddingBottom = "0px";
+	topdiv.style.marginBottom = "0";
+	topdiv.style.textAlign = "right";
 	if (title == undefined) title = "";
 	topdiv.innerHTML = "<span style='font-size: 10pt; font-weight: bold; float: left; padding-left: 6px; padding-top: 5px;'>" + title + "</span>";
 	var xbox = document.createElement("span");
-	xbox.style.cssText = "cursor:pointer; padding-right:4px; padding-top:4px;";
+	xbox.style.cursor = "pointer";
+	xbox.style.paddingRight = "4px";
+	xbox.style.paddingTop = "4px";
 	xbox.innerHTML = B.img("ERROR", 17);
 	topdiv.appendChild(xbox);
 	div.appendChild(topdiv);
@@ -61,7 +71,10 @@ B.SlideMenu = function(title, width, multi, clr, bgclr) {
 		}
 	}
 	this.pushDiv = document.createElement("span");
-	this.pushDiv.style.cssText = "position:absolute; top:0; left:0; overflow:hidden;";
+	this.pushDiv.style.position = "absolute";
+	this.pushDiv.style.top = "0px";
+	this.pushDiv.style.left = "0px";
+	this.pushDiv.style.overflow = "hidden";
 	this.open = this.show;
 	this.hide = function() { 
 		var rslt = this.onbeforeclose(this);
@@ -108,7 +121,6 @@ B.SlideMenu.prototype.addMenu = function(text, handler, iconname, section, clr, 
 	if (section == "") section = null;
 	var h = "";
 	var div = document.createElement("div");
-	div.style.cssText = "font-weight:normal; cursor:pointer; font-size:10pt; margin:0; padding:3px;";
 	div.style.backgroundColor = this.bgclr;
 	div.style.color = this.clr;
 	if (iconname == undefined) iconname = "";
@@ -117,7 +129,11 @@ B.SlideMenu.prototype.addMenu = function(text, handler, iconname, section, clr, 
 		h = B.img(iconname, 10);
 	}
 	div.innerHTML = B.trim(h + " " + text);
+	div.style.fontWeight = "normal";
+	div.style.fontSize = "10pt";
 	div.style.borderTop = "1px solid " + this.menu.bgclr;
+	div.style.margin = "0";
+		div.style.padding = "3px";
 	if (section == null) {
 		this.menu.appendChild(div);
 	} else {
@@ -179,16 +195,27 @@ B.SlideMenu.prototype.addSection = function(id, title, clr, bgclr) {
 	this.sections[id] = sec;
 
 	var div = document.createElement("div");
-	div.style.cssText = "text-align:center; font-weight:bold; cursor:pointer; font-size:10pt; padding-top:3px; margin:0;";
 	div.style.backgroundColor = sec.bgclr;
 	div.style.color = sec.clr;
+	div.style.textAlign = "center";
 	div.innerHTML = "<div style='padding-bottom: 3px;'>" + B.trim(title) + "</div>";
+	div.style.fontWeight = "bold";
+	div.style.cursor = "pointer";
+	div.style.fontSize = "10pt";
 	div.style.borderTop = "1px solid " + this.bgclr;
+	div.style.paddingTop = "3px";
+	div.style.margin = "0";
 	sec.section = div;
 	this.menu.appendChild(div);
 	
 	var sub = document.createElement("div");
-	sub.style.cssText = "text-align:left; padding:0; padding-left:.5em; font-weight:bold; cursor:pointer; font-size:10pt; margin:0;";
+	sub.style.textAlign = "left";
+	sub.style.padding = "0"; // padding already applied on parent
+	sub.style.paddingLeft = ".5em";
+	sub.style.fontWeight = "bold";
+	sub.style.cursor = "pointer";
+	sub.style.fontSize = "10pt";
+	sub.style.margin = "0";
 	sec.div = sub;
 	$(sub).hide();
 	div.appendChild(sub);
@@ -217,6 +244,7 @@ B.SlideMenu.prototype.disable = function() {
 		var itm = this.items[arguments[i]];
 		itm.div.style.backgroundColor = "gray";
 		itm.div.style.color = "white";
+        itm.div.style.cursor = "default";
 		itm.div.onclick = function(event) { event.stopPropagation(); };
 		itm.div.onmouseover = function() { };
 		itm.div.onmouseout = function() { };
@@ -227,21 +255,29 @@ B.SlideMenu.prototype.enable = function() {
 	for (var i = 0; i < arguments.length; i++) {
 		var itm = this.items[arguments[i]];
 		itm.div.style.backgroundColor = itm.bgclr;
-		itm.div.style.color = itm.clr;
-		itm.div.onclick = $.proxy(function(event) { 
-			event.stopPropagation();
-			var rslt = itm.handler();
-			if (rslt == undefined) rslt = true;
-			if (rslt) this.close();
-		}, this);
-		itm.div.onmouseover = $.proxy(function() { 
-			this.div.style.backgroundColor = itm.hvrbgclr ;
-			this.div.style.color = itm.hvrclr;
-		}, itm);
-		itm.div.onmouseout = $.proxy(function() { 
-			this.div.style.backgroundColor = this.bgclr; 
-			this.div.style.color = this.clr;
-		}, itm);
-		itm.disabled = false;
+        itm.div.style.color = itm.clr;
+        if (itm.handler == null) { // Text only... no handler
+            itm.div.style.cursor = "default";
+            itm.div.onclick = function(event) { event.stopPropagation(); return false; };
+            itm.div.onmouseover = function() { };
+            itm.div.onmouseout = function() { };
+        } else {
+            itm.div.style.cursor = "pointer";
+            itm.div.onclick = $.proxy(function(event) { 
+                event.stopPropagation();
+                var rslt = itm.handler();
+                if (rslt == undefined) rslt = true;
+                if (rslt) this.close();
+            }, this);
+            itm.div.onmouseover = $.proxy(function() { 
+                this.div.style.backgroundColor = itm.hvrbgclr ;
+                this.div.style.color = itm.hvrclr;
+            }, itm);
+            itm.div.onmouseout = $.proxy(function() { 
+                this.div.style.backgroundColor = this.bgclr; 
+                this.div.style.color = this.clr;
+            }, itm);
+        }
+        itm.disabled = false;    
 	}
 }
