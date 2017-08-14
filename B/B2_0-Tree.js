@@ -5,7 +5,11 @@ B.Tree = function(elementId, leaf_click_callback, only_one_open_per_level) {
 	this.onLeafclick = leaf_click_callback || null;
 	if (only_one_open_per_level == undefined) only_one_open_per_level = true;
 	this.oneBranchPerLevel = only_one_open_per_level;
-	this.element = document.getElementById(elementId);
+	if (typeof elementId == "string") {
+		this.element = document.getElementById(elementId);		
+	} else {
+		this.element = elementId;
+	}
 	this.tbl = null; // To be created and applied to this.element when rendering
 	this.nodes = []; // A node can be a leaf or a branch (leaves)
 
