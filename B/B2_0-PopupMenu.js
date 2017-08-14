@@ -37,7 +37,7 @@ B.PopupMenu.prototype.show = function(event) {
 	} catch(e) {;}    
     if (this.object == null) {
         this.object = document.createElement("div");
-        this.object.style.cssText = "position:absolute; display:none; border:1px dotted navy; padding:3px; background-color:white; boxShadow: 5px 5px 10px 6px rgba(0, 0, 0, 0.4);";
+        this.object.style.cssText = "position:absolute; display:none; border:1px dotted navy; padding:3px; background-color:white;";
         $(this.object).appendTo("body")
     }
     this.object.innerHTML = ""; // Clean it out each time!
