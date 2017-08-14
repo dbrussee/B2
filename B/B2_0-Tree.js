@@ -142,8 +142,9 @@ B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
 	var tr = document.createElement("tr");
 	parentElement.appendChild(tr)
 	tr.style.cursor = "pointer";
+	//tr.className = "BAction";
 	var td = document.createElement("td");
-	td.style.cssText = "color:darkgreen; vertical-align:top; width:1.1em; text-align:right; padding-right:3px;";
+	td.style.cssText = "color:darkgreen; vertical-align:top; width:1.1em; text-align:center;";
 	tr.appendChild(td);
 	td = document.createElement("td");
 	td.style.cssText = "vertical-align:top;";
@@ -206,13 +207,14 @@ B.TreeLeaf.prototype.render = function(branchElement) {
 	}
 	var isLink = (linktype != null);
 	var tr = document.createElement("tr");
-	if (isLink) tr.style.cursor = "pointer";
+	if (isLink) tr.className = "BAction";
 	var td = document.createElement("td");
-	td.style.cssText = "color:darkgreen;vertical-align:top; width:1.1em; text-align:right; padding-right:3px;";
+	td.style.cssText = "color:darkgreen;vertical-align:top; width:1.1em; text-align:center;";
 	td.innerHTML = this.icon;
 	tr.appendChild(td);
 	td = document.createElement("td");
-	td.innerHTML = (isLink ? B.format.ASLINK(this.html) : this.html);
+	//td.innerHTML = (isLink ? B.format.ASLINK(this.html) : this.html);
+	td.innerHTML = this.html;
 	tr.appendChild(td);
 
 	if (linktype == "function") { // Call the user-defined function

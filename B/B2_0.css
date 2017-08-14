@@ -68,6 +68,14 @@ ul.BContextMenuItem li a {
 	border: 0;
 }
 
+tr.BAction, td.BAction, span.BAction {
+	cursor: pointer;
+}
+.BAction:hover {
+	background-color: aqua;
+	color: navy;
+}
+
 span.anchor {
 	color: blue;
 	cursor: pointer;
