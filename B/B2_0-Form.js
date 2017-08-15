@@ -60,11 +60,7 @@ B.Form = function(formID) {
 						}
 					}
 				}
-				if (tag == "SELECT") {
-					rec.type = "select";
-				} else {
-					rec.type = "text";
-				}
+				rec.type = (tag == "SELECT" ? "select" : "text");
 			} else if (tag == "CHECKBOX") {
 				rec.type = "check";
 			} else if (tag == "RADIO") {

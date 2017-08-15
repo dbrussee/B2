@@ -1,8 +1,6 @@
 // B2.0 Table
 
 // TODO
-// Link B.Dataset to table
-// Add contextmenu
 // Add B.Form integration
 
 B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {

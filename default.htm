@@ -42,11 +42,12 @@ function init() {
 		}
 	}
 	tblA.onBeforeRowRender = function(rn, rd, tr, tds) {
-		tds.imdb.innerHTML = (rd.imdb.val == "" ? "&nbsp;" : "IMDB");
+		tds.imdb.innerHTML = (rd.imdb.val == "" ? "&nbsp;" : "IMDb");
 		tds.fy.innerHTML = rd.fy.val + "-" + rd.ly.val;
 	}
-	tblA.contextMenu.addMenu("a", B.char.QUESTION, "Trivia about Episode count", function() { doRestTest(4); });
-	tblA.contextMenu.addMenu("b", B.char.QUESTION, "Trivia about First Year", function() { doRestTest(3); });
+	//tblA.contextMenu.menuWidth = "120px";
+	tblA.contextMenu.addMenu("a", "#", "Trivia about Episode count", function() { doRestTest(4); });
+	tblA.contextMenu.addMenu("b", "Y", "Trivia about First Year", function() { doRestTest(3); });
 	tblA.contextMenu.addMenu("imdb", B.char.FLAG, "IMDb actor link", function() { doIMDB(); });
 
 	tblA.addRows(example_data);
@@ -283,6 +284,7 @@ function doRestTest(typ) {
 					<label><input type='radio' name='rad' value='D'>DDD</label></td></tr>
 				<tr><th>Disabled:</th><td><input size='20' maxlength='20' name='frz' disabled></td></tr>
 				<tr><th>Test Date:</th><td><input name='month' size='4' maxlength='2' value='9'> / <input name='day' size='4' maxlength='2' value='1'> <button onclick='doRestTest(2);'>get</button></td></tr>
+				<tr><th>Read-Only:</th><td><input name='ro' size='20' readonly value="Can't touch this!"></td></tr>
 			</table>
 		</td></tr>
 	</table>

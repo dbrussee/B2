@@ -1,6 +1,7 @@
 ﻿// B2.0 Tree
 // A Tree lives in a DIV. Any existing content will be destroyed
-
+// require B2_0-Core.js
+// require jQuery
 B.Tree = function(elementId, leaf_click_callback, only_one_open_per_level) {
 	this.onLeafclick = leaf_click_callback || null;
 	if (only_one_open_per_level == undefined) only_one_open_per_level = true;
