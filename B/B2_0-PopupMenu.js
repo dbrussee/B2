@@ -70,7 +70,7 @@ B.PopupMenu.prototype.show = function(event) {
     if (B.is.IE()) {
         $(this.object).css("top", event.clientY+5).css("left", event.clientX+5);
     } else {
-        $(this.object).css("top", event.pageY-5).css("left", event.pageX-5);
+        $(this.object).css("top", event.pageY+5).css("left", event.pageX+5);
     }
 
     $(this.object).show();
