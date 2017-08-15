@@ -1,9 +1,13 @@
-B.PopupMenu = function(onbeforeshow) {
+B.PopupMenu = function(onbeforeshow, menuWidth) {
     this.items = {};
     this.itemlist = [];
     this.showing = false;
     this.object = null;
-    if (onbeforeshow == undefined) onbeforeshow = function() { return true; };
+    if (menuWidth == undefined) menuWidth = null;
+    if (typeof menuWidth == "number") menuWidth += "px";
+    this.menuWidth = menuWidth;
+    if (onbeforeshow == undefined) onbeforeshow = null;
+    if (onbeforeshow == null) onbeforeshow = function() { return true; };
     this.onbeforeshow = onbeforeshow;
 }
 B.PopupMenu.prototype.addMenu = function(id, img, txt, func, disabled) {
@@ -37,7 +41,8 @@ B.PopupMenu.prototype.show = function(event) {
 	} catch(e) {;}    
     if (this.object == null) {
         this.object = document.createElement("div");
-        this.object.style.cssText = "position:absolute; display:none; border:1px dotted navy; padding:3px; background-color:white;";
+        this.object.style.cssText = "position:absolute; display:none; border:1px dotted black; padding:3px; background-color:white; box-shadow:5px 5px 10px gray;";
+        if (this.menuWidth != null) this.object.style.width = this.menuWidth;
         $(this.object).appendTo("body")
     }
     this.object.innerHTML = ""; // Clean it out each time!
