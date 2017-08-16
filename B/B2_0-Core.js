@@ -344,6 +344,16 @@ B.is = {
 		}
 		return true;
 	},
+	VALIDABAROUTINGNUMBER: function(val) {
+		val = B.trim(val);
+		if (val.length != 9) return false;
+		if (!B.is.INTEGER(val)) return false;
+		var a = parseInt(val.charAt(0),10) + parseInt(val.charAt(3),10) + parseInt(val.charAt(6),10);
+		var b = parseInt(val.charAt(1),10) + parseInt(val.charAt(4),10) + parseInt(val.charAt(7),10);
+		var c = parseInt(val.charAt(2),10) + parseInt(val.charAt(5),10) + parseInt(val.charAt(8),10);
+		var tot = (a*3) + (b*7) + c;
+		return (tot % 10 == 0);
+	},
 	NOTONEOF: function() { return B.whichOneOf.apply(null, arguments) < 0; },
 	ONEOF: function() { return B.whichOneOf.apply(null, arguments) >= 0; }
 };
