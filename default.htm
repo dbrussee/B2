@@ -26,7 +26,17 @@ function init() {
 
 	window.dd = new B.DropdownMenu();
 	var m = dd.addMenu("a", "First", function() { $("#ddBody").html("You clicked the first item"); });
-		m.addMenu("a1", "", "First - First");
+		m.addMenu("a1", "", "Back Routing Number...", function() { askValue("Enter a bank routing number to validate", "Number:", "", "ABA Routing Number", function(rslt) {
+				if (rslt == "") return;
+				if (B.is.VALIDABAROUTINGNUMBER(rslt)) {
+					say("Yippee!!, That is a valid routing number!");
+					return true;
+				} else {
+					sayError("Nope... No good.");
+					return false;
+				}
+			});
+		});
 		m.addMenu("a2", "2", "First - Second");
 		m.addMenu("a3", "3", "First - Third");
 		var mm = m.addSubmenu("aa", "Submenu Test");
