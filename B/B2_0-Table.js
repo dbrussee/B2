@@ -86,7 +86,6 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 		}
 	}, this);	
 	$(this.dataTable).on("contextmenu", $.proxy(function(event) {
-		if (this.maxSelectedRows == 0) return;
 		var el = $(event.target)[0]; // A collection even though only one
 		var cell = $(el).closest("td")[0];
 		if (cell == undefined) return;
@@ -102,8 +101,10 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 		if (rslt) {
 			this.pick(row, cell);
 			if (this.contextMenu.itemlist.length > 0)	{
-				this.onBeforeRightClick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd, row.rowIndex != this.current.rownum);
-				this.contextMenu.show(event);
+				if (this.contextMenu.showing) this.contextMenu.hide();
+				var rslt = this.onBeforeRightClick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd, row.rowIndex != this.current.rownum);
+				if (rslt == undefined) rslt = true;
+				if (rslt) this.contextMenu.show(event);
 			}
 		}
 	}, this));

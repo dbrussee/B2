@@ -2,6 +2,9 @@
 // A Tree lives in a DIV. Any existing content will be destroyed
 // require B2_0-Core.js
 // require jQuery
+
+// TODO: Add enable/disable to dynamically change activity
+
 B.Tree = function(elementId, leaf_click_callback, only_one_open_per_level) {
 	this.onLeafclick = leaf_click_callback || null;
 	if (only_one_open_per_level == undefined) only_one_open_per_level = true;
@@ -149,7 +152,7 @@ B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
 	tr.appendChild(td);
 	td = document.createElement("td");
 	td.style.cssText = "vertical-align:top;";
-	td.innerHTML = "<b>" + this.html + "</b> <span style='font-size:.8em;text-decooration:italic'>(" + this.nodes.length + ")</span>";
+	td.innerHTML = "<i>" + this.html + "</i> <span style='font-size:.7em;text-decooration:italic'>(" + this.nodes.length + ")</span>";
 	tr.appendChild(td);
 
 	this.tbl = document.createElement("table");

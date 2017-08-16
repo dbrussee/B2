@@ -16,12 +16,33 @@
 <script src="B/B2_0-Tree.js"></script>
 <script src="B/B2_0-Tabset.js"></script>
 <script src="B/B2_0-PopupMenu.js"></script>
+<script src="B/B2_0-DropdownMenu.js"></script>
 <script>
 
 function init() {
 	var frm = B.getForm("dlg1");
 	var now = new Date();
 	frm.set("month", now.getMonth()+1, "day", now.getDate());
+
+	window.dd = new B.DropdownMenu();
+	var m = dd.addMenu("a", "First", function() { $("#ddBody").html("You clicked the first item"); });
+		m.addMenu("a1", "", "First - First");
+		m.addMenu("a2", "2", "First - Second");
+		m.addMenu("a3", "3", "First - Third");
+		var mm = m.addSubmenu("aa", "Submenu Test");
+		mm.addMenu("aa1", "X", "First / Test - One");
+		mm.addMenu("aa2", "Y", "First / Test - Two");
+	m = dd.addMenu("b", "Second");
+		m.addMenu("b1", "1", "Second - First");
+		m.addMenu("b2", "2", "Second - Second");
+		m.addMenu("b3", "3", "Second - Third");
+	m = dd.addMenu("c", "Third");
+		m.addMenu("c1", "1", "Third - First");
+		m.addMenu("c2", "2", "Third - Second");
+		m.addMenu("c3", "3", "Third - Third");
+	dd.addMenu("d", "Last", function() { $("#ddBody").html("You clicked the last item"); });
+	dd.render("ddMenu");
+
 
 	window.tblA = new B.ScrollingTable("tblA", 150, new B.DataColumnSet("actor,role,episodes,fy,ly,imdb"), "actor", "actors");
 	tblA.footer.addButton("a", "First", function(event) { tblA.footer.disableButton("a").enableButton("b"); }).disable();
@@ -241,7 +262,11 @@ function doRestTest(typ) {
 				<th data='imdb,100,C'>IMDb</th></tr>
 		</table>
 	</div>
-	<div id='another' data='Unused,6em'></div>
+	<div id='another' data='Dropdown,6em'>
+		<div id='ddMenu'></div>
+		<br>
+		<span id='ddBody'></span>
+	</div>
 </div>
 
 
