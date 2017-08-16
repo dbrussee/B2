@@ -179,7 +179,7 @@ askValueIcon = function(icon, msg, prompt, value, title, callback, height, width
 			callback(null);  } }
 	];
 	sayIcon(icon, h, title, callback, height, width, btns);
-	if (value != undefined) $("#B-Say-Dialog-Value").val(value);
+	if (value != undefined && value != null) $("#B-Say-Dialog-Value").val(value);
 }
 function askValue(msg, p, v, t, cb, h, w) { askValueIcon("HELP", msg, p, v, t, cb, h, w); };
 function askValueWarn(msg, p, v, t, cb, h, w) { askValueIcon("WARN", msg, p, v, t, cb, h, w); };
