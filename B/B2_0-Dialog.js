@@ -1,7 +1,7 @@
 // Dialogs -- These are defined at global level to make the simple to use.
 
 // TODO
-// askValue (get a text value from the user and do callback)
+// BUG: askValue - Enter key submits page (reload)
 
 B.dialogStack = []; // The stack stays in the B domain
 function openDialog(id, btns) {

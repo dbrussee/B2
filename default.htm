@@ -25,24 +25,23 @@ function init() {
 	frm.set("month", now.getMonth()+1, "day", now.getDate());
 
 	window.dd = new B.DropdownMenu();
-	var m = dd.addMenu("a", "First", function() { $("#ddBody").html("You clicked the first item"); });
+	var m = dd.addMenu("a", B.img("LEDGREEN") + " First", function() { $("#ddBody").html("You clicked the first item"); });
 		m.addMenu("a1", "", "Back Routing Number...", function() { askValue("Enter a bank routing number to validate", "Number:", bankNumber, "ABA Routing Number", function(rslt) {
 				if (rslt == "") return;
 				bankNumber = rslt;
 				if (B.is.VALIDABAROUTINGNUMBER(rslt)) {
 					$("#ddBody").html("Yippee!!, '" + rslt + "' is a valid routing number!");
-					return true;
 				} else {
 					$("#ddBody").html("Nope... '" + rslt + "' is no good.");
-					return false;
 				}
 			});
 		});
-		m.addMenu("a2", "2", "First - Second");
-		m.addMenu("a3", "3", "First - Third");
+		//m.addMenu("a2", B.char.CHECKY, "Turn on routing number", function() { dd.menus.a.submenu.items.aa.menu.enable("aa1")});
+		m.addMenu("a2", B.char.CHECKY, "Turn on routing number", function() { dd.enableItem("a", "a1")});
+		m.addMenu("a3", B.char.CHECKN, "Turn off routing number", function() { dd.disableItem("a", "a1")});
 		var mm = m.addSubmenu("aa", "Submenu Test");
-		mm.addMenu("aa1", "X", "First / Test - One");
-		mm.addMenu("aa2", "Y", "First / Test - Two");
+		mm.addMenu("aa1", "X", "Stay open when clicked!!", function() { $("#ddBody").html("The old man's down the road!"); return false; });
+		mm.addMenu("aa2", "Y", "Change text", function() { dd.setText("a", B.img("LEDOFF") + " " + B.getDateParts(new Date()).sss); return false; });
 	m = dd.addMenu("b", "Second");
 		m.addMenu("b1", "1", "Second - First");
 		m.addMenu("b2", "2", "Second - Second");

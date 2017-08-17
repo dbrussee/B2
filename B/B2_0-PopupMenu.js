@@ -9,6 +9,7 @@ B.PopupMenu = function(onbeforeshow) {
     if (onbeforeshow == null) onbeforeshow = function() { return true; };
     this.onbeforeshow = onbeforeshow;
     this.onclose = function() { };
+    this.handler = null;
     this.made = false; // After the first MAKE... we need to track the status of open/closed submenus
 }
 B.PopupMenu.prototype.addMenu = function(id, img, txt, func, disabled) {
@@ -24,10 +25,10 @@ B.PopupMenu.prototype.addSpace = function() {
     this.itemlist.push(itm); 
 }
 B.PopupMenu.prototype.addSubmenu = function(id, txt) {
-    var itm = { kind:'submenu', id:id, text:txt, mnu:new B.PopupSubmenu(this, this, id, txt) };
-    // No reference in items collection
+    var itm = { kind:'submenu', id:id, text:txt, menu:new B.PopupSubmenu(this, this, id, txt) };
+    this.items[id] = itm;
     this.itemlist.push(itm);
-    return itm.mnu;
+    return itm.menu;
 }
 B.PopupMenu.prototype.enable = function() {
     for (var i = 0; i < arguments.length; i++) {
@@ -41,6 +42,23 @@ B.PopupMenu.prototype.disable = function() {
         itm.disabled = true;
     }
 }
+B.PopupMenu.prototype.getSubmenu = function(code) {
+    // code is <submenuid>.<submenuid>
+    // example: a.b.c
+    var parts = code.split(".");
+    var menu = this;
+    for (var i = 0; i < parts.length; i++) {
+        if (parts[i] == "") continue;
+        var item = menu.items[parts[i]];
+        if (item.kind == "submenu") {
+            menu = item.menu;
+        } else {
+            break;
+        }
+    }
+    return menu;
+}
+
 B.PopupMenu.prototype.make = function() {
     if (!this.made) {
         this.object = document.createElement("div");
@@ -63,8 +81,12 @@ B.PopupMenu.prototype.make = function() {
             } else {
                 if (itm.img == "") itm.img = B.char.RIGHT_CLR;
                 this.tree.addItem(itm.text, $.proxy(function() { 
-                    this.tree.hide(); 
-                    this.func(); 
+                    var rslt = this.func(); 
+                    if (rslt == undefined) rslt = true;
+                    if (rslt) {
+                        $("html").click();
+                        this.tree.hide();     
+                    }
                 }, itm), itm.img);
             }
         } else if (itm.kind == "submenu") {
@@ -73,7 +95,7 @@ B.PopupMenu.prototype.make = function() {
                 open = oldTree.nodes[i].showing;
             }
             var b = this.tree.addBranch(itm.text, open);
-            itm.mnu.make(b);
+            itm.menu.make(b);
         } else {
             // What kind if thing are you!?
         }
@@ -82,7 +104,6 @@ B.PopupMenu.prototype.make = function() {
     this.made = true;
 }
 B.PopupMenu.prototype.showAt = function(x,y) {
-    if (this.showing) return;
     this.showing = true;
     this.make();
     $(this.object).css("top", y).css("left", x);
@@ -91,11 +112,10 @@ B.PopupMenu.prototype.showAt = function(x,y) {
 		$("html").one("click", $.proxy(function(event) { 
 			this.hide(); 
 		}, this));		
-	}, this);
+    }, this);
 	window.setTimeout(this.handler, 10);
 }
 B.PopupMenu.prototype.show = function(event) {
-    if (this.showing) return;
     this.showing = true;
 	try {
 		event.preventDefault();
@@ -117,7 +137,8 @@ B.PopupMenu.prototype.show = function(event) {
 	window.setTimeout(this.handler, 10);
 }
 B.PopupMenu.prototype.hide = function() {
-    $("html").unbind("click", this.handler);
+    if (this.handler != null) $("html").unbind("click", this.handler);
+    this.handler = null;
     $(this.object).hide();
     this.onclose();
     this.showing = false;
@@ -145,7 +166,7 @@ B.PopupSubmenu.prototype.addSpace = function() {
     this.itemlist.push(itm); 
 }
 B.PopupSubmenu.prototype.addSubmenu = function(id, txt) {
-    var itm = { kind:'submenu', id:id, text:txt, mnu:new B.PopupSubmenu(this.menu, this, id, txt) };
+    var itm = { kind:'submenu', id:id, text:txt, menu:new B.PopupSubmenu(this.menu, this, id, txt) };
     // No reference in items collection
     this.itemlist.push(itm);
 }
@@ -175,16 +196,17 @@ B.PopupSubmenu.prototype.make = function(branch) {
             } else {
                 if (itm.img == "") itm.img = B.char.RIGHT_CLR;
                 itm.branch.addItem(itm.text, $.proxy(function() { 
-                    $("html").unbind("click", this.handler);
-                    this.menu.hide(); 
-                    this.menu.onclose();
-                    this.menu.showing = false;
-                    this.func(); 
+                    var rslt = this.func(); 
+                    if (rslt == undefined) rslt = true;
+                    if (rslt) {
+                        $("html").click();
+                        this.menu.hide();     
+                    }
                 }, itm), itm.img);
             }
         } else if (itm.kind == "submenu") {
             this.tree.addBranch(itm.text, false);
-            itm.mnu.make();
+            itm.menu.make();
         } else {
             // What kind if thing are you!?
         }

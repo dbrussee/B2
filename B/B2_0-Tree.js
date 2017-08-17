@@ -230,7 +230,7 @@ B.TreeItem.prototype.render = function(branchElement) {
 		tr.onclick = $.proxy(function(e) {
 			try{e.stopPropagation();}catch(e){}			
 			try{event.cancelBubble = true;}catch(e){}
-			this.data.call();
+			this.data.call(); // In this case, data IS a function... so call it
 		}, this);
 	} else if (linktype == "item") { // call the global functin passing data
 		tr.onclick = $.proxy(function(e) {

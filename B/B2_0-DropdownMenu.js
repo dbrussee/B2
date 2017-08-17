@@ -5,7 +5,6 @@ B.DropdownMenu = function(onbeforeshow) {
     if (onbeforeshow == undefined) onbeforeshow = null;
     if (onbeforeshow == null) onbeforeshow = function() { return true; };
     this.onbeforeshow = onbeforeshow;
-    this.object = null;
 }
 B.DropdownMenu.prototype.addMenu = function(id, text, onclick) {
     var pop = new B.PopupMenu();
@@ -14,6 +13,31 @@ B.DropdownMenu.prototype.addMenu = function(id, text, onclick) {
     this.menus[id] = mnu;
     this.menulist.push(mnu);
     return mnu.submenu;
+}
+B.DropdownMenu.prototype.setText = function(id, text) {
+    var menu = this.menus[id];
+    menu.text = text;
+    if (this.object != null) {
+        menu.td.innerHTML = text;
+    }
+}
+B.DropdownMenu.prototype.getMenu = function(code) {
+    // code is <menuid>.<submenuid>.<submenuid>
+    // example: a.aa 
+    //    a is the main dropdown menu
+    //    aa is a submenu in that dropdown
+    var parts = code.split(".");
+    var menu = this.menus[parts[0]].submenu;
+    menu = menu.getSubmenu(parts.slice(1).join("."));
+    return menu;
+}
+B.DropdownMenu.prototype.enableItem = function(code, id) {
+    var menu = this.getMenu(code);
+    menu.enable(id);
+}
+B.DropdownMenu.prototype.disableItem = function(code, id) {
+    var menu = this.getMenu(code);
+    menu.disable(id);
 }
 B.DropdownMenu.prototype.render = function(div) {
     if (typeof div == "string") div = document.getElementById(div);
