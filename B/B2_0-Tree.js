@@ -5,8 +5,9 @@
 
 // TODO: Add enable/disable to dynamically change activity
 
-B.Tree = function(elementId, leaf_click_callback, only_one_open_per_level) {
-	this.onLeafclick = leaf_click_callback || null;
+B.Tree = function(elementId, item_click_callback, only_one_open_per_level) {
+	this.rendered = false;
+	this.onitemclick = item_click_callback || null;
 	if (only_one_open_per_level == undefined) only_one_open_per_level = true;
 	this.oneBranchPerLevel = only_one_open_per_level;
 	if (typeof elementId == "string") {
@@ -15,7 +16,7 @@ B.Tree = function(elementId, leaf_click_callback, only_one_open_per_level) {
 		this.element = elementId;
 	}
 	this.tbl = null; // To be created and applied to this.element when rendering
-	this.nodes = []; // A node can be a leaf or a branch (leaves)
+	this.nodes = []; // A node can be a item or a branch (which contains items)
 
 	this.closedBranchIcon = B.char.PLUS;
 	this.openBranchIcon = B.char.MINUS;
@@ -27,10 +28,10 @@ B.Tree.prototype.addBranch = function(html, showing) {
 	this.nodes.push(branch);
 	return branch;
 }
-B.Tree.prototype.addLeaf = function(txt, data, icon) {
-	var leaf = new B.TreeLeaf(this, this, txt, data, icon);
-	this.nodes.push(leaf);
-	return leaf;
+B.Tree.prototype.addItem = function(txt, data, icon) {
+	var item = new B.TreeItem(this, this, txt, data, icon);
+	this.nodes.push(item);
+	return item;
 }
 B.Tree.prototype.closeAll = function() {
 	for (var i = 0; i < this.nodes.length; i++) {
@@ -87,7 +88,7 @@ B.TreeBranch = function(tree, parent, html, showing) {
 	if (showing == undefined) showing = true;
 	this.showing = showing;
 	this.tbl = null;
-	this.leafDIV = null;
+	this.itemDIV = null;
 	return this;
 }
 B.TreeBranch.prototype.addBranch = function(html, showing) {
@@ -95,10 +96,10 @@ B.TreeBranch.prototype.addBranch = function(html, showing) {
 	this.nodes.push(branch);
 	return branch;
 }
-B.TreeBranch.prototype.addLeaf = function(html, data, icon) {
-	var leaf = new B.TreeLeaf(this.tree, this, html, data, icon);
-	this.nodes.push(leaf);
-	return leaf;
+B.TreeBranch.prototype.addItem = function(html, data, icon) {
+	var item = new B.TreeItem(this.tree, this, html, data, icon);
+	this.nodes.push(item);
+	return item;
 }
 B.TreeBranch.prototype.close = function() {
 	$(this.tbl).hide();
@@ -194,7 +195,7 @@ B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
 	tr.cells[0].innerHTML = (this.showing ? this.tree.openBranchIcon : this.tree.closedBranchIcon);
 }
 
-B.TreeLeaf = function(tree, parent, html, data, icon) {
+B.TreeItem = function(tree, parent, html, data, icon) {
 	this.tree = tree;
 	this.parent = parent;
 	this.icon = icon || B.char.RIGHT;
@@ -202,12 +203,12 @@ B.TreeLeaf = function(tree, parent, html, data, icon) {
 	this.html = html || "";
 	return this;
 }
-B.TreeLeaf.prototype.render = function(branchElement) {
+B.TreeItem.prototype.render = function(branchElement) {
 	var linktype = null;
 	if (this.data instanceof Function) {
 		linktype = "function";
-	} else if (this.tree.onLeafclick != null && this.data != null) {
-		linktype = "leaf";
+	} else if (this.tree.onItemclick != null && this.data != null) {
+		linktype = "item";
 	}
 	var isLink = (linktype != null);
 	var tr = document.createElement("tr");
@@ -231,11 +232,11 @@ B.TreeLeaf.prototype.render = function(branchElement) {
 			try{event.cancelBubble = true;}catch(e){}
 			this.data.call();
 		}, this);
-	} else if (linktype == "leaf") { // call the global functin passing data
+	} else if (linktype == "item") { // call the global functin passing data
 		tr.onclick = $.proxy(function(e) {
 			try{e.stopPropagation();}catch(e){}			
 			try{event.cancelBubble = true;}catch(e){}
-			this.tree.onLeafclick(this.data);
+			this.tree.onItemclick(this.data);
 		}, this)
 	} else { // Do nothing, but stop going up the chain!
 		tr.onclick = function(e) { 

@@ -9,6 +9,7 @@ B.PopupMenu = function(onbeforeshow) {
     if (onbeforeshow == null) onbeforeshow = function() { return true; };
     this.onbeforeshow = onbeforeshow;
     this.onclose = function() { };
+    this.made = false; // After the first MAKE... we need to track the status of open/closed submenus
 }
 B.PopupMenu.prototype.addMenu = function(id, img, txt, func, disabled) {
     if (disabled == undefined) disabled = false;
@@ -41,36 +42,44 @@ B.PopupMenu.prototype.disable = function() {
     }
 }
 B.PopupMenu.prototype.make = function() {
-    if (this.object == null) {
+    if (!this.made) {
         this.object = document.createElement("div");
         this.object.style.cssText = "position:absolute; display:none; border:1px dotted navy; border-top: 3px solid navy; padding:3px; background-color:white; box-shadow:5px 5px 10px gray;";
         $(this.object).appendTo("body")
     }
     this.object.innerHTML = ""; // Clean it out each time!
+    
+    var oldTree = this.tree;
+
     this.tree = new B.Tree(this.object, null, false);
     for (var i = 0; i < this.itemlist.length; i++) {
         var itm = this.itemlist[i];
         itm.tree = this;
         if (itm.kind == "space") {
-            this.tree.addLeaf("<span style='color:silver;'><hr></span>", null,"&nbsp;");
+            this.tree.addItem("<span style='color:silver;'><hr></span>", null,"&nbsp;");
         } else if (itm.kind == "menu") {
             if (itm.disabled) {
-                this.tree.addLeaf("<span style='color:silver;'>" + itm.text + "</span>", null, "&nbsp;");
+                this.tree.addItem("<span style='color:silver;'>" + itm.text + "</span>", null, "&nbsp;");
             } else {
                 if (itm.img == "") itm.img = B.char.RIGHT_CLR;
-                this.tree.addLeaf(itm.text, $.proxy(function() { 
+                this.tree.addItem(itm.text, $.proxy(function() { 
                     this.tree.hide(); 
                     this.func(); 
                 }, itm), itm.img);
             }
         } else if (itm.kind == "submenu") {
-            var b = this.tree.addBranch(itm.text, false);
+            var open = false;
+            if (oldTree != null) {
+                open = oldTree.nodes[i].showing;
+            }
+            var b = this.tree.addBranch(itm.text, open);
             itm.mnu.make(b);
         } else {
             // What kind if thing are you!?
         }
     }
     this.tree.render();
+    this.made = true;
 }
 B.PopupMenu.prototype.showAt = function(x,y) {
     if (this.showing) return;
@@ -155,17 +164,21 @@ B.PopupSubmenu.prototype.disable = function() {
 B.PopupSubmenu.prototype.make = function(branch) {
     for (var i = 0; i < this.itemlist.length; i++) {
         var itm = this.itemlist[i];
-        itm.tree = this.tree;
+        itm.tree = branch.tree;
         itm.branch = branch;
+        itm.menu = this.menu;
         if (itm.kind == "space") {
-            itm.branch.addLeaf("<span style='color:silver;'><hr></span>", null,"&nbsp;");
+            itm.branch.addItem("<span style='color:silver;'><hr></span>", null,"&nbsp;");
         } else if (itm.kind == "menu") {
             if (itm.disabled) {
-                itm.branch.addLeaf("<span style='color:silver;'>" + itm.text + "</span>", null, "&nbsp;");
+                itm.branch.addItem("<span style='color:silver;'>" + itm.text + "</span>", null, "&nbsp;");
             } else {
                 if (itm.img == "") itm.img = B.char.RIGHT_CLR;
-                itm.branch.addLeaf(itm.text, $.proxy(function() { 
-                    this.tree.hide(); 
+                itm.branch.addItem(itm.text, $.proxy(function() { 
+                    $("html").unbind("click", this.handler);
+                    this.menu.hide(); 
+                    this.menu.onclose();
+                    this.menu.showing = false;
                     this.func(); 
                 }, itm), itm.img);
             }

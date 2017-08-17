@@ -78,8 +78,9 @@ function init() {
 		tds.fy.innerHTML = rd.fy.val + "-" + rd.ly.val;
 	}
 	//tblA.contextMenu.menuWidth = "120px";
-	tblA.contextMenu.addMenu("a", "#", "Trivia about Episode count", function() { doRestTest(4); });
-	tblA.contextMenu.addMenu("b", "Y", "Trivia about First Year", function() { doRestTest(3); });
+	var sm = tblA.contextMenu.addSubmenu("sm1", "Trivia");
+	sm.addMenu("a", "#", "Trivia about Episode count", function() { doRestTest(4); });
+	sm.addMenu("b", "Y", "Trivia about First Year", function() { doRestTest(3); });
 	tblA.contextMenu.addMenu("imdb", B.char.FLAG, "IMDb actor link", function() { doIMDB(); });
 
 	tblA.addRows(example_data);
@@ -87,8 +88,8 @@ function init() {
 	window.tree1 = new B.Tree("tree1", null, true);
 	var br = tree1.addBranch("Dialog actions", false);
 	var b2 = br.addBranch("General messages", false);
-	b2.addLeaf("Say something via dialog", function() { say("Ok, I said something. So there."); }, B.img("INFO"));
-	b2.addLeaf("Ask something",
+	b2.addItem("Say something via dialog", function() { say("Ok, I said something. So there."); }, B.img("INFO"));
+	b2.addItem("Ask something",
 		function() { ask("Are you happy you chose to have me ask you something?", "",
 			function(rslt) {
 				if (rslt == "YES") {
@@ -98,7 +99,7 @@ function init() {
 				}
 			}); 
 		}, B.img("HELP"));
-	b2.addLeaf("Yes/No/Cancel (askC)",
+	b2.addItem("Yes/No/Cancel (askC)",
 		function() { askC("Let's say you are on step 3 of 10. Do you want to continue?", "",
 			function(rslt) {
 				if (rslt == "YES") {
@@ -110,17 +111,17 @@ function init() {
 				}
 			}); 
 		});
-	b2.addLeaf("Choose an item with choose", 
+	b2.addItem("Choose an item with choose", 
 		function() { choose("Pick one of the items", "", "Tom,Dick,Harry", 
 			function(rslt) { say("You chose option " + rslt); }
 		); }, B.char.CHECK);
-	br.addLeaf("Freeze the screen", function() { 
+	br.addItem("Freeze the screen", function() { 
 		timedFreeze("This message will disappear using the thaw() method in 10 seconds. " +
 			"Use freeze(msg) for normal stuff, but when calling remote operations that may " +
 			"take some time, you may want to include a timer."); 
 		window.setTimeout(function() { thaw(); }, 10000);
 	});
-	br.addLeaf("Get a value", function() {
+	br.addItem("Get a value", function() {
 		askValue("Enter a value that will be used to know how intelligent you are.", "Your Number:", "42", "Are you a Hoopy Frood?", function(rslt) {
 			if (rslt != null) {
 				if (rslt == "42") {
@@ -131,11 +132,11 @@ function init() {
 			}
 		})
 	})
-	br.addLeaf("Open up a form dialog", function() { doDialogTest(); });
+	br.addItem("Open up a form dialog", function() { doDialogTest(); });
 	br = tree1.addBranch("Some Other Actions", false);
-	br.addLeaf("Show images", function() { doImageTest(); });
-	br.addLeaf("Show chars", function() { doCharTest(); });
-	tree1.addLeaf("This line is just informative. You cannot click it.")
+	br.addItem("Show images", function() { doImageTest(); });
+	br.addItem("Show chars", function() { doCharTest(); });
+	tree1.addItem("This line is just informative. You cannot click it.")
 	tree1.render();
 
 
