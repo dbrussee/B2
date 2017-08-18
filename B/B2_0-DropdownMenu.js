@@ -23,13 +23,18 @@ B.DropdownMenu.prototype.setText = function(id, text) {
 }
 B.DropdownMenu.prototype.getMenu = function(code) {
     // code is <menuid>.<submenuid>.<submenuid>
-    // example: a.aa 
+    // example: a.aa.aaa
     //    a is the main dropdown menu
     //    aa is a submenu in that dropdown
+    //    aaa is a submenu in aa
     var parts = code.split(".");
-    var menu = this.menus[parts[0]].submenu;
+    var menu = this.menus[parts[0]].submenu; // This is a B.PopupMenu object
     menu = menu.getSubmenu(parts.slice(1).join("."));
-    return menu;
+    return menu; // This is either a PopupMenu or a subMenu of that PopupMenu
+}
+B.DropdownMenu.prototype.getItem = function(menucode, itemid) {
+    var menu = this.getMenu(menucode);
+    return menu.items[itemid].treenode;
 }
 B.DropdownMenu.prototype.enableItem = function(code, id) {
     var menu = this.getMenu(code);

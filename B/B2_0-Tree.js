@@ -203,6 +203,14 @@ B.TreeItem = function(tree, parent, html, data, icon) {
 	this.textTD = null;
 	return this;
 }
+B.TreeItem.prototype.setIcon = function(icon) {
+	this.icon = icon;
+	if (this.iconTD != null) this.iconTD.innerHTML = icon;
+}
+B.TreeItem.prototype.setText = function(text) {
+	this.html = text;
+	if (this.textTD != null) this.textTD.innerHTML = text + "&nbsp;";
+}
 B.TreeItem.prototype.render = function(branchElement) {
 	var linktype = null;
 	if (this.data instanceof Function) {

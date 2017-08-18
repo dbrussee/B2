@@ -15,7 +15,7 @@ B.PopupMenu = function(onbeforeshow) {
 B.PopupMenu.prototype.addMenu = function(id, img, txt, func, disabled) {
     if (disabled == undefined) disabled = false;
     if (func == undefined) func = function() { return true; };
-    var itm = { kind:'menu', id:id, img:img, text:txt, func:func, disabled:disabled };
+    var itm = { kind:'menu', id:id, img:img, text:txt, func:func, disabled:disabled, treenode:null };
     this.items[id] = itm;
     this.itemlist.push(itm);
 }
@@ -25,7 +25,7 @@ B.PopupMenu.prototype.addSpace = function() {
     this.itemlist.push(itm); 
 }
 B.PopupMenu.prototype.addSubmenu = function(id, txt) {
-    var itm = { kind:'submenu', id:id, text:txt, menu:new B.PopupSubmenu(this, this, id, txt) };
+    var itm = { kind:'submenu', id:id, text:txt, menu:new B.PopupSubmenu(this, this, id, txt), treenode:null };
     this.items[id] = itm;
     this.itemlist.push(itm);
     return itm.menu;
@@ -77,10 +77,10 @@ B.PopupMenu.prototype.make = function() {
             this.tree.addItem("<span style='color:silver;'><hr></span>", null,"&nbsp;");
         } else if (itm.kind == "menu") {
             if (itm.disabled) {
-                this.tree.addItem("<span style='color:silver;'>" + itm.text + "</span>", null, "&nbsp;");
+                itm.treenode = this.tree.addItem("<span style='color:silver;'>" + itm.text + "</span>", null, "&nbsp;");
             } else {
                 if (itm.img == "") itm.img = B.char.RIGHT_CLR;
-                this.tree.addItem(itm.text, $.proxy(function() { 
+                itm.treenode = this.tree.addItem(itm.text, $.proxy(function() { 
                     var rslt = this.func(); 
                     if (rslt == undefined) rslt = true;
                     if (rslt) {
@@ -95,6 +95,7 @@ B.PopupMenu.prototype.make = function() {
                 open = oldTree.nodes[i].showing;
             }
             var b = this.tree.addBranch(itm.text, open);
+            this.treenode = b;
             itm.menu.make(b);
         } else {
             // What kind if thing are you!?
@@ -156,7 +157,7 @@ B.PopupSubmenu = function(menu, parentBranch, id, text) {
 B.PopupSubmenu.prototype.addMenu = function(id, img, txt, func, disabled) {
     if (disabled == undefined) disabled = false;
     if (func == undefined) func = function() { return true; };
-    var itm = { kind:'menu', id:id, img:img, text:txt, func:func, disabled:disabled };
+    var itm = { kind:'menu', id:id, img:img, text:txt, func:func, disabled:disabled, treenode:null };
     this.items[id] = itm;
     this.itemlist.push(itm);
 }
@@ -166,20 +167,30 @@ B.PopupSubmenu.prototype.addSpace = function() {
     this.itemlist.push(itm); 
 }
 B.PopupSubmenu.prototype.addSubmenu = function(id, txt) {
-    var itm = { kind:'submenu', id:id, text:txt, menu:new B.PopupSubmenu(this.menu, this, id, txt) };
+    var itm = { kind:'submenu', id:id, text:txt, menu:new B.PopupSubmenu(this.menu, this, id, txt), treenode:null };
     // No reference in items collection
     this.itemlist.push(itm);
 }
-B.PopupSubmenu.prototype.enable = function() {
+B.PopupSubmenu.prototype.enable = function() { // Pass in "id,id" or "id", "id"
     for (var i = 0; i < arguments.length; i++) {
-        var itm = this.items[arguments[i]];
-        itm.disabled = false;
+        var id = argumenst[i];
+        if (id.indexOf(",") > -1) {
+            this.enable(id.split(","));
+        } else {
+            var itm = this.items[id];
+            itm.disabled = false;
+        }
     }
 }
-B.PopupSubmenu.prototype.disable = function() {
+B.PopupSubmenu.prototype.disable = function() { // Pass in "id,id" or "id", "id"
     for (var i = 0; i < arguments.length; i++) {
-        var itm = this.items[arguments[i]];
-        itm.disabled = true;
+        var id = argumenst[i];
+        if (id.indexOf(",") > -1) {
+            this.disable(id.split(","));
+        } else {
+            var itm = this.items[id];
+            itm.disabled = true;
+        }
     }
 }
 B.PopupSubmenu.prototype.make = function(branch) {
@@ -189,13 +200,13 @@ B.PopupSubmenu.prototype.make = function(branch) {
         itm.branch = branch;
         itm.menu = this.menu;
         if (itm.kind == "space") {
-            itm.branch.addItem("<span style='color:silver;'><hr></span>", null,"&nbsp;");
+            itm.branch.addItem("<hr />", null,"&nbsp;");
         } else if (itm.kind == "menu") {
             if (itm.disabled) {
-                itm.branch.addItem("<span style='color:silver;'>" + itm.text + "</span>", null, "&nbsp;");
+                itm.treenode = itm.branch.addItem("<span style='color:silver;'>" + itm.text + "</span>", null, "&nbsp;");
             } else {
                 if (itm.img == "") itm.img = B.char.RIGHT_CLR;
-                itm.branch.addItem(itm.text, $.proxy(function() { 
+                itm.treenode = itm.branch.addItem(itm.text, $.proxy(function() { 
                     var rslt = this.func(); 
                     if (rslt == undefined) rslt = true;
                     if (rslt) {
@@ -205,7 +216,7 @@ B.PopupSubmenu.prototype.make = function(branch) {
                 }, itm), itm.img);
             }
         } else if (itm.kind == "submenu") {
-            this.tree.addBranch(itm.text, false);
+            this.treenode = this.tree.addBranch(itm.text, false);
             itm.menu.make();
         } else {
             // What kind if thing are you!?
