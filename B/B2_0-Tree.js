@@ -3,8 +3,6 @@
 // require B2_0-Core.js
 // require jQuery
 
-// TODO: Add enable/disable to dynamically change activity
-
 B.Tree = function(elementId, item_click_callback, only_one_open_per_level) {
 	this.rendered = false;
 	this.onitemclick = item_click_callback || null;
@@ -199,8 +197,10 @@ B.TreeItem = function(tree, parent, html, data, icon) {
 	this.tree = tree;
 	this.parent = parent;
 	this.icon = icon || B.char.RIGHT;
+	this.iconTD = null;
 	this.data = data || null;
 	this.html = html || "";
+	this.textTD = null;
 	return this;
 }
 B.TreeItem.prototype.render = function(branchElement) {
@@ -219,9 +219,11 @@ B.TreeItem.prototype.render = function(branchElement) {
 	}
 	var td = document.createElement("td");
 	td.style.cssText = "color:darkgreen;vertical-align:top; width:1.1em; text-align:center;";
+	this.iconTD = td;
 	td.innerHTML = this.icon;
 	tr.appendChild(td);
 	td = document.createElement("td");
+	this.textTD = td;
 	//td.innerHTML = (isLink ? B.format.ASLINK(this.html) : this.html);
 	td.innerHTML = this.html + "&nbsp;";
 	tr.appendChild(td);
