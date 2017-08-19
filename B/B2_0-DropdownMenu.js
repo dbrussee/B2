@@ -63,17 +63,23 @@ B.DropdownMenu.prototype.render = function(div) {
         td.className = "BAction";
         td.onclick = $.proxy(function() {
             this.onclick();
-            if (this.submenu.itemlist.length == 0) return;
-            var mnu = this;
-            var el = $(mnu.td);
-            var pos = el.offset();
-            this.submenu.onclose = $.proxy(function() { 
+            if (this.submenu.showing) {
                 this.style.color = "";
                 this.style.backgroundColor = "";
-            }, mnu.td);
-            mnu.td.style.color = "white";
-            mnu.td.style.backgroundColor = "navy";        
-            mnu.submenu.showAt(pos.left, pos.top + el.outerHeight());
+            mnu.submenu.hide();
+            } else {
+                if (this.submenu.itemlist.length == 0) return;
+                var mnu = this;
+                var el = $(mnu.td);
+                var pos = el.offset();
+                this.submenu.onclose = $.proxy(function() { 
+                    this.style.color = "";
+                    this.style.backgroundColor = "";
+                }, mnu.td);
+                mnu.td.style.color = "white";
+                mnu.td.style.backgroundColor = "navy";        
+                mnu.submenu.showAt(pos.left, pos.top + el.outerHeight());    
+            }
         }, mnu);
         tr.appendChild(td);
     }
