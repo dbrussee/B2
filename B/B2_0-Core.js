@@ -82,7 +82,7 @@ B.format = {
 		if (clr == undefined) clr = "";
 		var h = "";
 		if (clr != "") h += "color:" + clr + ";";
-		if (bgclr != "") h += "background-color:" + bgclor + ";";
+		if (bgclr != "") h += "background-color:" + bgclr + ";";
 		if (h != "") {
 			h = "<span style='" + h + "'>" + txt + "</span>";
 		} else {
