@@ -224,6 +224,7 @@ B.TreeItem.prototype.render = function(branchElement) {
 		tr.className = "BAction";
 	} else {
 		tr.style.cursor = "default";
+		this.icon = B.char.RIGHT_CLR;
 	}
 	var td = document.createElement("td");
 	td.style.cssText = "color:darkgreen;vertical-align:top; width:1.1em; text-align:center;";
