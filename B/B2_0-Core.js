@@ -111,9 +111,13 @@ B.format = {
 		}
 		return rslt;
 	},
-	ASLINK: function(html) {
-		var h = "<span class='anchor'>" + html + "</span>";
-		return h;
+	ASLINK: function(html, onclicktext) {
+		var oc = "";
+		if (onclicktext != undefined) oc = onclicktext;
+		var spn = "<span class='anchor'"
+		if (oc != "") spn += "onclick='" + oc;
+		spn += ">" + html + "</span>";
+		return spn;
 	},
 	DOLLARS: function(amt,places) {
 		if (places == undefined) places = 0;
