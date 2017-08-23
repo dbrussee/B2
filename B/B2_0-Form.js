@@ -136,8 +136,15 @@ B.Form.prototype.get = function(nam) {
 		}
 	}
 };
+B.Form.prototype.setFromTableRow = function(rowdata) {
+	for (var key in rowdata) {
+		if (this.fields[key] != undefined) {
+			this.set(key, rowdata[key].val);			
+		}
+	}
+}
 B.Form.prototype.set = function() {
-	if (typeof arguments[0] == "object") {
+	if (typeof arguments[0] == "object") { // data collection
 		var data = arguments[0];
 		for (var key in data) {
 			this.set(key, data[key]);

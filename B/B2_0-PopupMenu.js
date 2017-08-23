@@ -74,7 +74,7 @@ B.PopupMenu.prototype.make = function() {
         var itm = this.itemlist[i];
         itm.tree = this;
         if (itm.kind == "space") {
-            this.tree.addItem("<span style='color:silver;'><hr></span>", null,"&nbsp;");
+            this.tree.addItem("------------", function() {}, "--");
         } else if (itm.kind == "menu") {
             if (itm.disabled) {
                 itm.treenode = this.tree.addItem("<span style='color:silver;'>" + itm.text + "</span>", null, "&nbsp;");

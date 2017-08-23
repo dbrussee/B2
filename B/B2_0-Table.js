@@ -157,6 +157,14 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 	this.footer = {
 		table: this,
 		buttons: {},
+		addSpace: function() {
+			var div = document.createElement("div");
+			div.style.cssText = "display:inline-block; background-color:transparent; vertical-align:middle; height:17px; " +
+				"padding-right:5px; padding-left: 5px; padding-top: 4px; padding-bottom: 4px; border:1px solid transparent: color:navy; font-size:9pt; cursor:pointer";
+			div.innerHTML = "|";
+			div.onclick = function() {};
+			this.table.footerButtonsDIV.appendChild(div);
+		},
 		addButton: function(id, txt, onclick, watchpick) {
 			if (watchpick == undefined) watchpick = false;
 			var div = document.createElement("div");
@@ -196,7 +204,74 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 			return this;
 		}
 	};
-	
+	this.editForm = {
+		formid: null,
+		deletePrompt: "",
+		remote: null,
+		add: function() {},
+		edit: function() {},
+		copy: function() {},
+		delete: function() {}
+	}
+	this.setForm = function(formid, remote, deletePrompt) {
+		this.editForm.formid = formid;
+		this.editForm.remote = remote;
+		this.editForm.deletePrompt = deletePrompt;
+		this.footer.addButton("add_item", "Add", $.proxy(function() { 
+			var frm = new B.Form(this.editForm.formid);
+			frm.set("ACT","add");
+			frm.reset();
+			openDialog(this.editForm.formid); 
+		}, this), false);
+		this.contextMenu.addMenu("add_item", B.img("ADD"), "Add...", $.proxy(function() {
+			var frm = new B.Form(this.editForm.formid);
+			frm.set("ACT","add");
+			frm.reset();
+			openDialog(this.editForm.formid); 			
+		}, this), false);
+		this.footer.addButton("edit_item", "Edit", $.proxy(function() { 
+			var frm = new B.Form(this.editForm.formid);
+			frm.set("ACT","edit");
+			frm.setFromTableRow(this.getDataRow());
+			openDialog(this.editForm.formid); 
+		}, this), true).disable();
+		this.contextMenu.addMenu("edit_item", B.img("PENCIL"), "Edit...", $.proxy(function() { 
+			var frm = new B.Form(this.editForm.formid);
+			frm.set("ACT","edit");
+			frm.setFromTableRow(this.getDataRow());
+			openDialog(this.editForm.formid); 
+		}, this), false);
+		this.footer.addButton("copy_item", "Copy", $.proxy(function() { 
+			var frm = new B.Form(this.editForm.formid);
+			frm.set("ACT","copy");
+			frm.setFromTableRow(this.getDataRow());
+			openDialog(this.editForm.formid); 
+		}, this), true).disable();
+		this.contextMenu.addMenu("copy_item", B.img("COPY"), "Copy...", $.proxy(function() { 
+			var frm = new B.Form(this.editForm.formid);
+			frm.set("ACT","copy");
+			frm.setFromTableRow(this.getDataRow());
+			openDialog(this.editForm.formid); 
+		}, this), false);
+		this.footer.addButton("delete_item", "Delete", $.proxy(function() { 
+			var frm = new B.Form(this.editForm.formid);
+			askWarn(this.editForm.deletePrompt, "Delete " + this.txt1, function(rslt) {
+				if (rslt == "YES") {
+					say("Sorry... I cannot delete this. I have not coded it.");
+				}
+			});
+		}, this), true).disable();
+		this.contextMenu.addMenu("delete_item", B.img("X"), "Delete...", $.proxy(function() { 
+			var frm = new B.Form(this.editForm.formid);
+			askWarn(this.editForm.deletePrompt, "Delete " + this.txt1, function(rslt) {
+				if (rslt == "YES") {
+					say("Sorry... I cannot delete this. I have not coded it.");
+				}
+			});
+		}, this), false);
+		this.footer.addSpace();
+		this.contextMenu.addSpace();
+	};
 	this.onclick = function() {};
 	this.current = { rownum:-1, cellnum:-1 };
 	this.setFooterMessage();
@@ -204,7 +279,6 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 B.ScrollingTable.prototype.setMaxSelectedRows = function(num) {
 	this.maxSelectedRows = num;
 	this.dataTable.style.cursor = (num == 0 ? "default" : "pointer");
-
 }
 B.ScrollingTable.prototype.setFooterMessage = function(txt) {
 	if (txt == undefined) {
@@ -264,6 +338,9 @@ B.ScrollingTable.prototype.pick = function(row, cell) {
 	this.current.rownum = row.rowIndex;
 	this.current.cellnum = cell.cellIndex;
 	B.addClass(row, "picked");	
+	for (var key in this.footer.buttons) {
+		if (this.footer.buttons[key].watchpick) this.footer.enableButton(key);
+	}
 };
 B.ScrollingTable.prototype.unpick = function() {
 	for (var key in this.footer.buttons) {

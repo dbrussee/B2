@@ -55,6 +55,7 @@ function init() {
 
 
 	window.tblA = new B.ScrollingTable("tblA", 150, new B.DataColumnSet("actor,role,episodes,fy,ly,imdb"), "actor", "actors");
+	tblA.setForm("actorForm", null, "Beef");
 	tblA.footer.addButton("a", "First", function(event) { tblA.footer.disableButton("a").enableButton("b"); }).disable();
 	tblA.footer.addButton("b", "Second", function(event) { tblA.footer.disableButton("b").enableButton("a"); });
 	tblA.footer.addButton("imdb", "IMDb", function(event) { doIMDB(); }, true).disable();
@@ -81,6 +82,7 @@ function init() {
 	sm.addMenu("a", "#", "Trivia about Episode count", function() { doRestTest(4); });
 	sm.addMenu("b", "Y", "Trivia about First Year", function() { doRestTest(3); });
 	tblA.contextMenu.addMenu("imdb", B.char.FLAG, "IMDb actor link", function() { doIMDB(); });
+	tblA.contextMenu.addMenu("unpick", "#", "Unpick Row", function() { tblA.unpick(); });
 
 	tblA.addRows(example_data);
 
@@ -338,5 +340,12 @@ function doRestTest(typ) {
 	<button class='BDialogButton' onclick='popDialog();'>Close</button>
 </div>
 
+<form id='actorForm' class='BDialog' style='height:350px; width: 450px;' title='Actor Information'>
+	<input type='hidden' name='ACT'>
+	<table class='form'>
+		<tr><th>Actor:</th><td><input name='actor'></td></tr>
+	</table>
+	<button class='BDialogButton' onclick='popDialog();'>Close</button>
+</form>
 </body>
 </html>
