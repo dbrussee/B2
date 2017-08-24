@@ -63,9 +63,9 @@ function init() {
 	tblA.onclick = function(tbl, row, cell, rn, cn, rd, changedRow) {
 		if (rd.imdb.val == "") tblA.footer.buttons["imdb"].disable();
 	}
-	tblA.ondblclick = function(tbl, row, cell, rn, cn, rd) {
-		say("You double-clicked on '" + rd.role.val + "'!!!!");
-	}
+	//tblA.ondblclick = function(tbl, row, cell, rn, cn, rd) {
+	//	say("You double-clicked on '" + rd.role.val + "'!!!!");
+	//}
 	tblA.onBeforeRightClick = function(tbl, row, cell, rn, cn, rd, changedRow) {
 		if (rd.imdb.val == "") {
 			tblA.contextMenu.disable("imdb");
@@ -341,10 +341,10 @@ function doRestTest(typ) {
 </div>
 
 <form id='actorForm' class='BDialog' style='height:350px; width: 450px;' title='Actor Information'>
-	<input type='hidden' name='ACT'>
 	<table class='form'>
 		<tr><th>Actor:</th><td><input name='actor'></td></tr>
 	</table>
+	<button class='BDialogButton' data-id='saveButton' onclick='tblA.editForm.save();'>Save Me!</button>
 	<button class='BDialogButton' onclick='popDialog();'>Close</button>
 </form>
 </body>

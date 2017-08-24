@@ -104,7 +104,9 @@ B.Form.prototype.get = function(nam) {
 		var rslt = {};
 		for (var nn = 0; nn < nameList.length; nn++) {
 			var fld = this.fields[nameList[nn]];
-			if (fld.type == "text") {
+			if (fld == undefined) {
+				rslt[nameList[nn]] = null;
+			} else if (fld.type == "text") {
 				rslt[fld.name] = fld.els[0].value;
 			} else if (fld.type == "select") {
 				var sel = fld.els[0];

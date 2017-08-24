@@ -205,72 +205,87 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 		}
 	};
 	this.editForm = {
+		tbl: this,
 		formid: null,
 		deletePrompt: "",
 		remote: null,
-		add: function() {},
-		edit: function() {},
-		copy: function() {},
-		delete: function() {}
+		save: function() {
+			var chk = new B.Form(this.formid).get();
+			if (chk.ACT == "delete") {
+				// Remove it from the dataset
+				this.tbl.dataset.data.splice(this.tbl.current.rownum,1);
+				// Remove from the table
+				this.tbl.dataTableBody.deleteRow(this.tbl.current.rownum);
+				this.tbl.unpick();
+				this.tbl.setFooterMessage();
+				if (this.remote != null) this.remote.run();
+			} else if (chk.ACT == "edit") {
+
+			} else {
+				closeDialog(this.formid);
+				sayError("Saving not done yet. Sorry");
+			}
+
+		},
+		startAdd: $.proxy(function() {
+			var frm = new B.Form(this.editForm.formid);
+			frm.set("ACT","add");
+			frm.reset();
+			openDialog(this.editForm.formid); 
+			var btn = document.getElementById(this.editForm.formid + "_saveButton");
+			btn.innerHTML = "Save New";
+		}, this),
+		startEdit: $.proxy(function() {
+			var frm = new B.Form(this.editForm.formid);
+			frm.set("ACT","edit");
+			frm.setFromTableRow(this.getDataRow());
+			openDialog(this.editForm.formid); 
+			var btn = document.getElementById(this.editForm.formid + "_saveButton");
+			btn.innerHTML = "Save Changes";
+		}, this),
+		startCopy: $.proxy(function() {
+			var frm = new B.Form(this.editForm.formid);
+			frm.set("ACT","copy");
+			frm.setFromTableRow(this.getDataRow());
+			openDialog(this.editForm.formid); 
+			var btn = document.getElementById(this.editForm.formid + "_saveButton");
+			btn.innerHTML = "Save Copy";
+		}, this),
+		startDelete: $.proxy(function() {
+			var frm = new B.Form(this.editForm.formid);
+			frm.set("ACT","delete");
+			askWarn(this.editForm.deletePrompt, "Delete " + this.txt1, $.proxy(function(rslt) {
+				if (rslt == "YES") {
+					this.editForm.save();
+					//say("Sorry... I cannot delete this. I have not coded it.");
+				}
+			}, this));
+		}, this)
 	}
 	this.setForm = function(formid, remote, deletePrompt) {
+		var frm = new B.Form(formid);
+		if (frm.get("ACT") == null) {
+			var el = document.createElement("input");
+			el.name = "ACT";
+			el.type = "hidden";
+			frm.form.appendChild(el);
+		}
 		this.editForm.formid = formid;
 		this.editForm.remote = remote;
 		this.editForm.deletePrompt = deletePrompt;
-		this.footer.addButton("add_item", "Add", $.proxy(function() { 
-			var frm = new B.Form(this.editForm.formid);
-			frm.set("ACT","add");
-			frm.reset();
-			openDialog(this.editForm.formid); 
-		}, this), false);
-		this.contextMenu.addMenu("add_item", B.img("ADD"), "Add...", $.proxy(function() {
-			var frm = new B.Form(this.editForm.formid);
-			frm.set("ACT","add");
-			frm.reset();
-			openDialog(this.editForm.formid); 			
-		}, this), false);
-		this.footer.addButton("edit_item", "Edit", $.proxy(function() { 
-			var frm = new B.Form(this.editForm.formid);
-			frm.set("ACT","edit");
-			frm.setFromTableRow(this.getDataRow());
-			openDialog(this.editForm.formid); 
-		}, this), true).disable();
-		this.contextMenu.addMenu("edit_item", B.img("PENCIL"), "Edit...", $.proxy(function() { 
-			var frm = new B.Form(this.editForm.formid);
-			frm.set("ACT","edit");
-			frm.setFromTableRow(this.getDataRow());
-			openDialog(this.editForm.formid); 
-		}, this), false);
-		this.footer.addButton("copy_item", "Copy", $.proxy(function() { 
-			var frm = new B.Form(this.editForm.formid);
-			frm.set("ACT","copy");
-			frm.setFromTableRow(this.getDataRow());
-			openDialog(this.editForm.formid); 
-		}, this), true).disable();
-		this.contextMenu.addMenu("copy_item", B.img("COPY"), "Copy...", $.proxy(function() { 
-			var frm = new B.Form(this.editForm.formid);
-			frm.set("ACT","copy");
-			frm.setFromTableRow(this.getDataRow());
-			openDialog(this.editForm.formid); 
-		}, this), false);
-		this.footer.addButton("delete_item", "Delete", $.proxy(function() { 
-			var frm = new B.Form(this.editForm.formid);
-			askWarn(this.editForm.deletePrompt, "Delete " + this.txt1, function(rslt) {
-				if (rslt == "YES") {
-					say("Sorry... I cannot delete this. I have not coded it.");
-				}
-			});
-		}, this), true).disable();
-		this.contextMenu.addMenu("delete_item", B.img("X"), "Delete...", $.proxy(function() { 
-			var frm = new B.Form(this.editForm.formid);
-			askWarn(this.editForm.deletePrompt, "Delete " + this.txt1, function(rslt) {
-				if (rslt == "YES") {
-					say("Sorry... I cannot delete this. I have not coded it.");
-				}
-			});
-		}, this), false);
+		this.footer.addButton("add_item", "Add", $.proxy(function() { this.editForm.startAdd(); }, this), false);
+		this.contextMenu.addMenu("add_item", B.img("ADD"), "Add...", $.proxy(function() { this.editForm.startAdd(); }, this), false);
+		this.footer.addButton("edit_item", "Edit", $.proxy(function() { this.editForm.startEdit(); }, this), true).disable();
+		this.contextMenu.addMenu("edit_item", B.img("PENCIL"), "Edit...", $.proxy(function() { this.editForm.startEdit(); }, this), false);
+		this.footer.addButton("copy_item", "Copy", $.proxy(function() { this.editForm.startCopy(); }, this), true).disable();
+		this.contextMenu.addMenu("copy_item", B.img("COPY"), "Copy...", $.proxy(function() { this.editForm.startCopy(); }, this), false);
+		this.footer.addButton("delete_item", "Delete", $.proxy(function() { this.editForm.startDelete(); }, this), true).disable();
+		this.contextMenu.addMenu("delete_item", B.img("X"), "Delete...", $.proxy(function() { this.editForm.startDelete(); }, this), false);
 		this.footer.addSpace();
 		this.contextMenu.addSpace();
+		this.ondblclick = function(tbl, row, cell, rn, cn, rd) {
+			this.editForm.startEdit();
+		};
 	};
 	this.onclick = function() {};
 	this.current = { rownum:-1, cellnum:-1 };

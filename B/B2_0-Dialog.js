@@ -14,9 +14,9 @@ function openDialog(id, btns) {
 		var txt = el.innerText;
 		if (txt == undefined) txt = el.textContent;
 		var btn = { text: txt, click: el.onclick };
-		if (el.getAttribute("id") != "") {
+		if (el.getAttribute("id") != null) {
 			btn.id = id + "_" + el.getAttribute("id");
-		} else if (el.getAttribute("data-id") != "") {
+		} else if (el.getAttribute("data-id") != null) {
 			btn.id = id + "_" + el.getAttribute("data-id");
 		}
 		btns.push(btn);
@@ -35,7 +35,7 @@ function openDialog(id, btns) {
 	dlg.dialog({ 
 		autoOpen: false, 
 		dialogClass: "no-class",
-		resizable: false,	
+		resizable: true,	
 		modal: true, 
 		buttons: btns, 
 		height: height, 
