@@ -61,11 +61,8 @@ function init() {
 	tblA.footer.addButton("imdb", "IMDb", function(event) { doIMDB(); }, true).disable();
 
 	tblA.onclick = function(tbl, row, cell, rn, cn, rd, changedRow) {
-		if (rd.imdb.val == "") tblA.footer.buttons["imdb"].disable();
+		tblA.footer.buttons["imdb"].setDisabled(rd.imdb.val == "");
 	}
-	//tblA.ondblclick = function(tbl, row, cell, rn, cn, rd) {
-	//	say("You double-clicked on '" + rd.role.val + "'!!!!");
-	//}
 	tblA.onBeforeRightClick = function(tbl, row, cell, rn, cn, rd, changedRow) {
 		if (rd.imdb.val == "") {
 			tblA.contextMenu.disable("imdb");
@@ -77,7 +74,6 @@ function init() {
 		tds.imdb.innerHTML = (rd.imdb.val == "" ? "&nbsp;" : "IMDb");
 		tds.fy.innerHTML = rd.fy.val + "-" + rd.ly.val;
 	}
-	//tblA.contextMenu.menuWidth = "120px";
 	var sm = tblA.contextMenu.addSubmenu("sm1", "Trivia");
 	sm.addMenu("a", "#", "Trivia about Episode count", function() { doRestTest(4); });
 	sm.addMenu("b", "Y", "Trivia about First Year", function() { doRestTest(3); });
@@ -342,7 +338,11 @@ function doRestTest(typ) {
 
 <form id='actorForm' class='BDialog' style='height:350px; width: 450px;' title='Actor Information'>
 	<table class='form'>
-		<tr><th>Actor:</th><td><input name='actor'></td></tr>
+		<tr><th>Actor:</th><td><input name='actor' size='30'></td></tr>
+		<tr><th>Role:</th><td><input name='role' size='30'></td></tr>
+		<tr><th>Episodes:</th><td><input name='episodes' size='4'></td></tr>
+		<tr><th>First, Last Year:</th><td><input name='fy' size='5'>, <input name='ly' size='5'></td></tr>
+		<tr><th>IMDb Code:</th><td><input name='imdb'></td></tr>
 	</table>
 	<button class='BDialogButton' data-id='saveButton' onclick='tblA.editForm.save();'>Save Me!</button>
 	<button class='BDialogButton' onclick='popDialog();'>Close</button>

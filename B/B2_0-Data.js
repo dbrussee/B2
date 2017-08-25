@@ -168,7 +168,7 @@ B.Dataset.prototype.addRows = function(data, clearFirst) {
 }
 /**
  * Returns a collection of items in the format:
- * id: { raw:'str', val:<obj>, disp:'str', err:'str' }
+ * { raw:'str', val:<obj>, disp:'str', err:'str' }
  */
 B.Dataset.prototype.getRow = function(rownum, valsonly) {
 	if (valsonly == undefined) valsonly = false;
