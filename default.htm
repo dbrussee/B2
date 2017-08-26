@@ -55,7 +55,7 @@ function init() {
 
 
 	window.tblA = new B.ScrollingTable("tblA", 150, new B.DataColumnSet("actor,role,episodes,fy,ly,imdb"), "actor", "actors");
-	tblA.setForm("actorForm", null, "Beef");
+	tblA.setForm("actorForm", null, "Are you sure you want to delete this actor?");
 	tblA.footer.addButton("a", "First", function(event) { tblA.footer.disableButton("a").enableButton("b"); }).disable();
 	tblA.footer.addButton("b", "Second", function(event) { tblA.footer.disableButton("b").enableButton("a"); });
 	tblA.footer.addButton("imdb", "IMDb", function(event) { doIMDB(); }, true).disable();
@@ -112,13 +112,7 @@ function init() {
 		function() { choose("Pick one of the items", "", "Tom,Dick,Harry", 
 			function(rslt) { say("You chose option " + rslt); }
 		); }, B.char.CHECK);
-	br.addItem("Freeze the screen", function() { 
-		timedFreeze("This message will disappear using the thaw() method in 10 seconds. " +
-			"Use freeze(msg) for normal stuff, but when calling remote operations that may " +
-			"take some time, you may want to include a timer."); 
-		window.setTimeout(function() { thaw(); }, 10000);
-	});
-	br.addItem("Get a value", function() {
+	b2.addItem("Get a value", function() {
 		askValue("Enter a value that will be used to know how intelligent you are.", "Your Number:", "42", "Are you a Hoopy Frood?", function(rslt) {
 			if (rslt != null) {
 				if (rslt == "42") {
@@ -129,6 +123,12 @@ function init() {
 			}
 		})
 	})
+	br.addItem("Freeze the screen", function() { 
+		timedFreeze("This message will disappear using the thaw() method in 10 seconds. " +
+			"Use freeze(msg) for normal stuff, but when calling remote operations that may " +
+			"take some time, you may want to include a timer."); 
+		window.setTimeout(function() { thaw(); }, 10000);
+	});
 	br.addItem("Open up a form dialog", function() { doDialogTest(); });
 	br = tree1.addBranch("Some Other Actions", false);
 	br.addItem("Show images", function() { doImageTest(); });
