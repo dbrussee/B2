@@ -273,7 +273,7 @@ B.format = {
 };
 
 B.whichOneOf = function(txt) {
-	var a = txt;
+	var a = txt.toUpperCase();
 	if (arguments.length > 2) {
 		for (var i = 1; i < arguments.length; i++) {
 			var b = arguments[i].trim().toUpperCase();

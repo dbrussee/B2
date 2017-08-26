@@ -219,18 +219,34 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 		save: function() {
 			var chk = new B.Form(this.formid).get();
 			if (chk.ACT == "delete") {
-				// Remove it from the dataset
-				this.tbl.dataset.data.splice(this.tbl.current.rownum,1);
-				// Remove from the table
-				this.tbl.dataTableBody.deleteRow(this.tbl.current.rownum);
+				var rownum = this.tbl.current.rownum;
 				this.tbl.unpick();
+				// Remove it from the dataset
+				this.tbl.dataset.data.splice(rownum,1);
+				// Remove from the table
+				this.tbl.dataTableBody.deleteRow(rownum);
 				this.tbl.setFooterMessage();
+				if (this.remote != null) this.remote.run();
+			} else if (B.is.ONEOF(chk.ACT, "add,copy")) {
+				var colset = this.tbl.dataset.columnSet.colset;
+				data = "";
+				for (var i = 0; i < colset.length; i++) {
+					if (i > 0) data += "\t";
+					var col = colset[i];
+					var val = chk[col.id];
+					if (col.typ == "b") {
+						data += (val ? "Y":"N");
+					} else {
+						data += val;
+					}
+				}
+				this.tbl.addRows(data);
+				closeDialog(this.formid);				
 				if (this.remote != null) this.remote.run();
 			} else if (chk.ACT == "edit") {
 				var rownum = this.tbl.current.rownum;
 				var colset = this.tbl.dataset.columnSet.colset;
-				var dr = this.tbl.dataset.getRow(rownum);
-				
+				var dr = this.tbl.dataset.getRow(rownum);				
 				data = "";
 				for (var i = 0; i < colset.length; i++) {
 					if (i > 0) data += "\t";
@@ -259,8 +275,9 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 				}
 				this.tbl.onclick(this.tbl.dataTable, tr, tr.cells[0], rownum, 0, dr, true);
 				closeDialog(this.formid);				
+				if (this.remote != null) this.remote.run();
 			} else {
-				sayError("Saving not done yet. Sorry");
+				sayError("I dont know what ACT '" + chk.ACT + "' is. Sorry");
 			}
 
 		},
