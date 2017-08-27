@@ -17,6 +17,7 @@
 <script src="B/B2_0-Tabset.js"></script>
 <script src="B/B2_0-PopupMenu.js"></script>
 <script src="B/B2_0-DropdownMenu.js"></script>
+<script src="B/B2_0-Remote.js"></script>
 <script>
 var bankNumber = "123456789";
 function init() {
@@ -87,7 +88,7 @@ function init() {
 	var b2 = br.addBranch("General messages", false);
 	b2.addItem("Say something via dialog", function() { say("Ok, I said something. So there."); }, B.img("INFO"));
 	b2.addItem("Ask something",
-		function() { ask("Are you happy you chose to have me ask you something?", "",
+		function() { askWarn("Are you happy you chose to have me ask you something?", "",
 			function(rslt) {
 				if (rslt == "YES") {
 					say("I'm glad to hear that.");
@@ -95,9 +96,9 @@ function init() {
 					say("Well, you might want to try another item then.");
 				}
 			}); 
-		}, B.img("HELP"));
+		}, B.img("WARN"));
 	b2.addItem("Yes/No/Cancel (askC)",
-		function() { askC("Let's say you are on step 3 of 10. Do you want to continue?", "",
+		function() { askCError("Let's say you are on step 3 of 10. Do you want to continue?", "",
 			function(rslt) {
 				if (rslt == "YES") {
 					say("Ok, you would now be on step 4.");
@@ -107,7 +108,7 @@ function init() {
 					say("You cancelled... you are now back to step 1.");
 				}
 			}); 
-		});
+		}, B.img("ERROR"));
 	b2.addItem("Choose an item with choose", 
 		function() { choose("Pick one of the items", "", "Tom,Dick,Harry", 
 			function(rslt) { say("You chose option " + rslt); }

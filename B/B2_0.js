@@ -23,6 +23,9 @@ B.version = "2.0"; // B2_0.js
 B.settings = {
 	say: {
 		defTitle: 'System Message'
+	},
+	RemoteMethod: {
+		URL: 'rpc/method'
 	}
 };
 B.choiceValue = null;
@@ -68,14 +71,6 @@ B.isOneOf = function() {
 B.isNotOneOf = function() {
 	return B.whichOneOf.apply(null, arguments) < 0;
 };
-
-// Remote calls
-B.RestfulService = function(baseURL) {
-	this.baseURL = baseURL;
-	this.getText = function(urlEnd, callback) {
-		$.get(this.baseURL + urlEnd, callback);
-	}
-}
 
 B.is = {
 	DATE: function(val, min, max) {

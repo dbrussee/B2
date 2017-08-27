@@ -197,7 +197,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 			var div = this.buttons[id].div;
 			div.onclick = function() {};
 			div.onmouseover = function() { };
-			div.style.color = "goldenrod";
+			div.style.color = "peru";
 			div.style.cursor = "default";
 			return this;
 		},

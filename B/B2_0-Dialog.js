@@ -80,6 +80,9 @@ function sayBase(msg, title, callback, height, width, btns) {
 	$("body").append(h);
 
 	var dlg = $("#B-Say-Dialog");
+	dlg.submit(function(event) {
+		event.preventDefault();
+	});
 	dlg.dialog({ 
 		dialogClass: "no-class",
 		resizable: true, modal: true, autoOpen: false, closeOnEscape: false,
@@ -95,9 +98,14 @@ function sayBase(msg, title, callback, height, width, btns) {
 function sayIcon(icon, msg, title, callback, height, width, btns) {
 	msg = B.img(icon, 28, "", "", "float: left; padding-right: 10px;") + msg;
 	sayBase(msg, title, callback, height, width, btns);
+	if (icon == "WARN") {
+		$("#B-Say-Dialog").css("background", "papayawhip");
+	} else if (icon == "ERROR") {
+		$("#B-Say-Dialog").css("background", "mistyrose");
+	}
 };
 function say(msg, t, cb, h, w, bs) { sayIcon("INFO", msg, t, cb, h, w, bs); };
-function sayWarn(msg, t, cb, h, w, bs) { sayIcon("WAIT", msg, t, cb, h, w, bs); };
+function sayWarn(msg, t, cb, h, w, bs) { sayIcon("WARN", msg, t, cb, h, w, bs); };
 function sayError(msg, t, cb, h, w, bs) { sayIcon("ERROR", msg, t, cb, h, w, bs); };
 function sayFix(fixlist, msg, title, height, width) {
 	if (fixlist == "") return;
@@ -127,7 +135,7 @@ chooseIcon = function(icon, msg, title, options, callback, height, width) {
 	sayIcon(icon, msg, title, callback, height, width, btns);
 };
 function choose(msg, t, opts, cb, h, w) { chooseIcon("HELP", msg, t, opts, cb, h, w); };
-function chooseWarn(msg, t, opts, cb, h, w) { chooseIcon("WAIT", msg, t, opts, cb, h, w); };
+function chooseWarn(msg, t, opts, cb, h, w) { chooseIcon("WARN", msg, t, opts, cb, h, w); };
 function chooseError(msg, t, opts, cb, h, w) { chooseIcon("ERROR", msg, t, opts, cb, h, w); };
 askIcon = function(icon, msg, title, callback, height, width) {
 	if (callback == undefined) callback = function() { };
@@ -142,7 +150,7 @@ askIcon = function(icon, msg, title, callback, height, width) {
 	sayIcon(icon, msg, title, callback, height, width, btns);
 }
 function ask(msg, t, cb, h, w) { askIcon("HELP", msg, t, cb, h, w); };
-function askWarn(msg, t, cb, h, w) { askIcon("WAIT", msg, t, cb, h, w); };
+function askWarn(msg, t, cb, h, w) { askIcon("WARN", msg, t, cb, h, w); };
 function askError(msg, t, cb, h, w) { askIcon("ERROR", msg, t, cb, h, w); };
 askCIcon = function(icon, msg, title, callback, height, width) {
 	if (callback == undefined) callback = function() { };
@@ -180,6 +188,7 @@ askValueIcon = function(icon, msg, prompt, value, title, callback, height, width
 	];
 	sayIcon(icon, h, title, callback, height, width, btns);
 	if (value != undefined && value != null) $("#B-Say-Dialog-Value").val(value);
+	$("#B-Say-Dialog-Value").select().focus();
 }
 function askValue(msg, p, v, t, cb, h, w) { askValueIcon("HELP", msg, p, v, t, cb, h, w); };
 function askValueWarn(msg, p, v, t, cb, h, w) { askValueIcon("WARN", msg, p, v, t, cb, h, w); };
