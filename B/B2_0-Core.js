@@ -540,3 +540,52 @@ B.toggleClass = function(el, clsname) {
 		B.addClass(el, clsname);
 	}
 }
+
+// Use this when you want a collection, but also want to iterate
+// or count the items in that collection.
+// obj.keys is an array of keys.
+// obj.collection is a mapped object (key,value)
+// obj.collection['item']
+// obj.collection.item
+// obj.get(3) returns the key in the 4th spot in the keys collection
+// obj.get("item") returns the value in the collection with key "item"
+// obj.slice(2,1) will remove the 3rd item in the keys array AND that item in the collection
+B.MappedList = function() {
+	this.keys = [];
+	this.collection = {};
+}
+B.MappedList.prototype.set = function() {
+	for (var i = 0; i < arguments.length; i+=2) {
+		var key = arguments[i];
+		var val = arguments[i+1];
+		if (this.collection[key] == null) {
+			this.keys.push(key);
+		}
+		this.collection[key] = val;	
+	}
+}
+B.MappedList.prototype.push = function() { this.set.apply(this, arguments) };
+B.MappedList.prototype.sort = function(method) {
+	if (method == undefined) {
+		this.keys.sort();
+	} else {
+		this.keys.sort(method);
+	}
+}
+B.MappedList.prototype.revers = function() {
+	this.keys.reverse();
+}
+B.MappedList.prototype.get = function(pos) {
+	if (typeof pos == "number") {
+		return this.collection[this.keys[pos]];
+	} else {
+		return this.collection[pos];
+	}
+}
+B.MappedList.prototype.slice = function(pos,num) {
+	var lst = this.keys.slice(pos,num);
+	for (var i = 0; i < lst.length; i++) {
+		this.collection.delete(lst[i]);
+	}
+	return lst;
+}
