@@ -545,16 +545,12 @@ B.toggleClass = function(el, clsname) {
 // or count the items in that collection.
 // obj.keys is an array of keys.
 // obj.collection is a mapped object (key,value)
-// obj.collection['item']
-// obj.collection.item
-// obj.get(3) returns the key in the 4th spot in the keys collection
-// obj.get("item") returns the value in the collection with key "item"
-// obj.slice(2,1) will remove the 3rd item in the keys array AND that item in the collection
 B.MappedList = function() {
 	this.keys = [];
 	this.collection = {};
+	return this;
 }
-B.MappedList.prototype.set = function() {
+B.MappedList.prototype.set = function() { // adds items (key,val) to both the keys array and collection
 	for (var i = 0; i < arguments.length; i+=2) {
 		var key = arguments[i];
 		var val = arguments[i+1];
@@ -563,29 +559,39 @@ B.MappedList.prototype.set = function() {
 		}
 		this.collection[key] = val;	
 	}
+	return thisl
 }
-B.MappedList.prototype.push = function() { this.set.apply(this, arguments) };
-B.MappedList.prototype.sort = function(method) {
+B.MappedList.prototype.push = function() { return this.set.apply(this, arguments) }; // Same as set
+B.MappedList.prototype.sort = function(method) { // just sorts the keys
 	if (method == undefined) {
 		this.keys.sort();
 	} else {
 		this.keys.sort(method);
 	}
+	return this;
 }
-B.MappedList.prototype.revers = function() {
+B.MappedList.prototype.reverse = function() { // just reverses the order of the keys
 	this.keys.reverse();
+	return this;
 }
-B.MappedList.prototype.get = function(pos) {
+B.MappedList.prototype.get = function(pos) { // Returns an item based on numeric array index or key from collection
 	if (typeof pos == "number") {
 		return this.collection[this.keys[pos]];
 	} else {
 		return this.collection[pos];
 	}
 }
-B.MappedList.prototype.slice = function(pos,num) {
+B.MappedList.prototype.slice = function(pos,num) { // Slices the array and deletes those items from collection
 	var lst = this.keys.slice(pos,num);
 	for (var i = 0; i < lst.length; i++) {
 		this.collection.delete(lst[i]);
 	}
 	return lst;
+}
+B.MappedList.prototype.delete = function() { // Finds items in the collection, then calls slice on each one
+	for (var i = 0; i < arguments.length; i++) {
+		var key = arguments[i];
+		var pos = this.collection.indexOf(key);
+		if (pos >= 0) this.slice(pos,1);
+	}
 }
