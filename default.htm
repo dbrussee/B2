@@ -43,8 +43,8 @@ function init() {
 		var mm = m.addSubmenu("aa", "Submenu Test");
 		mm.addMenu("aa1", "X", "Stay open when clicked!!", function() { $("#ddBody").html("The old man's down the road!"); return false; });
 		mm.addMenu("aa2", "Y", "Change text", function() { dd.setText("a", B.img("LEDOFF") + " " + B.getDateParts(new Date()).sss); return false; });
-	m = dd.addMenu("b", "Second");
-		m.addMenu("b1", "1", "Second - First");
+	m = dd.addMenu("b", "Tests");
+		m.addMenu("b1", "1", "Test MappedList", function() { doTestMappedList(); });
 		m.addMenu("b2", "2", "Second - Second");
 		m.addMenu("b3", "3", "Second - Third");
 	m = dd.addMenu("c", "Third");
@@ -160,6 +160,19 @@ function init() {
 	window.ts1 = new B.TabSet("tabset1", "650px", "250px");
 	ts1.render(0);
 
+}
+function doTestMappedList() {
+	var ml = new B.MappedList();
+	ml.push("A","First","B","Second","3","Third");
+	var h = "Initialized: .push('A','First','B','Second','3','Third')";
+	h += "<br>1. Length: " + ml.keys.length;
+	ml.splice(1,1); // Remove B
+	h += "<br>2. Removed 2nd item using splice(1,1). Length: " + ml.keys.length;
+	ml.set("X","Last");
+	h += "<br>3. Added another item with code 'X'. Length: " + ml.keys.length;
+	h += "<br>4. Get value of 'X'. X: " + ml.get("X");
+	h += "<br>5. Get value of first itme (0). 0: " + ml.get(0);
+	say(h, "B.MappedList()", null, 400, 500);
 }
 function doIMDB() {
 	var d = tblA.getDataRow();

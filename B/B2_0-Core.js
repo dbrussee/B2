@@ -559,7 +559,7 @@ B.MappedList.prototype.set = function() { // adds items (key,val) to both the ke
 		}
 		this.collection[key] = val;	
 	}
-	return thisl
+	return this;
 }
 B.MappedList.prototype.push = function() { return this.set.apply(this, arguments) }; // Same as set
 B.MappedList.prototype.sort = function(method) { // just sorts the keys
@@ -581,10 +581,10 @@ B.MappedList.prototype.get = function(pos) { // Returns an item based on numeric
 		return this.collection[pos];
 	}
 }
-B.MappedList.prototype.slice = function(pos,num) { // Slices the array and deletes those items from collection
-	var lst = this.keys.slice(pos,num);
+B.MappedList.prototype.splice = function(pos,num) { // Slices the array and deletes those items from collection
+	var lst = this.keys.splice(pos,num);
 	for (var i = 0; i < lst.length; i++) {
-		this.collection.delete(lst[i]);
+		delete this.collection[lst[i]];
 	}
 	return lst;
 }
@@ -592,6 +592,6 @@ B.MappedList.prototype.delete = function() { // Finds items in the collection, t
 	for (var i = 0; i < arguments.length; i++) {
 		var key = arguments[i];
 		var pos = this.collection.indexOf(key);
-		if (pos >= 0) this.slice(pos,1);
+		if (pos >= 0) this.splice(pos,1);
 	}
 }
