@@ -21,6 +21,11 @@ B.DropdownMenu.prototype.setText = function(id, text) {
         menu.td.innerHTML = text;
     }
 }
+B.DropdownMenu.prototype.getText = function(id) {
+    var menu = this.menus[id];
+    if (menu != null) return menu.text;
+    return null;
+}
 B.DropdownMenu.prototype.getMenu = function(code) {
     // code is <menuid>.<submenuid>.<submenuid>
     // example: a.aa.aaa

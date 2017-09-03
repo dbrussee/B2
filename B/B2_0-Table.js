@@ -137,7 +137,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 	this.container.appendChild(this.surround);
 	B.addClass(this.header,"BTable,BTableHeader");
 	B.addClass(this.dataTable,"BTable,BTableData");
-	
+	$(this.header).show();
 	
 	this.footerDIV = document.createElement("div");
 	this.footerDIV.style.width = this.dataWidth + "px";
@@ -316,8 +316,30 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 			}, this));
 		}, this)
 	}
-	this.setForm = function(formid, remote, deletePrompt) {
+	this.setForm = function(formid, remote, supportCodes, deletePrompt) {
+		var allowEdit = false;
+		var allowAdd = false;
+		var allowCopy = false;
+		var allowDelete = false;
+		if (supportCodes.toUpperCase().indexOf("E") >= 0) allowEdit = true;
+		if (supportCodes.toUpperCase().indexOf("A") >= 0) allowAdd = true;
+		if (supportCodes.toUpperCase().indexOf("C") >= 0) allowCopy = true;
+		if (supportCodes.toUpperCase().indexOf("D") >= 0) allowDelete = true;
 		var frm = new B.Form(formid);
+		// Assume there are no buttons on the form
+		var obj = document.getElementById(formid);
+		var btn = document.createElement("button");
+		btn.className = "BDialogButton";
+		btn.onclick = $.proxy(function() { this.editForm.save(); }, this);
+		btn.setAttribute("data-id", "saveButton");
+		obj.appendChild(btn);
+
+		btn = document.createElement("button");
+		btn.className = "BDialogButton";
+		btn.onclick = function() { popDialog(); };
+		btn.innerHTML = "Cancel";
+		obj.appendChild(btn);
+		
 		if (frm.get("ACT") == null) {
 			var el = document.createElement("input");
 			el.name = "ACT";
@@ -327,19 +349,31 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 		this.editForm.formid = formid;
 		this.editForm.remote = remote;
 		this.editForm.deletePrompt = deletePrompt;
-		this.footer.addButton("add_item", "Add", $.proxy(function() { this.editForm.startAdd(); }, this), false);
-		this.contextMenu.addMenu("add_item", B.img("ADD"), "Add...", $.proxy(function() { this.editForm.startAdd(); }, this), false);
-		this.footer.addButton("edit_item", "Edit", $.proxy(function() { this.editForm.startEdit(); }, this), true).disable();
-		this.contextMenu.addMenu("edit_item", B.img("PENCIL"), "Edit...", $.proxy(function() { this.editForm.startEdit(); }, this), false);
-		this.footer.addButton("copy_item", "Copy", $.proxy(function() { this.editForm.startCopy(); }, this), true).disable();
-		this.contextMenu.addMenu("copy_item", B.img("COPY"), "Copy...", $.proxy(function() { this.editForm.startCopy(); }, this), false);
-		this.footer.addButton("delete_item", "Delete", $.proxy(function() { this.editForm.startDelete(); }, this), true).disable();
-		this.contextMenu.addMenu("delete_item", B.img("X"), "Delete...", $.proxy(function() { this.editForm.startDelete(); }, this), false);
+		if (allowAdd) {
+			this.footer.addButton("add_item", "Add", $.proxy(function() { this.editForm.startAdd(); }, this), false);
+			this.contextMenu.addMenu("add_item", B.img("ADD"), "Add...", $.proxy(function() { this.editForm.startAdd(); }, this), false);
+		}
+		if (allowEdit) {
+			this.footer.addButton("edit_item", "Edit", $.proxy(function() { this.editForm.startEdit(); }, this), true).disable();
+			this.contextMenu.addMenu("edit_item", B.img("PENCIL"), "Edit...", $.proxy(function() { this.editForm.startEdit(); }, this), false);
+		}
+		if (allowCopy) {
+			this.footer.addButton("copy_item", "Copy", $.proxy(function() { this.editForm.startCopy(); }, this), true).disable();
+			this.contextMenu.addMenu("copy_item", B.img("COPY"), "Copy...", $.proxy(function() { this.editForm.startCopy(); }, this), false);
+		}
+		if (allowDelete) {			
+			this.footer.addButton("delete_item", "Delete", $.proxy(function() { this.editForm.startDelete(); }, this), true).disable();
+			this.contextMenu.addMenu("delete_item", B.img("X"), "Delete...", $.proxy(function() { this.editForm.startDelete(); }, this), false);
+		}
 		this.footer.addSpace();
-		this.contextMenu.addSpace();
-		this.ondblclick = function(tbl, row, cell, rn, cn, rd) {
-			this.editForm.startEdit();
-		};
+		if (allowEdit) {
+			this.contextMenu.addSpace();
+			this.ondblclick = function(tbl, row, cell, rn, cn, rd) {
+				this.editForm.startEdit();
+			};
+		} else {
+			this.ondblclick = function() { };
+		}
 	};
 	this.onclick = function() {};
 	this.current = { rownum:-1, cellnum:-1 };

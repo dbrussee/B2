@@ -42,7 +42,14 @@ function init() {
 		m.addMenu("a3", B.char.CHECKN, "Turn off routing number", function() { dd.disableItem("a", "a1")});
 		var mm = m.addSubmenu("aa", "Submenu Test");
 		mm.addMenu("aa1", "X", "Stay open when clicked!!", function() { $("#ddBody").html("The old man's down the road!"); return false; });
-		mm.addMenu("aa2", "Y", "Change text", function() { dd.setText("a", B.img("LEDOFF") + " " + B.getDateParts(new Date()).sss); return false; });
+		mm.addMenu("aa2", "Y", "Change text", function() { 
+			if (dd.getText("a").indexOf("First") > -1) {
+				dd.setText("a", B.img("LEDOFF") + " " + B.getDateParts(new Date()).sss); 
+			} else {
+				dd.setText("a", B.img("LEDGREEN") + " First"); 
+			}
+			return false; 
+		});
 	m = dd.addMenu("b", "Tests");
 		m.addMenu("b1", "1", "Test MappedList", function() { doTestMappedList(); });
 		m.addMenu("b2", "2", "Second - Second");
@@ -56,7 +63,7 @@ function init() {
 
 
 	window.tblA = new B.ScrollingTable("tblA", 150, new B.DataColumnSet("actor,role,episodes,fy,ly,imdb"), "actor", "actors");
-	tblA.setForm("actorForm", null, "Are you sure you want to delete this actor?");
+	tblA.setForm("actorForm", null, "AED", "Are you sure you want to delete this actor?");
 	tblA.footer.addButton("a", "First", function(event) { tblA.footer.disableButton("a").enableButton("b"); }).disable();
 	tblA.footer.addButton("b", "Second", function(event) { tblA.footer.disableButton("b").enableButton("a"); });
 	tblA.footer.addButton("imdb", "IMDb", function(event) { doIMDB(); }, true).disable();
@@ -72,7 +79,7 @@ function init() {
 		}
 	}
 	tblA.onBeforeRowRender = function(rn, rd, tr, tds) {
-		tds.imdb.innerHTML = (rd.imdb.val == "" ? "&nbsp;" : "IMDb");
+		tds.imdb.innerHTML = (rd.imdb.val == "" ? "&nbsp;" : B.img("LINK") + " IMDb");
 		tds.fy.innerHTML = rd.fy.val + "-" + rd.ly.val;
 	}
 	var sm = tblA.contextMenu.addSubmenu("sm1", "Trivia");
@@ -277,7 +284,7 @@ function doRestTest(typ) {
 <div id='tabset1'>
 	<div id='tree1' data='Tree,6em' style='width:320px; padding:5px;'></div>
 	<div id='tableDIV' data='Table,9em'>
-		<table id='tblA'>
+		<table id='tblA' class='BTableHeader'>
 			<tr><th data='actor,160'>Actor</th>
 				<th data='role,160'>Role</th>
 				<th data='episodes,50,C'>Eps</th>
@@ -352,14 +359,12 @@ function doRestTest(typ) {
 
 <form id='actorForm' class='BDialog' style='height:350px; width: 450px;' title='Actor Information'>
 	<table class='form'>
-		<tr><th>Actor:</th><td><input name='actor' size='30'></td></tr>
-		<tr><th>Role:</th><td><input name='role' size='30'></td></tr>
+		<tr><th>Actor:</th><td><input class='VK' name='actor' size='30'></td></tr>
+		<tr><th>Role:</th><td><input class='VR' name='role' size='30'></td></tr>
 		<tr><th>Episodes:</th><td><input name='episodes' size='4'></td></tr>
 		<tr><th>First, Last Year:</th><td><input name='fy' size='5'>, <input name='ly' size='5'></td></tr>
 		<tr><th>IMDb Code:</th><td><input name='imdb'></td></tr>
 	</table>
-	<button class='BDialogButton' data-id='saveButton' onclick='tblA.editForm.save();'>Save Me!</button>
-	<button class='BDialogButton' onclick='popDialog();'>Close</button>
 </form>
 </body>
 </html>

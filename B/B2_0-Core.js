@@ -9,7 +9,7 @@ B.settings = {
 		defTitle: 'System Message'
 	},
 	ScrollingTable: {
-		fieldBackgroundColor: 'ivory',
+		fieldBackgroundColor: 'ghostwhite',
 		footerBackgroundColor: 'gainsboro',
 		footerHoverColor: 'aqua',
 		JQTheme: true // false for using stylesheet (BQTable, BQTableHeader)
