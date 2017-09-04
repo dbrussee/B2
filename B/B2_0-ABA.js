@@ -12,6 +12,7 @@ B.VALIDABAROUTINGNUMBER = function(val) {
     if (B.is.ONEOF(chk,"0,1")) rslt.type = "Primary";
     else if (B.is.ONEOF(chk,"2,3")) rslt.type = "Thrift";
     else if (B.is.ONEOF(chk,"6,7")) rslt.type = "Electronic";
+    else if (B.is.ONEOF(chk,"8")) rslt.type = "Travelers Checks";
     if (rslt.type == "") return "Invalid type"
     chk = val.substr(0,2); // Two digits
     if (B.is.ONEOF(chk,"01,21,61")) rslt.fedbank = "Boston";
