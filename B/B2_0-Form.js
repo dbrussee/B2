@@ -9,8 +9,15 @@ B.getForm = function(id) {
 	}
 	return frm;	
 }
-B.Form = function(formID) {
+B.Form = function(formID, forceReload) {
+	if (forceReload == undefined) forceReload = false;
+	if (!forceReload) { // Check if it already exists first
+		var test = B.formsCollection[formID];
+		if (test != null) return test;	
+	}
+
 	this.id = formID;
+	B.formsCollection[formID] = this;
 	this.form = document.getElementById(formID);
 	this.fields = {};
 	var lst =  $(this.form).find(":input");
@@ -18,7 +25,7 @@ B.Form = function(formID) {
 		var el = lst[x];
 		if (el.name == "") continue; // Unnamed input?
 		if (this.fields[el.name] == null) { // First reference to this item... set up a default object
-			this.fields[el.name] = { name: el.name, els: [ el ], type: 'text', key: false, req: false, upper: false, trim: true, disabled: false };
+			this.fields[el.name] = { name:el.name, els:[ el ], type:'text', readonly:el.readOnly, key:false, req:false, upper:false, trim:true, disabled:false };
 			var rec = this.fields[el.name];
 			if (el.disabled) rec.disabled = true;
 			// All elements with the same name must be the same tag
@@ -35,12 +42,8 @@ B.Form = function(formID) {
 			if (tag == "INPUT") tag = el.type.toUpperCase();
 			
 			if (B.isOneOf(tag, "TEXT")) {
-				if (el.readOnly) {
-					el.style.borderColor = "transparent";
-				}
-				if (rec.type == "date") $(el).datepicker({ 
-					dateFormat: "m/d/yy" 
-				});
+				if (el.readOnly) el.style.borderColor = "transparent";
+				if (rec.type == "date") $(el).datepicker({ dateFormat: "m/d/yy" });
 			}
 
 			if (B.isOneOf(tag, "TEXT,TEXTAREA,SELECT,HIDDEN")) { // text
@@ -73,6 +76,18 @@ B.Form = function(formID) {
 	this.onsubmit = function() { return true; };
 	return this;
 };
+B.Form.prototype.setReadOnly = function(nam, yorn) {
+	if (yorn == undefined) yorn = true;
+	var fld = this.fields[nam];
+	if (fld == null) return null;
+	if (fld.type == "text") {
+		var el = fld.els[0]; // There should only be one
+		if (yorn == "toggle") yorn = !el.readOnly;
+		el.readOnly = yorn;
+		el.style.borderColor = (yorn ? "transparent":"");
+		fld.readonly = yorn;
+	}
+}
 B.Form.prototype.focus = function(nam) {
 	var fld = this.fields[nam];
 	if (fld == null) return null;
@@ -193,7 +208,9 @@ B.Form.prototype.thaw = function() {
 		for (var i = 0; i < els.length; i++) {
 			var el = els[i];
 			if (el.type != "hidden") {
-				if (!fld.disabled) el.removeAttribute("disabled");
+				if (!fld.disabled) {
+					el.removeAttribute("disabled");
+				}
 			}
 		}
 	}

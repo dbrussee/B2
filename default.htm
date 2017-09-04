@@ -21,7 +21,7 @@
 <script>
 var bankNumber = "123456789";
 function init() {
-	var frm = B.getForm("dlg1");
+	var frm = new B.Form("dlg1");
 	var now = new Date();
 	frm.set("month", now.getMonth()+1, "day", now.getDate());
 
@@ -137,7 +137,7 @@ function init() {
 			"take some time, you may want to include a timer."); 
 		window.setTimeout(function() { thaw(); }, 10000);
 	});
-	br.addItem("Open up a form dialog", function() { doDialogTest(); });
+	br.addItem("Open up a form dialog", function() { openDialog("dlg1"); });
 	br = tree1.addBranch("Some Other Actions", false);
 	br.addItem("Show images", function() { doImageTest(); });
 	br.addItem("Show chars", function() { doCharTest(); });
@@ -191,11 +191,8 @@ function doIMDB() {
 		}
 	}
 }
-function doDialogTest() {
-	openDialog("dlg1");
-}
 function doFormDataTest() {
-	var frm = B.getForm("dlg1");
+	var frm = new B.Form("dlg1");
 	var dta = frm.get();
 	dta.frz = "I just got set!";
 	dta.fnam = "Daniel";
@@ -243,7 +240,7 @@ function doCharTest() {
 }
 function doRestTest(typ) {
 	var r = new B.RestfulService("http://numbersapi.com/");
-	var frm = B.getForm("dlg1");
+	var frm = new B.Form("dlg1");
 	var chk = frm.get();
 	var test = "500"
 	var fix = "";
@@ -344,10 +341,11 @@ function doRestTest(typ) {
 		</td></tr>
 	</table>
 	<br>
-	<button onclick='B.getForm("dlg1").freeze();'>Freeze</button>,
-	<button onclick='B.getForm("dlg1").thaw();'>Thaw</button>,
+	<button onclick='new B.Form("dlg1").freeze();'>Freeze</button>,
+	<button onclick='new B.Form("dlg1").thaw();'>Thaw</button>,
 	<button onclick='doFormDataTest()'>Data Test</button>,
-	<button onclick='B.getForm("dlg1").reset();'>Reset</button>
+	<button onclick='new B.Form("dlg1").reset();'>Reset</button>
+	<button onclick='new B.Form("dlg1").setReadOnly("com", "toggle");'>Allow Comment</button>
 	<button class='BDialogButton' onclick='popDialog();'>Close</button>
 </form>
 
