@@ -325,6 +325,13 @@ B.is = {
 		if (loc < 0) loc = ua.indexOf(".NET CLR ");
 		return (loc >= 0);
 	},
+	ALLDIGITS: function(val) {
+		var txt = val.toString();
+		for (var i = 0; i < txt.length; i++) {
+			if (!B.is.ONEOF(txt.charAt(i),"0,1,2,3,4,5,6,7,8,9")) return false;
+		}
+		return true;
+	},
 	DATE: function(val, min, max) {
 		var t = new Date(val).getTime();
 		if (isNaN(t)) return false;
@@ -347,16 +354,6 @@ B.is = {
 			if (int > parseInt(max,10)) return false;
 		}
 		return true;
-	},
-	VALIDABAROUTINGNUMBER: function(val) {
-		val = B.trim(val);
-		if (val.length != 9) return false;
-		if (!B.is.INTEGER(val)) return false;
-		var a = parseInt(val.charAt(0),10) + parseInt(val.charAt(3),10) + parseInt(val.charAt(6),10);
-		var b = parseInt(val.charAt(1),10) + parseInt(val.charAt(4),10) + parseInt(val.charAt(7),10);
-		var c = parseInt(val.charAt(2),10) + parseInt(val.charAt(5),10) + parseInt(val.charAt(8),10);
-		var tot = (a*3) + (b*7) + c;
-		return (tot % 10 == 0);
 	},
 	NOTONEOF: function() { return B.whichOneOf.apply(null, arguments) < 0; },
 	ONEOF: function() { return B.whichOneOf.apply(null, arguments) >= 0; }
