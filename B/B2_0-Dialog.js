@@ -45,6 +45,7 @@ function openDialog(id, btns) {
 
 	dlg.dialog("option", "closeOnEscape", false);
 	dlg.dialog("open");
+	dlg.find("input").first().focus();
 	B.dialogStack.push(id);
 	return dlg;
 };

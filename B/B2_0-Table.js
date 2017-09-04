@@ -345,6 +345,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 			el.name = "ACT";
 			el.type = "hidden";
 			frm.form.appendChild(el);
+			frm = new B.Form(formid, true); // Rebuild form
 		}
 		this.editForm.formid = formid;
 		this.editForm.remote = remote;

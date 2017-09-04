@@ -18,8 +18,9 @@
 <script src="B/B2_0-PopupMenu.js"></script>
 <script src="B/B2_0-DropdownMenu.js"></script>
 <script src="B/B2_0-Remote.js"></script>
+<script src="B/B2_0-ABA.js"></script>
 <script>
-var bankNumber = "123456789";
+var bankNumber = "307070115"; // Wyoming
 function init() {
 	var frm = new B.Form("dlg1");
 	var now = new Date();
@@ -30,10 +31,11 @@ function init() {
 		m.addMenu("a1", "", "Back Routing Number...", function() { askValue("Enter a bank routing number to validate", "Number:", bankNumber, "ABA Routing Number", function(rslt) {
 				if (rslt == "") return;
 				bankNumber = rslt;
-				if (B.is.VALIDABAROUTINGNUMBER(rslt)) {
-					$("#ddBody").html("Yippee!!, '" + rslt + "' is a valid routing number!");
+				var chk = B.VALIDABAROUTINGNUMBER(rslt);
+				if (typeof chk == "string") {
+					$("#ddBody").html("Nope... '" + rslt + "' is no good. " + chk);
 				} else {
-					$("#ddBody").html("Nope... '" + rslt + "' is no good.");
+					$("#ddBody").html("Yippee!!, '" + rslt + "' is a valid routing number!<br>The type is " + chk.type + ".<br>The Federal Reserve Bank is " + chk.fedbank + ".");
 				}
 			});
 		});
