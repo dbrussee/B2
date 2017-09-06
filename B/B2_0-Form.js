@@ -17,6 +17,7 @@ B.Form = function(formID, forceReload) {
 	}
 
 	this.id = formID;
+	this.cleanData = {};
 	B.formsCollection[formID] = this;
 	this.form = document.getElementById(formID);
 	this.fields = {};
@@ -76,6 +77,14 @@ B.Form = function(formID, forceReload) {
 	this.onsubmit = function() { return true; };
 	return this;
 };
+B.Form.prototype.setClean = function() {
+	this.cleanData = this.get();
+}
+B.Form.prototype.isDirty = function(currentData) {
+	if (currentData == undefined) currentData = this.get();
+	if (currentData == null) currentData = this.get();
+	return B.is.CHANGED(this.cleanData, currentData);
+}
 B.Form.prototype.setReadOnly = function(nam, yorn) {
 	if (yorn == undefined) yorn = true;
 	var fld = this.fields[nam];
@@ -122,7 +131,9 @@ B.Form.prototype.get = function(nam) {
 			if (fld == undefined) {
 				rslt[nameList[nn]] = null;
 			} else if (fld.type == "text") {
-				rslt[fld.name] = fld.els[0].value;
+				rslt[fld.name] = B.trim(fld.els[0].value);
+			} else if (fld.type == "textarea") {
+				rslt[fld.name] = B.trim(fld.els[0].value);
 			} else if (fld.type == "select") {
 				var sel = fld.els[0];
 				if (sel.selectedIndex < 0) {

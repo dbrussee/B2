@@ -355,6 +355,22 @@ B.is = {
 		}
 		return true;
 	},
+	CHANGED: function(obja, objb) { // Main use is with form.get() data before / after a load / save.
+		var usedkeys = {};
+		for (var key in obja) {
+			usedkeys[key] = ""; // Identify this key as being in obja
+			var valA = obja[key];
+			var valB = objb[key];
+			if (valB == undefined) {
+				if (valA != undefined) return true; // key in A does not exist in B
+			}
+			if (valA != valB) return true; // Values have changed
+		}
+		for (var key in objb) {
+			if (usedkeys[key] == undefined) return true; // key in B does not exist in A
+		}
+		return false; // Looks the same to me
+	},
 	NOTONEOF: function() { return B.whichOneOf.apply(null, arguments) < 0; },
 	ONEOF: function() { return B.whichOneOf.apply(null, arguments) >= 0; }
 };
