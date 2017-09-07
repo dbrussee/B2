@@ -374,7 +374,11 @@ B.is = {
 	NOTONEOF: function() { return B.whichOneOf.apply(null, arguments) < 0; },
 	ONEOF: function() { return B.whichOneOf.apply(null, arguments) >= 0; }
 };
-
+B.stringToElement = function(str) {
+	var div = document.createElement("div");
+	div.innerHTML = str;
+	return div.firstChild;
+}
 B.img = function(imgname, width, title, onclick, otherStyle, id, classes) {
 	if (classes == undefined) classes = "";
 	if (classes != "") classes = " class='" + classes + "'";

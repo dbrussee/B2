@@ -54,7 +54,11 @@ function init() {
 		});
 	m = dd.addMenu("b", "Tests");
 		m.addMenu("b1", "1", "Test MappedList", function() { doTestMappedList(); });
-		m.addMenu("b2", "2", "Second - Second");
+		m.addMenu("b2", "2", "Test string to element", function() { 
+			var el = B.stringToElement("<table class='form'><tr><th>Prompt:</th><td><input value='just testing'></td></tr></table>");
+			say("This is an form table: <span id='testImageID' onclick='alert(this.innerHTML);'></span>."); 
+			document.getElementById("testImageID").appendChild(el);
+		});
 		m.addMenu("b3", "3", "Second - Third");
 	m = dd.addMenu("c", "Third");
 		m.addMenu("c1", "1", "Third - First");
@@ -348,7 +352,7 @@ function doRestTest(typ) {
 	<button onclick='doFormDataTest()'>Data Test</button>,
 	<button onclick='new B.Form("dlg1").reset();'>Reset</button>
 	<button onclick='new B.Form("dlg1").setReadOnly("com", "toggle");'>Allow Comment</button>
-	<button onclick='say("This forms Dirty status = " + new B.Form("dlg1").isDirty())'>Check Dirty</button>
+	<button onclick='say("This forms was set as clean when opened. Its Dirty status is now = " + new B.Form("dlg1").isDirty())'>Check Dirty</button>
 	<button class='BDialogButton' onclick='popDialog();'>Close</button>
 </form>
 
