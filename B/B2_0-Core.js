@@ -276,7 +276,7 @@ B.whichOneOf = function(txt) {
 	var a = txt.toUpperCase();
 	if (arguments.length > 2) {
 		for (var i = 1; i < arguments.length; i++) {
-			var b = arguments[i].trim().toUpperCase();
+			var b = B.trim(arguments[i]).toUpperCase();
 			if (a == b) return i-1;
 		}
 	} else {
@@ -284,12 +284,12 @@ B.whichOneOf = function(txt) {
 		if (typeof itm == "string") {
 			var lst = itm.split(",");
 			for (var i = 0; i < lst.length; i++) {
-				var b = lst[i].trim().toUpperCase();
+				var b = B.trim(lst[i]).toUpperCase();
 				if (a == b) return i;
 			}
 		} else { // list passed in
 			for (var i = 0; i < itm.length; i++) {
-				var b = itm[i].trim().toUpperCase();
+				var b = B.trim(itm[i]).toUpperCase();
 				if (a == b) return i;
 			}
 		}
