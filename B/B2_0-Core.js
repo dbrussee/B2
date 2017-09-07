@@ -303,13 +303,6 @@ B.isNotOneOf = function() {
 	return B.whichOneOf.apply(null, arguments) < 0;
 };
 
-// Remote Restful service calls
-B.RestfulService = function(baseURL) {
-	this.baseURL = baseURL;
-	this.getText = function(urlEnd, callback) {
-		$.get(this.baseURL + urlEnd, callback);
-	}
-}
 B.trim = function(str) { // Eliminate space before and after text
 	if (str == undefined) return "";
 	return str.toString().replace(/^\s\s*/, '').replace(/\s\s*$/, '');
