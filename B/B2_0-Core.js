@@ -359,6 +359,13 @@ B.is = {
 			}
 			if (valA != valB) return true; // Values have changed
 		}
+		if (typeof valA == "object") {
+			if (typeof valB == "object") {
+				if (B.is.CHANGED(valA, valB)) return true; // Sub object is different
+			} else {
+				return true; // One is an object... the other is not
+			}
+		}
 		for (var key in objb) {
 			if (usedkeys[key] == undefined) return true; // key in B does not exist in A
 		}
