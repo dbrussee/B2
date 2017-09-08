@@ -605,10 +605,11 @@ B.MappedList.prototype.splice = function(pos,num) { // Slices the array and dele
 	}
 	return lst;
 }
-B.MappedList.prototype.delete = function() { // Finds items in the collection, then calls slice on each one
+B.MappedList.prototype.pop = function() { // Finds items in the collection, then calls slice on each one
 	for (var i = 0; i < arguments.length; i++) {
 		var key = arguments[i];
 		var pos = this.collection.indexOf(key);
 		if (pos >= 0) this.splice(pos,1);
 	}
 }
+

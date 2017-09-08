@@ -224,3 +224,4 @@ B.PopupSubmenu.prototype.make = function(branch) {
     }
 
 }
+

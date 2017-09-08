@@ -188,3 +188,4 @@ B.RemoteMethod.prototype.run = function() {
 	});
 	
 }
+

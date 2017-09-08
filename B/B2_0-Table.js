@@ -458,3 +458,4 @@ B.ScrollingTable.prototype.clear = function() {
 	this.dataTableBody.innerHTML = "";
 	this.setFooterMessage();
 }
+

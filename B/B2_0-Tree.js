@@ -258,3 +258,4 @@ B.TreeItem.prototype.render = function(branchElement) {
 	
 	branchElement.appendChild(tr);
 }
+

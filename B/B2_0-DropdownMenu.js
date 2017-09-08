@@ -90,3 +90,4 @@ B.DropdownMenu.prototype.render = function(div) {
     }
     this.object.appendChild(tbl);
 }
+

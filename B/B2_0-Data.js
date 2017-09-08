@@ -198,3 +198,4 @@ B.Dataset.prototype.getRow = function(rownum, valsonly) {
 	}
 	return rslt;
 }
+

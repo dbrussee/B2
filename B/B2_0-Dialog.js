@@ -227,3 +227,4 @@ function thaw() {
 	}
 	closeDialog("B-Say-Dialog"); 
 }
+

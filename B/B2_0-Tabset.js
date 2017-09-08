@@ -119,3 +119,4 @@ B.Tab = function(id, width, title, div) {
 B.Tab.prototype.setTitle = function(title) {
     this.tab.innerHTML = title;
 }
+

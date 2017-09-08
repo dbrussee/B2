@@ -281,3 +281,4 @@ B.SlideMenu.prototype.enable = function() {
         itm.disabled = false;    
 	}
 }
+
