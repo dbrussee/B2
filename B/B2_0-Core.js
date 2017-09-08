@@ -8,6 +8,9 @@ B.settings = {
 	say: {
 		defTitle: 'System Message'
 	},
+	RemoteMethod: {
+		URL: ''
+	},
 	ScrollingTable: {
 		fieldBackgroundColor: 'ghostwhite',
 		footerBackgroundColor: 'gainsboro',
