@@ -29,7 +29,7 @@ B.settings = {
 B.choiceValue = null;
 
 $(document).ready(function() {
-	$(".BDialog").dialog({ autoOpen: false, resizable: false, modal: true, beforeClose: function() {  } });
+	$(".BDialog").dialog({ autoOpen: false, resizable: true, modal: true, beforeClose: function() {  } });
 	$('form.block, form.BDialog').bind('submit',function(e){e.preventDefault();});
     $( document ).tooltip({ track: true });
 	$(":button").button();
@@ -608,11 +608,100 @@ B.MappedList.prototype.splice = function(pos,num) { // Slices the array and dele
 	}
 	return lst;
 }
-B.MappedList.prototype.pop = function() { // Finds items in the collection, then calls slice on each one
+B.MappedList.prototype.remove = function() { // Finds items in the collection, then calls slice on each one
 	for (var i = 0; i < arguments.length; i++) {
 		var key = arguments[i];
 		var pos = this.collection.indexOf(key);
 		if (pos >= 0) this.splice(pos,1);
 	}
 }
+
+
+B.cssSheet = document.createElement("style");
+B.cssSheet.type = "text/css";
+document.getElementsByTagName("head")[0].appendChild(B.cssSheet);
+B.cssSheet = document.styleSheets[document.styleSheets.length-1];
+
+B.setCSSRule = function(selector, styles, checkfirst) {
+	if (checkfirst == undefined) checkfirst = false;
+	var media = typeof B.cssSheet.media; // string or object depending on browser
+	if (media == "string") {
+		if (checkfirst) {
+			for (var i = 0; i < B.cssSheet.rules.length; i++) {
+				var rul = B.cssSheet.rules[i];
+				if (rul.selectorText && rul.selectorText == selector) {
+					rul.style.cssText = styles;
+					return;
+				}
+			}
+		}
+		B.cssSheet.addRule(selector, styles);
+	} else if (media == "object") { // Edge?
+		var len = (B.cssSheet.cssRules) ? B.cssSheet.cssRules.length : 0;
+		if (checkfirst) {
+			for (var i = 0; i < len; i++) {
+				var rul = B.cssSheet.cssRules[i];
+				if (rul.selectorText && rul.selectorText == selector) {
+					rul.style.cssText = styles;
+					return;
+				}
+			}
+		}
+		B.cssSheet.insertRule(selector + " {" + styles + "}", len);
+	}
+}
+B.setCSSRule(".ui-dialog .ui-dialog-titlebar, "+
+	"ui-dialog .ui-dialog-buttonpane, "+
+	"ui-widget-header .ui-priority-primary, "+
+	".ui-widget, .ui-button", "font-size: 1.05em;");
+B.setCSSRule(".ui-dialog .ui-dialog-content", "font-size:1em;");
+B.setCSSRule(".no-close .ui-dialog-titlebar-close", "display: none;");
+B.setCSSRule(".no-title .ui-dialog .ui-dialog-titlebar", "display: none;");
+B.setCSSRule("body", 
+	"font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; "+
+	"font-size: 10pt;");
+B.setCSSRule(".BDialog", 
+	"z-index: 9999; "+
+	"display: none;");
+
+B.setCSSRule("table.BTableData tr.picked", "background-color: lightskyblue;");
+B.setCSSRule("table.BTableData tr td",
+	"border-left:1px dotted silver; "+
+	"border-right:1px dotted silver; "+
+	"border-bottom:1px dotted silver;");
+
+B.setCSSRule("table.BTable tr th", "font-size: 1.05em;");
+B.setCSSRule("table.BTable tr td, table.BTable tr th", "box-sizing: border-box;");
+B.setCSSRule("table.BTableHeader", "display:none;");
+
+B.setCSSRule("table.form tr th",
+	"padding-right:.1em; "+
+	"text-align:right; "+
+	"font-weight:bold; "+
+	"background-color:transparent;");
+B.setCSSRule(".BTab",
+	"background-color: gainsboro; "+
+	"border-left: 1px solid silver; "+
+	"border-right: 1px solid silver; "+
+	"border-bottom: 1px solid navy; "+
+	"border-top: 5px solid transparent; "+
+	"text-align: center; "+
+	"cursor: pointer; "+
+	"margin-right: 50px;");
+B.setCSSRule(".BTab:hover", "background-color: aqua;");
+B.setCSSRule(".BTab.current",
+	"background-color: transparent; "+
+	"border-top: 5px solid brown; "+
+	"border-left: 1px solid navy; "+
+	"border-right: 1px solid brown; "+
+	"border-bottom: 1px solid white; "+
+	"cursor: default;");
+B.setCSSRule(".BTab.current:hover",
+	"background-color: lightcyan; "+
+	"border-bottom: 1px solid lightcyan !important;");
+B.setCSSRule("tr.BAction, td.BAction, span.BAction", "cursor: pointer;")
+B.setCSSRule(".BAction:hover", "background-color: aqua; color: navy;");
+B.setCSSRule("span.anchor", "color: blue; cursor: pointer;");
+B.setCSSRule("span.anchor.bad", "color: red");
+B.setCSSRule("span.anchor:hover", "color: darkgreen; text-decoration: underline;");
 
