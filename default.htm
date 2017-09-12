@@ -24,7 +24,7 @@ function init() {
 
 	window.dd = new B.DropdownMenu();
 	var m = dd.addMenu("a", B.img("LEDGREEN") + " First", function() { $("#ddBody").html("You clicked the first item"); });
-		m.addMenu("a1", "", "Back Routing Number...", function() { askValue("Enter a bank routing number to validate", "Number:", bankNumber, "ABA Routing Number", function(rslt) {
+		m.addMenu("a1", "", "Bank Routing Number...", function() { askValue("Enter a bank routing number to validate", "Number:", bankNumber, "ABA Routing Number", function(rslt) {
 				if (rslt == "") return;
 				bankNumber = rslt;
 				var chk = B.VALIDABAROUTINGNUMBER(rslt);
