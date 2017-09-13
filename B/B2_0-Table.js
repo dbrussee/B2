@@ -1,8 +1,5 @@
 // B2.0 Table
 
-// TODO
-// Add B.Form integration
-
 B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 	this.rootId = rootId;
 	this.height = height;
