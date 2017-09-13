@@ -274,6 +274,20 @@ B.format = {
 	DATE: function(d) { return B.format.MDYYYY(d); },
 	TS: function(d) { return B.format.MDYYYYHNNSS(d); }
 };
+B.stripChars = function(txt,charsToStrip,ignoreCase) {
+	var rslt = txt.toString();
+	if (ignoreCase == undefined) ignoreCase = false;
+	for (var i = 0; i < charsToStrip.length; i++) {
+		var c = charsToStrip.charAt(i);
+		if (ignoreCase) {
+			while (rslt.indexOf(c.toUpperCase()) >= 0) rslt = rslt.replace(c.toUpperCase(), '');
+			while (rslt.indexOf(c.toLowerCase()) >= 0) rslt = rslt.replace(c.toLowerCase(), '');
+		} else {
+			while (rslt.indexOf(c) >= 0) rslt = rslt.replace(c, '');
+		}
+	}
+	return rslt;
+};
 
 B.whichOneOf = function(txt) {
 	var a = txt.toUpperCase();
