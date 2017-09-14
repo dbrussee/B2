@@ -230,25 +230,19 @@ function thaw() {
 
 // Form - Simple handling of form data
 // Added to bettway GIT
-B.formsCollection = {};
-B.getForm = function(id) {
-	var frm = B.formsCollection[id];
-	if (frm == null) {
-		frm = new B.Form(id);
-		B.formsCollection[id] = frm;
-	}
-	return frm;	
-}
+B.formsCache = {};
 B.Form = function(formID, forceReload) {
-	if (forceReload == undefined) forceReload = false;
-	if (!forceReload) { // Check if it already exists first
-		var test = B.formsCollection[formID];
-		if (test != null) return test;	
+	var itm = B.formsCache[formID];
+	if (itm == null) {
+		B.formsCache[formID] = {form:this, cleanData:null};
+	} else {
+		if (forceReload == undefined) forceReload = false;
+		if (!forceReload) { // Check if it already exists first
+			return itm.form;	
+		}
 	}
 
 	this.id = formID;
-	this.cleanData = {};
-	B.formsCollection[formID] = this;
 	this.form = document.getElementById(formID);
 	this.fields = {};
 	var lst =  $(this.form).find(":input");
