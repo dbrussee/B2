@@ -404,6 +404,7 @@ B.Form.prototype.set = function() {
 	} else {
 		for (var i = 0; i < arguments.length; i+=2) { // Pairs of key/values
 			var fld = this.fields[arguments[i]];
+			if (fld == undefined) continue; // I dont know what this field is
 			var val = arguments[i+1];
 			if (fld.type == "text") {
 				fld.els[0].value = val;
