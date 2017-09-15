@@ -620,8 +620,8 @@ B.Tree = function(elementId, item_click_callback, only_one_open_per_level) {
 	this.tbl = null; // To be created and applied to this.element when rendering
 	this.nodes = []; // A node can be a item or a branch (which contains items)
 
-	this.closedBranchIcon = B.char.PLUS;
-	this.openBranchIcon = B.char.MINUS;
+	this.closedBranchIcon = B.char.RIGHT;
+	this.openBranchIcon = B.char.DIR_SE;
 
 	return this;
 };
