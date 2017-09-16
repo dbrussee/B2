@@ -1,6 +1,8 @@
 // B2.0 Table
 
-B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
+B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollbar) {
+	this.embedScrollbar = embedScrollbar;
+	if (embedScrollbar == undefined) this.embedScrollbar = B.settings.ScrollingTable.embedScrollbar;
 	this.rootId = rootId;
 	this.height = height;
 	this.dataset = new B.Dataset(ColumnSet);
@@ -30,7 +32,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 		var cell = row.cells[i];
 		var data = cell.getAttribute("data").split(","); // columnName, widthInPixels, attributes
 		var nam = data[0];
-		var wid = 100; // 100 pixels
+		var wid = 100; // 100 pixels -- will get overridden by data value next
 		if (data.length > 1) wid = parseInt(data[1],10);
 		this.dataWidth += wid;
 		cell.style.width = wid + "px";
@@ -45,6 +47,12 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 		if (attribs.indexOf("B")>=0) col.bold = true;
 		cell.style.textAlign = col.align;
 		cell.style.border = "1px solid transparent";
+	}
+	if (this.embedScrollbar) {
+		var pad = document.createElement("th");
+		pad.style.width = "17px";
+		pad.style.border = "1px solid transparent";
+		row.appendChild(pad);
 	}
 	this.header.style.tableLayout = "fixed";
 
@@ -61,7 +69,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 	this.dataTableBody = document.createElement("tbody");
 	this.dataTable.appendChild(this.dataTableBody);
 	this.dataTable.id = this.rootId + "_data";
-	this.dataTable.style.cssText = "border-left:2px solid gainsboro; border-right:2px solid gainsboro; " +
+	this.dataTable.style.cssText = "border-left:2px solid gainsboro; border-right:2px solid transparent; " +
 		"border-collapse:collapse; table-layout:fixed; cursor:pointer";
 	this.dataTable.style.width = this.dataWidth + "px";
 	this.dataTable.onclick = $.proxy(function(event) {
@@ -137,7 +145,9 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2) {
 	$(this.header).show();
 	
 	this.footerDIV = document.createElement("div");
-	this.footerDIV.style.width = this.dataWidth + "px";
+	var pad = 0;
+	if (this.embedScrollbar) pad += 17;
+	this.footerDIV.style.width = (this.dataWidth + pad) + "px";
 	this.footerDIV.style.backgroundColor = B.settings.ScrollingTable.footerBackgroundColor;
 	this.footerDIV.style.height = "25px";
 	this.footerButtonsDIV = document.createElement("div");

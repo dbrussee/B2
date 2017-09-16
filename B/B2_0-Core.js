@@ -13,6 +13,7 @@ B.settings = {
 		URL: ''
 	},
 	ScrollingTable: {
+		embedScrollbar: false,
 		fieldBackgroundColor: 'ghostwhite',
 		footerBackgroundColor: 'gainsboro',
 		footerHoverColor: 'aqua',
