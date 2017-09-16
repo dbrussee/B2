@@ -72,10 +72,10 @@ function sayBase(msg, title, callback, height, width, btns) {
 	if (height == undefined) height = 250;
 	if (btns.length == 0) btns = [ { text: 'Ok', click: function() { closeDialog("B-Say-Dialog"); } } ];
 	if (btns.length == 1 && btns[0] == "NONE") btns = []; // Freeze?
-	if (title == undefined) title = B.settings.say.defTitle;
-	if (title == "") title = B.settings.say.defTitle;
+	if (title == undefined) title = B.settings.say.defaultTitle;
+	if (title == "") title = B.settings.say.defaultTitle;
 
-	var h = "<form id='B-Say-Dialog' class='BDialog' title='" + B.settings.say.defTitle + "'>"
+	var h = "<form id='B-Say-Dialog' class='BDialog' title='" + B.settings.say.defaultTitle + "'>"
 	h += "<div id='B-Say-Dialog-Message' style='width: 100%; height: 100%; overflow-y: auto;'></div>";
 	h += "</form>";
 	$("body").append(h);
@@ -99,10 +99,12 @@ function sayBase(msg, title, callback, height, width, btns) {
 function sayIcon(icon, msg, title, callback, height, width, btns) {
 	msg = B.img(icon, 28, "", "", "float: left; padding-right: 10px;") + msg;
 	sayBase(msg, title, callback, height, width, btns);
-	if (icon == "WARN") {
-		$("#B-Say-Dialog").css("background", "papayawhip");
-	} else if (icon == "ERROR") {
-		$("#B-Say-Dialog").css("background", "mistyrose");
+	if (B.settings.say.tinting) {
+		if (icon == "WARN") {
+			$("#B-Say-Dialog").css("background", "papayawhip");
+		} else if (icon == "ERROR") {
+			$("#B-Say-Dialog").css("background", "mistyrose");
+		}
 	}
 };
 function say(msg, t, cb, h, w, bs) { sayIcon("INFO", msg, t, cb, h, w, bs); };
@@ -250,15 +252,13 @@ B.Form = function(formID, forceReload) {
 		var el = lst[x];
 		if (el.name == "") continue; // Unnamed input?
 		if (this.fields[el.name] == null) { // First reference to this item... set up a default object
-			this.fields[el.name] = { name:el.name, els:[ el ], type:'text', readonly:el.readOnly, key:false, req:false, upper:false, trim:true, disabled:false };
+			this.fields[el.name] = { name:el.name, els:[ el ], type:'text', readonly:el.readOnly, key:false, req:false, upper:false, trim:true, disabled:el.disabled };
 			var rec = this.fields[el.name];
-			if (el.disabled) rec.disabled = true;
 			// All elements with the same name must be the same tag
 			var tag = el.tagName;
 			var jel = $(el);
 			if (jel.hasClass("VK")) { rec.key = true; rec.req = true; }
 			if (jel.hasClass("VR")) rec.req = true;
-			if (jel.hasClass("VN")) rec.trim = false;
 			if (jel.hasClass("VU")) { el.style.textTransform = "uppercase"; rec.upper = true; }
 			if (jel.hasClass("VN")) rec.type = "num";
 			if (jel.hasClass("VI")) rec.type = "int";

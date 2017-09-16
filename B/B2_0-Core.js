@@ -6,7 +6,8 @@ window.B = { version: "2.0" }; // B2_0.js
 // Cusomize these settings to work as you want them
 B.settings = {
 	say: {
-		defTitle: 'System Message'
+		defaultTitle: 'System Message',
+		tinting: false
 	},
 	RemoteMethod: {
 		URL: ''
