@@ -9,6 +9,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 	this.txt1 = txt1;
 	this.txt2 = txt2;
 	this.header = document.getElementById(this.rootId);
+	B.addClass(this.header, "BScrollingTableHeader");
 	this.header.style.cssText = "border-collapse:collapse; border-right:2px solid transparent; border-left:2px solid transparent";
 	// Create the container div
 	this.container = document.createElement("div");
@@ -20,45 +21,59 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 
 	this.columns = [];
 	this.dataWidth = 0;
-	var row = this.header.rows[0];
-	if (B.settings.ScrollingTable.JQTheme) {
-		B.addClass(row, "ui-widget-header,ui-priority-primary");
-	}
 	this.contextMenu = new B.PopupMenu();
 	this.maxSelectedRows = 1;
-
 	this.onBeforeRowRender = function(rn, rd, tr, tds) { return; };
-	for (var i = 0; i < row.cells.length; i++) {
-		var cell = row.cells[i];
-		var data = cell.getAttribute("data").split(","); // columnName, widthInPixels, attributes
-		var nam = data[0];
-		var wid = 100; // 100 pixels -- will get overridden by data value next
-		if (data.length > 1) wid = parseInt(data[1],10);
-		this.dataWidth += wid;
-		cell.style.width = wid + "px";
-		cell.style.fontWeight = "bold";
-		var weight = "N";
-		var col = { pos:i, name:nam, width:wid, bold:false, align:'left' };
-		this.columns.push(col);
-		var attribs = "L"; // Left justification as default
-		if (data.length > 2) attribs = data[2].toUpperCase(); // CB (Center Bold), etc
-		if (attribs.indexOf("C")>=0) col.align = "center";
-		if (attribs.indexOf("R")>=0) col.align = "right";
-		if (attribs.indexOf("B")>=0) col.bold = true;
-		cell.style.textAlign = col.align;
-		cell.style.border = "1px solid transparent";
-	}
-	if (this.embedScrollbar) {
-		var pad = document.createElement("th");
-		pad.style.width = "17px";
-		pad.style.border = "1px solid transparent";
-		row.appendChild(pad);
+
+	// Build the actual header from the template
+	for (var rn = 0; rn < this.header.rows.length; rn++) {
+		var row = this.header.rows[rn];
+		if (B.settings.ScrollingTable.JQTheme) {
+			B.addClass(row, "ui-widget-header,ui-priority-primary");
+		}
+		for (var cn = 0; cn < row.cells.length; cn++) {
+			var cell = row.cells[cn];
+			B.addClass(cell, "BScrollingTableHeaderCell");
+			if (cell.getAttribute("colspan") != null) {
+				var numcols = parseInt(cell.getAttribute("colspan"), 10);
+				if (numcols > 1) {
+					// This does not represent a data element
+					cell.style.fontWeight = "bold";
+					cell.style.textAlign = "center";
+					cell.style.border = "1px solid transparent";
+					continue;
+				}
+			}
+			var data = cell.getAttribute("data").split(","); // columnName, widthInPixels, attributes
+			var nam = data[0];
+			var wid = 100; // 100 pixels -- will get overridden by data value next
+			if (data.length > 1) wid = parseInt(data[1],10);
+			this.dataWidth += wid;
+			cell.style.width = wid + "px";
+			cell.style.fontWeight = "bold";
+			var weight = "N";
+			var col = { pos:cn, name:nam, width:wid, bold:false, align:'left' };
+			this.columns.push(col);
+			var attribs = "L"; // Left justification as default
+			if (data.length > 2) attribs = data[2].toUpperCase(); // CB (Center Bold), etc
+			if (attribs.indexOf("C")>=0) col.align = "center";
+			if (attribs.indexOf("R")>=0) col.align = "right";
+			if (attribs.indexOf("B")>=0) col.bold = true;
+			cell.style.textAlign = col.align;
+			cell.style.border = "1px solid transparent";
+		}
+		if (this.embedScrollbar) {
+			var pad = document.createElement("th");
+			pad.style.width = "17px";
+			pad.style.border = "1px solid transparent";
+			row.appendChild(pad);
+		}
 	}
 	this.header.style.tableLayout = "fixed";
 
 	this.surround = document.createElement("div");
 	this.surround.id = this.rootId + "_surround";
-	this.surround.style.cssText = "position:relative; overflow-x:hidden; overflow-y:auto";
+	this.surround.style.cssText = "position:relative; overflow-x:hidden; overflow-y:scroll";
 	this.surround.style.height = this.height + "px";
 	this.surround.style.width = (this.dataWidth + 17) + "px"; // Add width for the scroll bar
 	this.surround.style.backgroundColor = B.settings.ScrollingTable.fieldBackgroundColor;

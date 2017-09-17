@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>B2.0 - Home</title>
+<title>B2.0 - Library Demonstration Page</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/redmond/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> 
@@ -63,7 +63,7 @@ function init() {
 	dd.render("ddMenu");
 
 
-	window.tblA = new B.ScrollingTable("tblA", 150, new B.DataColumnSet("actor,role,episodes,fy,ly,imdb"), "actor", "actors", false);
+	window.tblA = new B.ScrollingTable("tblA", 150, new B.DataColumnSet("actor,role,episodes,fy,ly,imdb"), "actor", "actors", true);
 	tblA.setForm("actorForm", null, "AED", "Are you sure you want to delete this actor?");
 	tblA.footer.addButton("a", "First", function(event) { tblA.footer.disableButton("a").enableButton("b"); }).disable();
 	tblA.footer.addButton("b", "Second", function(event) { tblA.footer.disableButton("b").enableButton("a"); });
@@ -283,11 +283,12 @@ function doRestTest(typ) {
 	<div id='tree1' data='Tree,6em' style='width:320px; padding:5px;'></div>
 	<div id='tableDIV' data='Table,9em'>
 		<table id='tblA' class='BTableHeader'>
-			<tr><th data='actor,160'>Actor</th>
-				<th data='role,160'>Role</th>
-				<th data='episodes,50,C'>Eps</th>
+			<tr><th rowspan='2' data='actor,160'>Actor</th>
+				<th rowspan='2' data='role,160'>Role</th>
+				<th rowspan='2' data='imdb,100,C'>IMDb</th>
+				<th data='episodes,50,C'>Count</th>
 				<th data='fy,85,C'>Years</th>
-				<th data='imdb,100,C'>IMDb</th></tr>
+			</tr>
 		</table>
 	</div>
 	<div id='another' data='Dropdown,6em'>
