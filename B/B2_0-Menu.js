@@ -490,7 +490,7 @@ B.SlideMenu.prototype.enable = function() {
             itm.div.onmouseout = function() { };
         } else {
             itm.div.style.cursor = "pointer";
-            itm.div.onclick = $.proxy(function(event) { 
+            itm.div.onclick = $.proxy(function(event) {
                 event.stopPropagation();
                 var rslt = itm.handler();
                 if (rslt == undefined) rslt = true;
@@ -577,12 +577,12 @@ B.DropdownMenu.prototype.render = function(div) {
         td.innerHTML = mnu.text;
         td.style.cssText = "padding-left:.5em; padding-right:.5em; border-right:1px solid navy;";
         td.className = "BAction";
-        td.onclick = $.proxy(function() {
+        td.onclick = $.proxy(function() { // closing the menu
             this.onclick();
             if (this.submenu.showing) {
-                this.style.color = "";
-                this.style.backgroundColor = "";
-            mnu.submenu.hide();
+                this.td.style.color = "";
+                this.td.style.backgroundColor = "";
+            	this.submenu.hide();
             } else {
                 if (this.submenu.itemlist.length == 0) return;
                 var mnu = this;
