@@ -308,7 +308,7 @@ B.Form = function(formID, forceReload) {
 				}
 				rec.type = (tag == "SELECT" ? "select" : "text");
 			} else if (tag == "CHECKBOX") {
-				rec.type = "check";
+				rec.type = "checkbox";
 			} else if (tag == "RADIO") {
 				rec.type = "radio";
 			} 
