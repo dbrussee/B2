@@ -133,6 +133,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		if (this.contextMenu.items.length > 0) this.contextMenu.show(event); 
 	};
 	this.dataTable.ondblclick = $.proxy(function(event) {
+		B.clearSelection();
 		if (this.maxSelectedRows == 0) return;
 		var el = $(event.target)[0]; // A collection even though only one
 		var cell = $(el).closest("td")[0];

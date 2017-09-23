@@ -48,6 +48,14 @@ $(document).ready(function() {
 	});
     if (typeof init === 'function') init();
 });
+B.clearSelection = function() {
+    if(document.selection && document.selection.empty) {
+        document.selection.empty();
+    } else if(window.getSelection) {
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+    }
+}
 B.months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 B.days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 B.getDateParts = function(d) {
