@@ -96,6 +96,24 @@ function sayBase(msg, title, callback, height, width, btns) {
 	dlg.dialog('option', 'title', title);
 	$("#B-Say-Dialog-Message").html(msg);
 };
+function clickDialogButton(dlgid, btnid) {
+	var dlg = $("#" + dlgid);
+	if (dlg == undefined) return;
+	var buttons = dlg.dialog("option","buttons");
+	var btn = null;
+	if (isNaN(btnid)) {
+		for (var i = 0; i < buttons.length; i++) {
+			var test = buttons[i];
+			if (test.text.toUpperCase() == btnid.toUpperCase()) {
+				btn = test; break;
+			}
+		}
+	} else {
+		btn = buttons[btnid];
+	}
+	if (btn) btn.click.call(btn);
+	return (btn); // boolean
+}
 function sayIcon(icon, msg, title, callback, height, width, btns) {
 	msg = B.img(icon, 28, "", "", "float: left; padding-right: 10px;") + msg;
 	sayBase(msg, title, callback, height, width, btns);
