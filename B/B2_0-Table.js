@@ -464,13 +464,23 @@ B.ScrollingTable.prototype.addRows = function(data, clear) {
 	this.setFooterMessage();
 }
 B.ScrollingTable.prototype.pick = function(row, cell) {
-	this.current.rownum = row.rowIndex;
-	this.current.cellnum = cell.cellIndex;
+	if (isNaN(row)) {
+		this.current.rownum = row.rowIndex;		
+	} else {
+		this.current.rownum = row;
+		row = this.dataTableBody.rows[row];
+	}
+	if (isNaN(cell)) {
+		this.current.cellnum = cell.cellIndex;
+	} else {
+		this.current.cellnum = cell;
+		if (row) cell = row.cells[cell];
+	}
 	if (B.isOneOf(this.highlightItem, ",TR,ROW,TRTD,BOTH")) {
-		B.addClass(row, "picked");			
+		if (row) B.addClass(row, "picked");			
 	}
 	if (B.isOneOf(this.highlightItem, "TD,CELL,COLUMN,TRTD,BOTH")) {
-		B.addClass(cell, "picked");
+		if (row) B.addClass(cell, "picked");
 	}
 };
 B.ScrollingTable.prototype.unpick = function() {
@@ -479,12 +489,8 @@ B.ScrollingTable.prototype.unpick = function() {
 	}
 	if (this.current.rownum >= 0) {
 		var tr = this.dataTable.rows[this.current.rownum];
-		if (B.isOneOf(this.highlightItem, ",TR,ROW,TRTD,BOTH")) {
-			B.removeClass(tr, "picked");			
-		}
-		if (B.isOneOf(this.highlightItem, "TD,CELL,COLUMN,TRTD,BOTH")) {
-			B.removeClass(tr.cells[this.current.cellnum], "picked");
-		}
+		B.removeClass(tr, "picked");
+		B.removeClass(tr.cells[this.current.cellnum], "picked");
 	}
 	this.current.rownum = -1;
 	this.current.cellnum = -1;

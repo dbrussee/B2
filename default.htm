@@ -240,6 +240,15 @@ function doCharTest() {
 	}
 	$("#dlgImageExample").html("Click a character above to see the code here.");
 }
+function setHighlight() {
+	var chk = new B.Form("frmTableHighlight").get(); //  Only one item!!
+	var rn = tblA.current.rownum;
+	var cn = tblA.current.cellnum;
+
+	tblA.unpick();
+	tblA.highlightItem = chk;
+	tblA.pick(rn, cn);
+}
 function doRestTest(typ) {
 	var r = new B.RestfulService("http://numbersapi.com/");
 	var frm = new B.Form("dlg1");
@@ -291,6 +300,12 @@ function doRestTest(typ) {
 				<th data='fy,85,C'>Years</th>
 			</tr>
 		</table>
+		<form id='frmTableHighlight'>
+			Highlight Option: 
+			<label><input type='radio' checked name='hlitm' value='ROW' onclick='setHighlight();'>Row</label>&nbsp;
+			<label><input type='radio' name='hlitm' value='CELL' onclick='setHighlight();'>Cell</label>&nbsp;
+			<label><input type='radio' name='hlitm' value='BOTH' onclick='setHighlight();'>Both</label>
+		</form>
 	</div>
 	<div id='another' data='Dropdown,6em'>
 		<div id='ddMenu'></div>
