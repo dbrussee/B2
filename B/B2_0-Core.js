@@ -735,7 +735,7 @@ B.setCSSRule(".BTab.current:hover",
 	"border-bottom: 1px solid lightcyan !important;");
 B.setCSSRule("tr.BAction, td.BAction, span.BAction", "cursor: pointer;")
 B.setCSSRule(".BAction:hover", "background-color: aqua; color: navy;");
-B.setCSSRule("span.anchor", "color: blue; cursor: pointer;");
-B.setCSSRule("span.anchor.bad", "color: red");
-B.setCSSRule("span.anchor:hover", "color: darkgreen; text-decoration: underline;");
+B.setCSSRule(".anchor", "color: blue; cursor: pointer;");
+B.setCSSRule(".anchor.bad", "color: red");
+B.setCSSRule(".anchor:hover", "color: darkgreen; text-decoration: underline;");
 
