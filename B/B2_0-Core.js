@@ -13,6 +13,7 @@ B.settings = {
 		URL: ''
 	},
 	ScrollingTable: {
+		highlightItem: 'tr',
 		embedScrollbar: false,
 		fieldBackgroundColor: 'ghostwhite',
 		footerBackgroundColor: 'gainsboro',
@@ -688,7 +689,15 @@ B.setCSSRule(".BDialog",
 	"z-index: 9999; "+
 	"display: none;");
 
+//B.setCSSRule("table.BTableData tr td:hover", "border-bottom:1px solid navy;");
 B.setCSSRule("table.BTableData tr.picked", "background-color: lightskyblue;");
+B.setCSSRule("table.BTableData tr td.picked", "background-color: lightskyblue;");
+B.setCSSRule("table.BTableData tr.picked td.picked",
+	"background: aqua !important; "+ /* For browsers that do not support gradients */
+	"background: -webkit-linear-gradient(left, khaki, white, khaki) !important; "+ /* For Safari 5.1 to 6.0 */
+	"background: -o-linear-gradient(left, khaki, white, khaki) !important; "+ /* For Opera 11.1 to 12.0 */
+	"background: -moz-linear-gradient(left, khaki, white, khaki) !important; "+ /* For Firefox 3.6 to 15 */
+	"background: linear-gradient(to right, khaki, white, khaki) !important;") /* Standard syntax */ 
 B.setCSSRule("table.BTableData tr td",
 	"border-left:1px dotted silver; "+
 	"border-right:1px dotted silver; "+

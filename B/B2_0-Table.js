@@ -6,6 +6,8 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 	this.rootId = rootId;
 	this.height = height;
 	this.dataset = new B.Dataset(ColumnSet);
+	this.highlightItem = B.settings.ScrollingTable.highlightItem.toUpperCase();
+	if (this.highlightItem == undefined) this.highlightItem = "TR";
 	this.txt1 = txt1;
 	this.txt2 = txt2;
 	this.header = document.getElementById(this.rootId);
@@ -464,14 +466,25 @@ B.ScrollingTable.prototype.addRows = function(data, clear) {
 B.ScrollingTable.prototype.pick = function(row, cell) {
 	this.current.rownum = row.rowIndex;
 	this.current.cellnum = cell.cellIndex;
-	B.addClass(row, "picked");	
+	if (B.isOneOf(this.highlightItem, ",TR,ROW,TRTD,BOTH")) {
+		B.addClass(row, "picked");			
+	}
+	if (B.isOneOf(this.highlightItem, "TD,CELL,COLUMN,TRTD,BOTH")) {
+		B.addClass(cell, "picked");
+	}
 };
 B.ScrollingTable.prototype.unpick = function() {
 	for (var key in this.footer.buttons) {
 		if (this.footer.buttons[key].watchpick) this.footer.disableButton(key);
 	}
 	if (this.current.rownum >= 0) {
-		B.removeClass(this.dataTable.rows[this.current.rownum], "picked");
+		var tr = this.dataTable.rows[this.current.rownum];
+		if (B.isOneOf(this.highlightItem, ",TR,ROW,TRTD,BOTH")) {
+			B.removeClass(tr, "picked");			
+		}
+		if (B.isOneOf(this.highlightItem, "TD,CELL,COLUMN,TRTD,BOTH")) {
+			B.removeClass(tr.cells[this.current.cellnum], "picked");
+		}
 	}
 	this.current.rownum = -1;
 	this.current.cellnum = -1;
