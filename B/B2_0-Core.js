@@ -703,7 +703,6 @@ B.setCSSRule("table.BTableData tr td",
 	"border-left:1px dotted silver; "+
 	"border-right:1px dotted silver; "+
 	"border-bottom:1px dotted silver;");
-
 B.setCSSRule("table.BTable tr th", "font-size: 1.05em;");
 B.setCSSRule("table.BTable tr td, table.BTable tr th", "box-sizing: border-box;");
 B.setCSSRule("table.BTableHeader", "display:none;");
@@ -713,6 +712,7 @@ B.setCSSRule("table.form tr th",
 	"text-align:right; "+
 	"font-weight:bold; "+
 	"background-color:transparent;");
+
 B.setCSSRule(".BTab",
 	"background-color: gainsboro; "+
 	"border-left: 1px solid silver; "+
@@ -733,7 +733,7 @@ B.setCSSRule(".BTab.current",
 B.setCSSRule(".BTab.current:hover",
 	"background-color: lightcyan; "+
 	"border-bottom: 1px solid lightcyan !important;");
-B.setCSSRule("tr.BAction, td.BAction, span.BAction", "cursor: pointer;")
+B.setCSSRule(".BAction", "cursor: pointer;")
 B.setCSSRule(".BAction:hover", "background-color: aqua; color: navy;");
 B.setCSSRule(".anchor", "color: blue; cursor: pointer;");
 B.setCSSRule(".anchor.bad", "color: red");
