@@ -4,8 +4,9 @@
 // BUG: askValue - Enter key submits page (reload)
 
 B.dialogStack = []; // The stack stays in the B domain
-function openDialog(id, btns) {
-	if (btns == undefined) btns = [];
+function openDialog(id, onEnterKey) {
+	if (onEnterKey == undefined) onEnterKey = function() { };
+	var btns = [];
 	var dlg = $("#" + id);
 	var lst = $(":button.BDialogButton", dlg);
 	for (var i = 0; i < lst.length; i++) {
@@ -40,7 +41,11 @@ function openDialog(id, btns) {
 		buttons: btns, 
 		height: height, 
 		width: width
-	});
+	}).keypress($.proxy(function (e) {
+		if (e.keyCode === $.ui.keyCode.ENTER) {
+			this();
+		}
+	}, onEnterKey));
 	dlg.dialog("widget").find('.ui-dialog-titlebar-close').remove()
 
 	dlg.dialog("option", "closeOnEscape", false);
@@ -90,6 +95,10 @@ function sayBase(msg, title, callback, height, width, btns) {
 		height: height, width: width, minHeight: 200, minWidth: 300,
 		buttons: btns, 
 		close: function() { $(this).dialog("destroy").remove(); }
+	}).keypress(function (e) {
+		if (e.keyCode === $.ui.keyCode.ENTER) {
+			clickDialogButton("B-Say-Dialog", 0);
+		}
 	});
 	dlg.dialog("widget").find('.ui-dialog-titlebar-close').remove()
 	dlg.dialog("open");

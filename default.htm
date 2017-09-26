@@ -139,7 +139,7 @@ function init() {
 			"take some time, you may want to include a timer."); 
 		window.setTimeout(function() { thaw(); }, 10000);
 	});
-	br.addItem("Open up a form dialog", function() { openDialog("dlg1"); new B.Form("dlg1").setClean(); });
+	br.addItem("Open up a form dialog", function() { openDialog("dlg1", function() { clickDialogButton("dlg1", "Close"); }); new B.Form("dlg1").setClean(); });
 	br = tree1.addBranch("Some Other Actions", false);
 	br.addItem("Show images", function() { doImageTest(); });
 	br.addItem("Show chars", function() { doCharTest(); });
@@ -151,7 +151,7 @@ function init() {
 	smnu.addMenu("Toggle Section 2, item 2", function() { smnu.setSection('s2'); smnu.setDisabled(!smnu.items[4].disabled, 4);	return false; }, "FAVE");
 	smnu.addMenu("Test the menu system", function() { say("Looks like it is working."); });
 	var sect = smnu.addSection("s1", "Dialog Features").show();
-	sect.addMenu("General form dialog...", function() { openDialog("dlg1"); new B.Form("dlg1").setClean(); }, "POPUP");
+	sect.addMenu("General form dialog...", function() { openDialog("dlg1", function() { clickDialogButton("dlg1", "Close"); }); new B.Form("dlg1").setClean(); }, "POPUP");
 
 	sect = smnu.addSection("s2", "Second Section");
 	sect.addMenu("Show information...", function() { say("'Show information...'"); }, "INFO");
