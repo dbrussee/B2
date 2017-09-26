@@ -47,14 +47,14 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 				}
 			}
 			var data = cell.getAttribute("data").split(","); // columnName, widthInPixels, attributes
-			var nam = data[0];
+			var id = data[0];
 			var wid = 100; // 100 pixels -- will get overridden by data value next
 			if (data.length > 1) wid = parseInt(data[1],10);
 			this.dataWidth += wid;
 			cell.style.width = wid + "px";
 			cell.style.fontWeight = "bold";
 			var weight = "N";
-			var col = { pos:cn, name:nam, width:wid, bold:false, align:'left' };
+			var col = { index:cn, id:id, headText:cell.innerText, width:wid, bold:false, align:'left' };
 			this.columns.push(col);
 			var attribs = "L"; // Left justification as default
 			if (data.length > 2) attribs = data[2].toUpperCase(); // CB (Center Bold), etc
@@ -98,6 +98,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		if (row == undefined) return;
 		this.unpick();
 		var rd = this.dataset.getRow(row.rowIndex);
+		rd["clickedColumn"] = this.columns[cell.cellIndex];
 		for (var key in this.footer.buttons) {
 			if (this.footer.buttons[key].watchpick) this.footer.enableButton(key);
 		}
@@ -115,6 +116,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		if (row == undefined) return;
 		this.unpick();
 		var rd = this.dataset.getRow(row.rowIndex);
+		rd["clickedColumn"] = this.columns[cell.cellIndex];
 		for (var key in this.footer.buttons) {
 			if (this.footer.buttons[key].watchpick) this.footer.enableButton(key);
 		}
@@ -144,6 +146,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		if (row == undefined) return;
 		this.unpick();
 		var rd = this.dataset.getRow(row.rowIndex);
+		rd["clickedColumn"] = this.columns[cell.cellIndex];
 		for (var key in this.footer.buttons) {
 			if (this.footer.buttons[key].watchpick) this.footer.enableButton(key);
 		}
@@ -439,13 +442,13 @@ B.ScrollingTable.prototype.prepareRow = function(dr, rownum) {
 		if (tblcol.bold) {
 			sty += "font-weight:bold;";
 		}
-		var dcol = dr[tblcol.name];
+		var dcol = dr[tblcol.id];
 		if (sty.length > 0) h += " style='" + sty + "'";
 		h += ">" + (dcol == null ? "" : dcol.disp) + "</td>";
 	}
 	tr.innerHTML = h;
 	for (var i = 0; i < this.columns.length; i++) {
-		tds[this.columns[i].name] = tr.cells[i];
+		tds[this.columns[i].id] = tr.cells[i];
 	}
 	return { tr:tr, tds:tds };
 }
