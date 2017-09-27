@@ -26,12 +26,15 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 	this.contextMenu = new B.PopupMenu();
 	this.maxSelectedRows = 1;
 	this.onBeforeRowRender = function(rn, rd, tr, tds) { return; };
+	if (B.settings.ScrollingTable.JQTheme) {
+		B.addClass(this.header, "ui-widget-header,ui-priority-primary");
+	}
 
 	// Build the actual header from the template
 	for (var rn = 0; rn < this.header.rows.length; rn++) {
 		var row = this.header.rows[rn];
 		if (B.settings.ScrollingTable.JQTheme) {
-			B.addClass(row, "ui-widget-header,ui-priority-primary");
+			//B.addClass(row, "ui-widget-header,ui-priority-primary");
 		}
 		for (var cn = 0; cn < row.cells.length; cn++) {
 			var cell = row.cells[cn];
