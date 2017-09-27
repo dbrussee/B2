@@ -193,14 +193,6 @@ function doIMDB() {
 		}
 	}
 }
-function doFormDataTest() {
-	var frm = new B.Form("dlg1");
-	var dta = frm.get();
-	dta.frz = "I just got set!";
-	dta.fnam = "Daniel";
-	frm.set(dta);
-	frm.focus("com");
-}
 function doImageTest() {
 	openDialog("dlgImages");
 	var el = document.getElementById("dlgImageTarget");
@@ -285,6 +277,11 @@ function doRestTest(typ) {
 	});
 }
 
+function doFormValidate() {
+	var frm = new B.Form("dlg1");
+	frm.checkRequired("fnam,lnam,addr,city,st,zip,num,opt,adate,mult,rad");
+}
+
 </script>
 </head>
 <body>
@@ -362,10 +359,10 @@ function doRestTest(typ) {
 	<br>
 	<button onclick='new B.Form("dlg1").freeze();'>Freeze</button>,
 	<button onclick='new B.Form("dlg1").thaw();'>Thaw</button>,
-	<button onclick='doFormDataTest()'>Data Test</button>,
-	<button onclick='new B.Form("dlg1").reset();'>Reset</button>
 	<button onclick='new B.Form("dlg1").setReadOnly("com", "toggle");'>Allow Comment</button>
 	<button onclick='say("This forms was set as clean when opened. Its Dirty status is now = " + new B.Form("dlg1").isDirty())'>Check Dirty</button>
+	<button onclick='doFormValidate();'>Validate</button>
+	<button onclick='new B.Form("dlg1").clearIssues();'>Clear</button>
 	<button class='BDialogButton' onclick='popDialog();'>Close</button>
 </form>
 

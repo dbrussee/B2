@@ -488,3 +488,91 @@ B.Form.prototype.getToData = function(data, names) {
 	}
 	return this;
 };
+
+B.Form.prototype.markIssues = function(fldList, clearFirst) {
+	if (clearFirst == undefined) clearFirst = false;
+	if (clearFirst) this.clearIssues();
+	var lst = fldList.split(",");
+	for (var i = 0; i < lst.length; i++) {
+		var fld = this.fields[lst[i]];
+		if (fld == null) continue;
+		if (fld.type == "text") {
+			fld.els[0].style.backgroundColor = "pink";
+		} else if (fld.type == "select") {
+			fld.els[0].style.backgroundColor = "pink";
+		} else if (fld.type == "radio") {
+			var items = this.findLabels(fld.els);
+			for (var j = 0; j < items.length; j++) {
+				items[j].style.backgroundColor = "pink";
+			}
+		} else if (fld.type == "checkbox") {
+			var items = this.findLabels(fld.els);
+			for (var j = 0; j < items.length; j++) {
+				items[j].style.backgroundColor = "pink";
+			}
+		} else {
+			// No idea what this thing is!!!!
+		}
+	}
+}
+B.Form.prototype.checkRequired = function(fldList) {
+	var lst = fldList.split(",");
+	var markList = [];
+	var clearList = [];
+	var chk = this.get();
+	for (var i = 0; i < lst.length; i++) {
+		var itm = lst[i];
+		if (chk[itm] == null || chk[itm] == "") {
+			markList.push(itm);
+		} else {
+			clearList.push(itm);
+		}
+	}
+	this.markIssues(markList.join(","));
+	this.clearIssues(clearList.join(","));
+}
+B.Form.prototype.clearIssues = function(fldList) {
+	var lst = [];
+	if (fldList == undefined) {
+		for (var k in this.fields) {
+			lst.push(k);
+		}
+	} else {
+		lst = fldList.split(",");
+	}
+	for (var i = 0; i < lst.length; i++) {
+		this.clearIssue(lst[i]);
+	}
+}
+B.Form.prototype.clearIssue = function(fldname) {
+	var fld = this.fields[fldname];
+	if (fld.type == "text") {
+		fld.els[0].style.backgroundColor = "";
+	} else if (fld.type == "select") {
+		fld.els[0].style.backgroundColor = "";
+	} else if (fld.type == "radio") {
+		var lst = this.findLabels(fld.els);
+		for (var j = 0; j < lst.length; j++) {
+			lst[j].style.backgroundColor = "";
+		}
+	} else if (fld.type == "checkbox") {
+		var lst = this.findLabels(fld.els);
+		for (var j = 0; j < lst.length; j++) {
+			lst[j].style.backgroundColor = "";
+		}
+	} else {
+		// No idea what this thing is!!!!
+	}
+}
+B.Form.prototype.findLabels = function(els) {
+	var lst = [];
+	for (var i = 0; i < els.length; i++) {
+		var parentElem = $(els[i]).parent();
+		var parentTagName = parentElem.get(0).tagName.toLowerCase();
+	
+		if(parentTagName == "label") {
+			lst.push(parentElem[0]);
+		}
+	}
+	return lst;
+}
