@@ -5,7 +5,7 @@
 
 B.dialogStack = []; // The stack stays in the B domain
 function openDialog(id, onEnterKey) {
-	if (onEnterKey == undefined) onEnterKey = function() { };
+	if (onEnterKey == undefined) onEnterKey = "";
 	var btns = [];
 	var dlg = $("#" + id);
 	var lst = $(":button.BDialogButton", dlg);
@@ -31,7 +31,7 @@ function openDialog(id, onEnterKey) {
 	}
 	height = parseInt(height,10);
 	width = parseInt(width,10);
-	dlg.data("height", height).data("width", width);
+	dlg.data("height", height).data("width", width).data("enterkey",onEnterKey).data("id",id);
 
 	dlg.dialog({ 
 		autoOpen: false, 
@@ -41,11 +41,13 @@ function openDialog(id, onEnterKey) {
 		buttons: btns, 
 		height: height, 
 		width: width
-	}).keypress($.proxy(function (e) {
+	}).keypress($.proxy(function (e) { // Handle keypress while on form
 		if (e.keyCode === $.ui.keyCode.ENTER) {
-			this();
+			if (this.data("enterkey") != "") {
+				clickDialogButton(this.data("id"), this.data("enterkey"));
+			}
 		}
-	}, onEnterKey));
+	}, dlg));
 	dlg.dialog("widget").find('.ui-dialog-titlebar-close').remove()
 
 	dlg.dialog("option", "closeOnEscape", false);
