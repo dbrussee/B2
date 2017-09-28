@@ -36,7 +36,7 @@ B.DynamicTabset = function(id, width, height) {
                 var title = parts[0];
                 var width = "100px";
                 if (parts.length > 1) width = parts[1];
-                this.addTab(kid.id, title, width, kid);
+                this.addTab(-1, kid.id, title, width, kid);
             }
         
         }
@@ -44,34 +44,84 @@ B.DynamicTabset = function(id, width, height) {
 
     return this;
 }
-B.DynamicTabset.prototype.addTab = function(id, title, width, content) {
-    var tab = new B.DynamicTab(this, id, title, content);
-
+B.DynamicTabset.prototype.addTab = function(position, id, title, width, content) {
+    var tab = new B.DynamicTab(this, id, title, content);    
     var td = document.createElement("td");
     td.data = id;
     td.onclick = $.proxy(function(event) {
         var el = $(event.target)[0]; // A collection even though only one
         var td = $(el).closest("td")[0];            
-        var dta = td.data;
-        if (this.currentTab != dta) this.setTab(dta);
+        var id = td.id.split("_")[2];
+        if (this.currentTab != id) this.setTab(id);
     }, this);
     td.id = "TAB_" + this.id + "_" + id;
     td.style.width = width;
     td.className = "BTab";
     td.innerHTML = title;
-    this.tabsRow.insertBefore(td, this.spacer);
+    var beforeTab = this.spacer;
+    if (position >= 0) {
+        if (position < this.taborder.length) {
+            beforeTab = this.tabs[this.taborder[position]]; // This is the tab object
+            beforeTab = document.getElementById("TAB_" + this.id + "_" + beforeTab.id);
+        }
+    }
+    this.tabsRow.insertBefore(td, beforeTab);
+    this.tabs[id] = tab;
+    if (position < 0) {
+        this.taborder.push(id);
+    } else {
+        if (position >= this.taborder.length) {
+            this.taborder.push(id);
+        } else {
+            this.taborder.splice(position, 0, id);
+        }
+    }
 
+}
+B.DynamicTabset.prototype.removeTab = function(id) {
+    if (typeof id == "number") id = this.taborder[id];
+    var tab = this.tabs[id];
+
+}
+B.DynamicTabset.prototype.moveTab = function(frompos, topos, pickit) {
+    this.unsetTab();
+    var tmp = this.taborder[frompos];
+    tmpid = this.tabsRow.cells[frompos].id;
+    tmphtml = this.tabsRow.cells[frompos].innerHTML;
+    this.tabsRow.cells[frompos].id = "";
+    this.tabsRow.cells[frompos].innerHTML = "Beef";
+    if (frompos < topos) {
+        for (var i = frompos; i < topos; i++) {
+            this.taborder[i] = this.taborder[i+1];
+            this.tabsRow.cells[i].id = this.tabsRow.cells[i+1].id;
+            this.tabsRow.cells[i].innerHTML = this.tabsRow.cells[i+1].innerHTML;
+        }
+    } else {
+        for (var i = frompos; i > topos; i--) {
+            this.taborder[i] = this.taborder[i-1];
+            this.tabsRow.cells[i].id = this.tabsRow.cells[i-1].id;
+            this.tabsRow.cells[i].innerHTML = this.tabsRow.cells[i-1].innerHTML;
+        }
+    }
+    this.taborder[topos] = tmp;
+    this.tabsRow.cells[topos].id = tmpid;
+    this.tabsRow.cells[topos].innerHTML = tmphtml;
+    if (pickit != undefined && pickit) this.setTab(topos);
 }
 B.DynamicTabset.prototype.setTab = function(id) {
     if (typeof id == "number") id = this.taborder[id];
     var tab = this.tabs[id];
-    if (this.currentTab != null) {
-        this.body.removeChild(this.body.childNodes[0]);
-        B.removeClass(document.getElementById("TAB_" + this.id + "_" + this.currentTab), "current");
-    }
+    this.unsetTab();
     this.body.appendChild(tab.div);
     B.addClass(document.getElementById("TAB_" + this.id + "_" + id), "current");
     this.currentTab = id;
+}
+B.DynamicTabset.prototype.unsetTab = function() {
+    if (this.currentTab != null) {
+        if (this.body.childNodes.length > 0) this.body.removeChild(this.body.childNodes[0]);
+        B.removeClass(document.getElementById("TAB_" + this.id + "_" + this.currentTab), "current");
+    }
+    this.currentTab = null;    
 }
 B.DynamicTab = function(tabset, id, title, content) {
     this.tabset = tabset;
@@ -82,8 +132,6 @@ B.DynamicTab = function(tabset, id, title, content) {
         this.div = document.createElement("div");
     }
 
-    this.tabset.tabs[id] = this;
-    this.tabset.taborder.push(id);
     this.title = title;
     this.id = id;
 }
