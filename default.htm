@@ -11,7 +11,7 @@
 <script src="B/B2_0-Table.js"></script><script src="B/ExampleData.js"></script>
 <script src="B/B2_0-Data.js"></script>
 <script src="B/B2_0-Menu.js"></script>
-<script src="B/B2_0-Tabset.js"></script>
+<script src="B/B2_0-DynamicTabs.js"></script>
 <script src="B/B2_0-Remote.js"></script>
 <script src="B/B2_0-ABA.js"></script>
 <script>
@@ -165,8 +165,8 @@ function init() {
 	//smnu.onafterclose = function(mnu) { say("You closed the menu"); }
 	
 
-	window.ts1 = new B.TabSet("tabset1", "650px", "250px");
-	ts1.render(0);
+	window.ts1 = new B.DynamicTabset("tabset1", 650, 250);
+	ts1.setTab(0);
 
 }
 function doTestMappedList() {
@@ -310,6 +310,7 @@ function doFormValidate() {
 		<span id='ddBody'></span>
 	</div>
 </div>
+
 
 
 
