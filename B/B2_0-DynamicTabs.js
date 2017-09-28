@@ -79,6 +79,7 @@ B.DynamicTabset.prototype.addTab = function(position, id, title, width, content)
 
 }
 B.DynamicTabset.prototype.removeTab = function(pos) {
+    if (pos < 0 || pos > (this.taborder.length-1)) return;
     this.unsetTab();
     var tab = this.tabs[this.taborder[pos]];
     var div = tab.div;
@@ -88,6 +89,8 @@ B.DynamicTabset.prototype.removeTab = function(pos) {
     return div;
 }
 B.DynamicTabset.prototype.moveTab = function(frompos, topos, pickit) {
+    if (frompos < 0 || frompos > (this.taborder.length-1) || frompos == topos) return;
+    if (topos < 0 || topos > (this.taborder.length-1)) return;
     this.unsetTab();
     var tmp = this.taborder[frompos];
     tmpid = this.tabsRow.cells[frompos].id;
