@@ -279,7 +279,7 @@ function doRestTest(typ) {
 
 function doFormValidate() {
 	var frm = new B.Form("dlg1");
-	frm.checkRequired("fnam,lnam,addr,city,st,zip,num,opt,adate,mult,rad");
+	frm.validate();
 }
 
 </script>
@@ -319,21 +319,21 @@ function doFormValidate() {
 	<table class='form'>
 		<tr><td style='vertical-align: top;'>
 			<table class='form'>
-				<tr><th>First Name:</th><td><input class='VK' size='20' name='fnam'></td></tr>
-				<tr><th>Last Name:</th><td><input class='VK' size='20' name='lnam'></td></tr>
+				<tr><th>First Name:</th><td><input data-validate="*" size='20' name='fnam'></td></tr>
+				<tr><th>Last Name:</th><td><input data-validate="*" size='20' name='lnam'></td></tr>
 				<tr><th>Current:</th><td><label><input type='checkbox' name='cur'> <i>Check to make current</i></label></td></tr>
-				<tr><th>Address:</th><td><input class='VR' size='25' name='addr'></td></tr>
+				<tr><th>Address:</th><td><input data-validate="!" size='25' name='addr'></td></tr>
 				<tr><th>City:</th><td><input size='25' name='city'></td></tr>
-				<tr><th>State, Zip:</th><td><input class='VU' size='2' maxlength='2' name='st'>
-					<input class='VR' size='6' maxlength='5' name='zip'></td></tr>
-				<tr><th>Date:</th><td><input size='14' name='adate' class='VD'></td></tr>
-				<tr><th>Number:</th><td><input name='num' size='5' maxlength='4' value='42'> <button onclick='doRestTest(1);'>get</button></td></tr>
+				<tr><th>State, Zip:</th><td><input data-validate="U" size='2' maxlength='2' name='st'>
+					<input data-validate="z" size='6' maxlength='5' name='zip'></td></tr>
+				<tr><th>Date:</th><td><input size='14' name='adate' data-validate="d"></td></tr>
+				<tr><th>Number:</th><td><input data-validate="i:5,50" name='num' size='5' maxlength='4' value='42'> <button onclick='doRestTest(1);'>get</button></td></tr>
 			</table>
 		</td>
 		<td style='vertical-align: top;'>
 			<table class='form' style='margin-left: 2em;'>
 				<tr><th>Comment:</th><td><input size='25' name='com' readonly></td></tr>
-				<tr><th>Option:</th><td><select class='VR' name='opt'>
+				<tr><th>Option:</th><td><select data-validate="!" name='opt'>
 					<option value=''>Select an option</option>
 					<option value='1'>First</option><option value='2'>Second</option>
 					<option value='3'>Third</option><option value='4'>Fourth</option>
@@ -346,7 +346,7 @@ function doFormValidate() {
 					<option value='9'>Ninth</option><option value='10'>Tenth</option>
 					</select></td></tr>
 				<tr><th>Radio:</th><td>
-					<label><input type='radio' name='rad' value='A'>AAA</label>
+					<label><input data-validate="!" type='radio' name='rad' value='A'>AAA</label>
 					<label><input type='radio' name='rad' value='B'>BBB</label>
 					<label><input type='radio' name='rad' value='C'>CCC</label>
 					<label><input type='radio' name='rad' value='D'>DDD</label></td></tr>
@@ -375,8 +375,8 @@ function doFormValidate() {
 <form id='actorForm' class='BDialog' style='height:350px; width: 450px;' title='Actor Information'>
 	<input type='hidden' name='ACT'>
 	<table class='form'>
-		<tr><th>Actor:</th><td><input class='VK' name='actor' size='30'></td></tr>
-		<tr><th>Role:</th><td><input class='VR' name='role' size='30'></td></tr>
+		<tr><th>Actor:</th><td><input data-validate="*" name='actor' size='30'></td></tr>
+		<tr><th>Role:</th><td><input data-validate="!" name='role' size='30'></td></tr>
 		<tr><th>Episodes:</th><td><input name='episodes' size='4'></td></tr>
 		<tr><th>First, Last Year:</th><td><input name='fy' size='5'>, <input name='ly' size='5'></td></tr>
 		<tr><th>IMDb Code:</th><td><input name='imdb'></td></tr>

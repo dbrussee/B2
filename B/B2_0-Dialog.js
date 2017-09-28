@@ -281,19 +281,55 @@ B.Form = function(formID, forceReload) {
 		var el = lst[x];
 		if (el.name == "") continue; // Unnamed input?
 		if (this.fields[el.name] == null) { // First reference to this item... set up a default object
-			this.fields[el.name] = { name:el.name, els:[ el ], type:'text', readonly:el.readOnly, key:false, req:false, upper:false, trim:true, disabled:el.disabled };
+			this.fields[el.name] = { 
+				name:el.name, 
+				vtype:'text', valid:true, min:null, max:null,
+				els:[ el ], 
+				type:'text', 
+				readonly:el.readOnly, 
+				key:false, 
+				req:false, 
+				upper:false, 
+				trim:true, 
+				disabled:el.disabled };
 			var rec = this.fields[el.name];
 			// All elements with the same name must be the same tag
 			var tag = el.tagName;
+			if (tag == "INPUT") tag = el.type.toUpperCase();	
 			var jel = $(el);
-			if (jel.hasClass("VK")) { rec.key = true; rec.req = true; }
-			if (jel.hasClass("VR")) rec.req = true;
-			if (jel.hasClass("VU")) { el.style.textTransform = "uppercase"; rec.upper = true; }
-			if (jel.hasClass("VN")) rec.type = "num";
-			if (jel.hasClass("VI")) rec.type = "int";
-			if (jel.hasClass("VD")) rec.type = "date";
-			// Convert INPUT to "TEXT", "HIDDEN", "RADIO", etc.
-			if (tag == "INPUT") tag = el.type.toUpperCase();
+			var dta = el.getAttribute("data-validate");
+			if (dta == null) { // Use classes to determine types, etc.
+				if (jel.hasClass("VK")) { rec.key = true; rec.req = true; }
+				if (jel.hasClass("VR")) rec.req = true;
+				if (jel.hasClass("VU")) { el.style.textTransform = "uppercase"; rec.upper = true; }
+				if (jel.hasClass("VN")) rec.vtype = "num";
+				if (jel.hasClass("VI")) rec.vtype = "int";
+				if (jel.hasClass("VD")) rec.vtype = "date";
+				// Convert INPUT to "TEXT", "HIDDEN", "RADIO", etc.
+			} else { // Use data element to determine field info
+				var itm = dta.split(":"); // !#:0,100
+				var typ = itm[0];
+				var range = "";
+				if (itm.length == 2) range = itm[1];
+				if (B.contains(typ,"!")) rec.req = true;
+				if (B.contains(typ,"*")) { rec.req = true; rec.key = true; }
+				if (B.contains(typ,"#")) rec.vtype = "int";
+				if (B.contains(typ,"i")) rec.vtype = "int";
+				if (B.contains(typ,"f")) rec.vtype = "num";
+				if (B.contains(typ,"d")) rec.vtype = "date";
+				if (B.contains(typ,"%")) rec.vtype = "datetime";
+				if (B.contains(typ,"$")) rec.vtype = "dollars";
+				if (B.contains(typ,"c")) rec.vtype = "money";
+				if (B.contains(typ,"@")) rec.vtype = "email";
+				if (B.contains(typ,"z")) rec.vtype = "zip";
+				if (B.contains(typ,"_")) rec.trim = false;
+				if (B.contains(typ,"U")) { el.style.textTransform = "uppercase"; rec.upper = true; }
+				if (range != "") {
+					var parts = range.split(",");
+					rec.min = parts[0];
+					if (parts.length > 1) rec.max = parts[1];
+				}
+			}
 			
 			if (B.isOneOf(tag, "TEXT")) {
 				if (el.readOnly) el.style.borderColor = "transparent";
@@ -317,7 +353,7 @@ B.Form = function(formID, forceReload) {
 						}
 					}
 				}
-				rec.type = (tag == "SELECT" ? "select" : "text");
+				if (tag == "SELECT") rec.type = "select";
 			} else if (tag == "CHECKBOX") {
 				rec.type = "checkbox";
 			} else if (tag == "RADIO") {
@@ -377,16 +413,16 @@ B.Form.prototype.get = function(nam) {
 		}
 		return this.get(nam);
 	} else {
-		var nameList = nam.split(","); // 'fnam,lnam,bday' -> ['fnam','lnam','bday']
+		var nameList = nam.split(","); // 'fnam,lnam,bday' -> ['Frank','Jones','9/1/1960']
 		var rslt = {};
 		for (var nn = 0; nn < nameList.length; nn++) {
 			var fld = this.fields[nameList[nn]];
 			if (fld == undefined) {
 				rslt[nameList[nn]] = null;
 			} else if (fld.type == "text") {
-				rslt[fld.name] = B.trim(fld.els[0].value);
+				rslt[fld.name] = fld.els[0].value;
 			} else if (fld.type == "textarea") {
-				rslt[fld.name] = B.trim(fld.els[0].value);
+				rslt[fld.name] = fld.els[0].value;
 			} else if (fld.type == "select") {
 				var sel = fld.els[0];
 				if (sel.selectedIndex < 0) {
@@ -409,6 +445,7 @@ B.Form.prototype.get = function(nam) {
 				// No idea what this thing is!!!!
 				rslt[fld.name] = "";
 			}
+			if (fld.trim) rslt[fld.name] = B.trim(rslt[fld.name]);
 		}
 		if (nameList.length == 1) {
 			return rslt[nam];
@@ -515,21 +552,124 @@ B.Form.prototype.markIssues = function(fldList, clearFirst) {
 		}
 	}
 }
-B.Form.prototype.checkRequired = function(fldList) {
-	var lst = fldList.split(",");
-	var markList = [];
-	var clearList = [];
-	var chk = this.get();
-	for (var i = 0; i < lst.length; i++) {
-		var itm = lst[i];
-		if (chk[itm] == null || chk[itm] == "") {
-			markList.push(itm);
+B.Form.prototype.validateRequired = function(fldname) {
+	var fld = this.fields[fldname];
+	var val = this.get(fldname);
+	var ok = true;
+	if (val == null || val == "") {
+		ok = false;
+	}
+	if (ok) {
+		return true;
+	} else {
+		fld.valid = false;
+		this.markIssues(fldname, false);
+		return false;
+	}
+}
+B.Form.prototype.validateText = function(fldname, min, max) {
+	var fld = this.fields[fldname];
+	var val = this.get(fldname);
+	var ok = true;
+	if (min != null) if (val.length < min) ok = false;
+	if (max != null) if (val.length > max) ok = false;
+	if (!ok) {
+		fld.valid = false;
+		this.markIssues(fldname, false);
+		return false;
+	}
+	return true;
+}
+B.Form.prototype.validateInteger = function(fldname, min, max) {
+	var fld = this.fields[fldname];
+	var val = this.get(fldname);
+	var ok = true;
+	if (!B.is.INTEGER(val, min, max)) {
+		if (val == "" && !fld.req) {
+			// Not integer, but blank and not required
 		} else {
-			clearList.push(itm);
+			ok = false;
 		}
 	}
-	this.markIssues(markList.join(","));
-	this.clearIssues(clearList.join(","));
+	if (!ok) {
+		fld.valid = false;
+		this.markIssues(fldname, false);
+		return false;
+	}
+	return true;
+}
+B.Form.prototype.validateEmail = function(fldname) {
+	var fld = this.fields[fldname];
+	var val = this.get(fldname);
+	var ok = true;
+	if (!B.is.EMAIL(val)) {
+		if (val == "" && !fld.req) {
+			// Not valid, but blank and not required
+		} else {
+			ok = false;
+		}
+	}
+	if (!ok) {
+		fld.valid = false;
+		this.markIssues(fldname, false);
+		return false;
+	}
+	return true;
+}
+B.Form.prototype.validateNumber = function(fldname, min, max) { // Allows floating point
+	var fld = this.fields[fldname];
+	var val = this.get(fldname);
+	var ok = true;
+	if (!B.is.NUMBER(val, min, max)) {
+		if (val == "" && !fld.req) {
+			// Not number, but blank and not required
+		} else {
+			ok = false;
+		}
+	}
+	if (!ok) {
+		fld.valid = false;
+		this.markIssues(fldname, false);
+		return false;
+	}
+	return true;
+}
+B.Form.prototype.validateZipcode = function(fldname) {
+	var fld = this.fields[fldname];
+	var val = this.get(fldname);
+	var ok = true;
+	if (val == "") {
+		if (fld.req) {
+			ok = false;
+		}
+	} else {
+		ok = B.is.ZIPCODE(val);
+	}
+	if (!ok) {
+		fld.valid = false;
+		this.markIssues(fldname, false);
+		return false;
+	}
+	return true;
+}
+B.Form.prototype.validateDate = function(fldname, min, max) {
+	var fld = this.fields[fldname];
+	var val = this.get(fldname);
+	var ok = true;
+	var dat = null;
+	if (val == "") {
+		if (fld.req) {
+			ok = false;
+		}
+	} else {
+		ok = B.is.DATE(val, min, max);
+	}
+	if (!ok) {
+		fld.valid = false;
+		this.markIssues(fldname, false);
+		return false;
+	}
+	return true;
 }
 B.Form.prototype.clearIssues = function(fldList) {
 	var lst = [];
@@ -575,4 +715,22 @@ B.Form.prototype.findLabels = function(els) {
 		}
 	}
 	return lst;
+}
+
+B.Form.prototype.validate = function(chk) {
+	if (chk == undefined) chk = this.get();
+	this.clearIssues();
+	for (var k in this.fields) {
+		var fld = this.fields[k];
+		fld.valid = true; // Assume the best!
+		if (fld.req) this.validateRequired(k);
+		if (fld.vtype == "int") this.validateInteger(k, fld.min, fld.max);
+		if (fld.vtype == "dollars") this.validateInteger(k, fld.min, fld.max);
+		if (fld.vtype == "num") this.validateNumber(k, fld.min, fld.max);
+		if (fld.vtype == "text") this.validateText(k, fld.min, fld.max);
+		if (fld.vtype == "zip") this.validateZipcode(k);
+		if (fld.vtype == "date") this.validateDate(k, fld.min, fld.max);
+		
+		if (!fld.valid) this.markIssues(k);
+	}
 }

@@ -353,8 +353,12 @@ B.is = {
 		}
 		return true;
 	},
+	ZIPCODE: function(val) {
+		return /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(val);
+	},
 	DATE: function(val, min, max) {
-		var t = new Date(val).getTime();
+		var d = new Date(val);
+		var t = d.getTime();
 		if (isNaN(t)) return false;
 		if (min != undefined && min !== null) {
 			if (new Date(min).getTime() > t) return false;
@@ -362,7 +366,26 @@ B.is = {
 		if (max != undefined && max != null && max !== "") {
 			if (t > new Date(max).getTime()) return false;
 		}
+		if (d.getHours() > 0) return false;
+		if (d.getMinutes() > 0) return false;
+		if (d.getSeconds() > 0) return false;
+		if (d.getMilliseconds() > 0) return false;
 		return true;		
+	},
+	EMAIL: function(val) {
+		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		return re.test(val);		
+	},
+	NUMBER: function(val, min, max) {
+		var num = parseFloat(String(val));
+		if (isNaN(num)) return false;
+		if (min != undefined && min !== null) {
+			if (parseFloat(min) > num) return false;
+		}
+		if (max != undefined && max != null && max !== "") {
+			if (num > parseFloat(max)) return false;
+		}
+		return true;
 	},
 	INTEGER: function(val, min, max) { 
 		var int = parseInt(String(val),10);
@@ -527,6 +550,14 @@ B.char = {
 	STAR:		"&#x2606;",		BLACKSTAR:	"&#x2605;",		CLOUD:		"&#x2601;",
 	CARD_S:		"&#9824;",		CARD_C:		"&#9827;",		CARD_H:		"&#9829;",		CARD_D:		"&#9830"
 };
+B.contains = function(str, test, caseInsensitive) {
+	if (caseInsensitive == undefined) caseInsensitive = false;
+	if (caseInsensitive) {
+		str = str.toUpperCase(); 
+		test = test.toUpperCase();
+	}
+	return (str.indexOf(test) != -1);
+}
 B.hasClass = function(el, clsname) {
 	var lst = el.className.split(" ");
 	for (var i = 0; i < lst.length; i++) {
