@@ -116,7 +116,11 @@ B.DynamicTabset.prototype.moveTab = function(frompos, topos, pickit) {
     if (pickit != undefined && pickit) this.setTab(topos);
 }
 B.DynamicTabset.prototype.setTab = function(id) {
-    if (typeof id == "number") id = this.taborder[id];
+    if (typeof id == "number") {
+        id = this.taborder[id];
+    } else if (typeof id == "string") {
+        // This is the tab id already... nothing to do here
+    }
     var tab = this.tabs[id];
     this.unsetTab();
     this.body.appendChild(tab.div);
