@@ -560,6 +560,14 @@ B.DropdownMenu.prototype.disableItem = function(code, id) {
     var menu = this.getMenu(code);
     menu.disable(id);
 }
+B.DropdownMenu.prototype.closeAll = function() {
+	for (var k in this.menus) {
+		var mnu = this.menus[k];
+		if (mnu.submenu.showing) {
+			mnu.td.click();
+		}
+	}
+}
 B.DropdownMenu.prototype.render = function(div) {
     if (typeof div == "string") div = document.getElementById(div);
     this.object = div;
