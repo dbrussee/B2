@@ -420,7 +420,9 @@ B.ScrollingTable.prototype.setMaxSelectedRows = function(num) {
 }
 B.ScrollingTable.prototype.setFooterMessage = function(txt) {
 	if (txt == undefined) {
-		txt = this.dataTable.rows.length + " " + (this.dataTable.rows.length == 1 ? this.txt1 : this.txt2)
+		var cnt = this.dataTable.rows.length;
+		if (cnt == 0) cnt = "No";
+		txt = cnt + " " + (this.dataTable.rows.length == 1 ? this.txt1 : this.txt2)
 	}
 	this.footerMessageDIV.innerHTML = txt;
 }
