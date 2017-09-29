@@ -92,6 +92,7 @@ function sayBase(msg, title, callback, height, width, btns) {
 		event.preventDefault();
 	});
 	dlg.dialog({ 
+		BData: null,
 		dialogClass: "no-class",
 		resizable: true, modal: true, autoOpen: false, closeOnEscape: false,
 		height: height, width: width, minHeight: 200, minWidth: 300,
@@ -173,11 +174,13 @@ askIcon = function(icon, msg, title, callback, height, width) {
 	if (callback == undefined) callback = function() { };
 	var btns = [
 		{ text: "Yes", click: function() { 
+			var data = $("#B-Say-Dialog").dialog("option", "BData");
 			closeDialog("B-Say-Dialog"); 
-			callback("YES"); } },
+			callback("YES", data); } },
 		{ text: "No",  click: function() { 
+			var data = $("#B-Say-Dialog").dialog("option", "BData");
 			closeDialog("B-Say-Dialog"); 
-			callback("NO");  } }
+			callback("NO", data);  } }
 	];
 	sayIcon(icon, msg, title, callback, height, width, btns);
 }
@@ -188,14 +191,17 @@ askCIcon = function(icon, msg, title, callback, height, width) {
 	if (callback == undefined) callback = function() { };
 	var btns = [
 		{ text: "Yes", click: function() { 
+			var data = $("#B-Say-Dialog").dialog("option", "BData");
 			closeDialog("B-Say-Dialog"); 
-			callback("YES"); } },
+			callback("YES", data); } },
 		{ text: "No",  click: function() { 
+			var data = $("#B-Say-Dialog").dialog("option", "BData");
 			closeDialog("B-Say-Dialog"); 
-			callback("NO");  } },
+			callback("NO", data);  } },
 		{ text: "Cancel",  click: function() { 
+			var data = $("#B-Say-Dialog").dialog("option", "BData");
 			closeDialog("B-Say-Dialog"); 
-			callback("CANCEL");  } }
+			callback("CANCEL", data);  } }
 	];
 	sayIcon(icon, msg, title, callback, height, width, btns);
 }
@@ -211,12 +217,14 @@ askValueIcon = function(icon, msg, prompt, value, title, callback, height, width
 	h += "</table>";
 	var btns = [
 		{ text: "Ok",  click: function() { 
+			var data = $("#B-Say-Dialog").dialog("option", "BData");
 			var rslt = $("#B-Say-Dialog-Value").val();
 			closeDialog("B-Say-Dialog"); 
-			callback(rslt);  } },
+			callback(rslt, data);  } },
 		{ text: "Cancel",  click: function() { 
+			var data = $("#B-Say-Dialog").dialog("option", "BData");
 			closeDialog("B-Say-Dialog"); 
-			callback(null);  } }
+			callback(null, data);  } }
 	];
 	sayIcon(icon, h, title, callback, height, width, btns);
 	if (value != undefined && value != null) $("#B-Say-Dialog-Value").val(value);

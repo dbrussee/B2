@@ -4,6 +4,7 @@ B.DynamicTabset = function(id, width, height) {
     this.tabs = {};
     this.taborder = [];
     this.currentTab = null;
+    this.onBodyClick = function() { };
 
     this.container = document.createElement("div");
     this.container.style.cssText = "padding:0; margin:0; border-collapse: collapse; height:" + (height+30) + "px; width:" + width + "px; ";
@@ -23,6 +24,9 @@ B.DynamicTabset = function(id, width, height) {
     this.body = document.createElement("div");
     this.body.style.cssText = "height:" + height + "px; border-left:1px solid navy; border-right:1px solid navy; border-bottom:1px solid navy; padding:3px;";
     this.container.appendChild(this.body);
+    this.container.onclick = $.proxy(function() {
+        this.onBodyClick.call(this);
+    }, this);
 
     template.parentElement.insertBefore(this.container, template);
 
@@ -45,9 +49,25 @@ B.DynamicTabset = function(id, width, height) {
     return this;
 }
 B.DynamicTabset.prototype.addTab = function(position, id, title, width, content) {
+    if (this.tabs[id]) return null;
     var tab = new B.DynamicTab(this, id, title, content);    
     var td = document.createElement("td");
     td.data = id;
+    td.style.position = "relative";
+    var btn = document.createElement("div");
+    btn.className = "BTabCloser";
+    btn.innerHTML = "X";
+    btn.onclick = $.proxy(function(event) {
+        var tab = this;
+        this.tabset.setTab(tab.id);
+        askWarn("Are you sure you want to close the tab '" + tab.title + "'?", "Close Tab?", function(rslt, data) {
+            if (rslt == "YES") {
+                data.removeTab(data.currentTab);
+            }
+        });
+        $("#B-Say-Dialog").dialog("option", "BData", this.tabset);
+    }, tab);
+    td.appendChild(btn);
     td.onclick = $.proxy(function(event) {
         var el = $(event.target)[0]; // A collection even though only one
         var td = $(el).closest("td")[0];            
@@ -57,7 +77,10 @@ B.DynamicTabset.prototype.addTab = function(position, id, title, width, content)
     td.id = "TAB_" + this.id + "_" + id;
     td.style.width = width;
     td.className = "BTab";
-    td.innerHTML = title;
+    var span = document.createElement("span");
+    span.id = td.id + "_title";
+    span.innerHTML = title;
+    td.appendChild(span);
     var beforeTab = this.spacer;
     if (position >= 0) {
         if (position < this.taborder.length) {
@@ -76,17 +99,39 @@ B.DynamicTabset.prototype.addTab = function(position, id, title, width, content)
             this.taborder.splice(position, 0, id);
         }
     }
-
+    return tab;
 }
-B.DynamicTabset.prototype.removeTab = function(pos) {
-    if (pos < 0 || pos > (this.taborder.length-1)) return;
+B.DynamicTabset.prototype.removeTab = function(pos, thenpick) {
+    var tab = this.findTab(pos);
+    if (tab == null) return;
+    if (typeof pos == "string") {
+        for (var i = 0; i < this.taborder.length; i++) {
+            if (this.taborder[i] == pos) {
+                pos = i;
+                break;
+            }
+        }
+    }
     this.unsetTab();
-    var tab = this.tabs[this.taborder[pos]];
     var div = tab.div;
     delete this.tabs[tab.id];
     this.taborder.splice(pos,1);
     this.tabsRow.removeChild(this.tabsRow.cells[pos]);
+    if (thenpick != undefined) this.setTab(thenpick);
     return div;
+}
+B.DynamicTabset.prototype.setTabTitle = function(id, title) {
+    var tab = this.findTab(pos);
+    var id = "TAB_" + this.id + "_" + tab.id + "_TITLE";
+    $("#" + id).html(title);
+}
+B.DynamicTabset.prototype.findTab = function(id) {
+    if (typeof id == "number") {
+        id = this.taborder[id];
+    } else if (typeof id == "string") {
+        // This is the tab id already... nothing to do here
+    }
+    return this.tabs[id];
 }
 B.DynamicTabset.prototype.moveTab = function(frompos, topos, pickit) {
     if (frompos < 0 || frompos > (this.taborder.length-1) || frompos == topos) return;
@@ -116,24 +161,19 @@ B.DynamicTabset.prototype.moveTab = function(frompos, topos, pickit) {
     if (pickit != undefined && pickit) this.setTab(topos);
 }
 B.DynamicTabset.prototype.setTab = function(id) {
-    if (typeof id == "number") {
-        id = this.taborder[id];
-    } else if (typeof id == "string") {
-        // This is the tab id already... nothing to do here
-    }
-    var tab = this.tabs[id];
+    var tab = this.findTab(id);
     this.unsetTab();
     $(tab.div).show();
-    B.addClass(document.getElementById("TAB_" + this.id + "_" + id), "current");
+    B.addClass(document.getElementById("TAB_" + this.id + "_" + tab.id), "current");
     this.currentTab = id;
 }
 B.DynamicTabset.prototype.unsetTab = function() {
     if (this.currentTab != null) {
         if (this.body.childNodes.length > 0) {
-            var tab = this.tabs[this.currentTab];
+            var tab = this.findTab(this.currentTab);
             $(tab.div).hide();
+            B.removeClass(document.getElementById("TAB_" + this.id + "_" + tab.id), "current");
         }
-        B.removeClass(document.getElementById("TAB_" + this.id + "_" + this.currentTab), "current");
     }
     this.currentTab = null;    
 }

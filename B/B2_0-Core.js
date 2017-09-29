@@ -765,6 +765,24 @@ B.setCSSRule(".BTab.current",
 B.setCSSRule(".BTab.current:hover",
 	"background-color: lightcyan; "+
 	"border-bottom: 1px solid lightcyan !important;");
+
+B.setCSSRule(".BTab:hover div.BTabCloser",
+	"z-index:50; "+
+	"cursor:pointer; "+
+	"position:absolute; "+
+	"display: inline; "+
+	"background-color:brown !important; "+
+	"color:white; "+
+	"height:14px; "+
+	"width:14px; "+
+	"top:0; "+
+	"right:0; "+
+	"margin-right:-5px; "+
+	"margin-top:-8px; "+
+	"font-size:11px; font-weight:bold; ");
+B.setCSSRule(".BTab:hover div.BTabCloser:hover", "color:white;background-color:red !important;");
+B.setCSSRule(".BTab div.BTabCloser", "display:none;");
+	
 B.setCSSRule(".BAction", "cursor: pointer;")
 B.setCSSRule(".BAction:hover", "background-color: aqua; color: navy;");
 B.setCSSRule(".anchor", "color: blue; cursor: pointer;");
