@@ -737,11 +737,12 @@ B.setCSSRule("table.BTableData tr td",
 B.setCSSRule("table.BTable tr th", "font-size: 1.05em;");
 B.setCSSRule("table.BTable tr td, table.BTable tr th", "box-sizing: border-box;");
 B.setCSSRule("table.BTableHeader", "display:none;");
+B.setCSSRule("table.BTableHeader tr th", "font-weight:normal !important;");
 
 B.setCSSRule("table.form tr th",
 	"padding-right:.1em; "+
 	"text-align:right; "+
-	"font-weight:bold; "+
+	"font-weight:bold; color:navy; "+
 	"background-color:transparent;");
 
 B.setCSSRule(".BTab",
