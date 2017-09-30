@@ -20,6 +20,9 @@ B.settings = {
 		footerHoverColor: 'aqua',
 		JQTheme: true // false for using stylesheet (BQTable, BQTableHeader)
 	},
+	DynamicTabs: {
+		closeTabLink: false
+	},
 	SlideMenu: {
 		PushStyle: false, // true pushes page content to the right when Slide Menu opens (Not ready for use)
 		Multisection: false,  // Only one section open at a time on SlideMenu
