@@ -478,6 +478,7 @@ B.ScrollingTable.prototype.pick = function(row, cell) {
 		this.current.rownum = row;
 		row = this.dataTableBody.rows[row];
 	}
+	if (cell == undefined) cell = 0;
 	if (isNaN(cell)) {
 		this.current.cellnum = cell.cellIndex;
 	} else {
@@ -498,7 +499,9 @@ B.ScrollingTable.prototype.unpick = function() {
 	if (this.current.rownum >= 0) {
 		var tr = this.dataTable.rows[this.current.rownum];
 		B.removeClass(tr, "picked");
-		B.removeClass(tr.cells[this.current.cellnum], "picked");
+		if (this.current.cellnum >= 0) {
+			B.removeClass(tr.cells[this.current.cellnum], "picked");
+		}
 	}
 	this.current.rownum = -1;
 	this.current.cellnum = -1;
