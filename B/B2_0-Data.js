@@ -144,6 +144,7 @@ B.DataColumnSet.prototype.getColumn = function(id) {
 // using \n and \t delimiters.
 B.Dataset = function(columnSet, data) {
 	this.columnSet = columnSet;
+	if (typeof columnSet == "string") this.columnSet = new B.DataColumnSet(columnSet);
 	this.data = [];
 	this.rownumber = -1; // Before first row
 	this.addRows(data, true);

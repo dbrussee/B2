@@ -62,7 +62,7 @@ function init() {
 	dd.render("ddMenu");
 
 
-	window.tblA = new B.ScrollingTable("tblA", 130, new B.DataColumnSet("actor,role,episodes,fy,ly,imdb"), "actor", "actors", true);
+	window.tblA = new B.ScrollingTable("tblA", 130, "actor,role,episodes,fy,ly,imdb", "actor", "actors", true);
 	tblA.highlightItem = "ROW";
 	tblA.setForm("actorForm", null, "AED", "Are you sure you want to delete this actor?");
 	tblA.footer.addButton("a", "First", function(event) { tblA.footer.disableButton("a").enableButton("b"); }).disable();
