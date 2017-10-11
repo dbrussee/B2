@@ -93,7 +93,7 @@ B.DataColumn.prototype.parse = function(val) {
 		if (typeof val == "boolean") {
 			rslt.val == val;
 		} else {
-			rslt.val = (B.trim(val).toUpperCase.charAt(0) == "Y");
+			rslt.val = (B.trim(val).toUpperCase().charAt(0) == "Y");
 		}
 		rslt.disp = (rslt.val ? B.char.CHECK : "");
 	} else if (this.typ == "$") {

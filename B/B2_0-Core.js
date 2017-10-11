@@ -20,9 +20,6 @@ B.settings = {
 		footerHoverColor: 'aqua',
 		JQTheme: true // false for using stylesheet (BQTable, BQTableHeader)
 	},
-	DynamicTabs: {
-		closeTabLink: false
-	},
 	SlideMenu: {
 		PushStyle: false, // true pushes page content to the right when Slide Menu opens (Not ready for use)
 		Multisection: false,  // Only one section open at a time on SlideMenu
@@ -57,9 +54,9 @@ B.clearSelection = function() {
         document.selection.empty();
     } else if(window.getSelection) {
         var sel = window.getSelection();
-        sel.removeAllRanges();
+        try {sel.removeAllRanges();} catch(e) {};
     }
-}
+};
 B.months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 B.days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 B.getDateParts = function(d) {
@@ -592,9 +589,10 @@ B.addClass = function(el, clsname) {
 			el.className = clsname;
 		}
 	}
-}
+};
 B.removeClass = function(el, clsname) {
 	if (typeof el == "string") el = document.getElementById(el);
+	if (el == null) return;
 	var clslist = clsname.split(",");
 	if (clslist.length > 1) {
 		for (var i = 0; i < clslist.length; i++) {

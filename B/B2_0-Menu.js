@@ -74,7 +74,7 @@ B.PopupMenu.prototype.make = function() {
         var itm = this.itemlist[i];
         itm.tree = this;
         if (itm.kind == "space") {
-            this.tree.addItem("&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;", function() {}, "&mdash;");
+            this.tree.addItem("<span style='color:silver;'>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;</span>", function() {}, "<span style='color:silver;'>&mdash;</span>");
         } else if (itm.kind == "menu") {
             if (itm.disabled) {
                 itm.treenode = this.tree.addItem("<span style='color:silver;'>" + itm.text + "</span>", null, "&nbsp;");
@@ -200,7 +200,7 @@ B.PopupSubmenu.prototype.make = function(branch) {
         itm.branch = branch;
         itm.menu = this.menu;
         if (itm.kind == "space") {
-            itm.branch.addItem("<hr />", null,"&nbsp;");
+            itm.branch.addItem("<span style='background-color:silver;'>&nbsp;</span>", null,"&nbsp;");
         } else if (itm.kind == "menu") {
             if (itm.disabled) {
                 itm.treenode = itm.branch.addItem("<span style='color:silver;'>" + itm.text + "</span>", null, "&nbsp;");

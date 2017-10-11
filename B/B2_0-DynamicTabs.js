@@ -5,7 +5,7 @@ B.DynamicTabset = function(id, width, height) {
     this.taborder = [];
     this.currentTab = null;
     this.onBodyClick = function() { };
-    this.closeTabLink = B.settings.DynamicTabs.closeTabLink;
+
     this.container = document.createElement("div");
     this.container.style.cssText = "padding:0; margin:0; border-collapse: collapse; height:" + (height+30) + "px; width:" + width + "px; ";
 
@@ -54,22 +54,20 @@ B.DynamicTabset.prototype.addTab = function(position, id, title, width, content)
     var td = document.createElement("td");
     td.data = id;
     td.style.position = "relative";
-    if (this.closeTabLink) {
-        var btn = document.createElement("div");
-        btn.className = "BTabCloser";
-        btn.innerHTML = "X";
-        btn.onclick = $.proxy(function(event) {
-            var tab = this;
-            this.tabset.setTab(tab.id);
-            askWarn("Are you sure you want to close the tab '" + tab.title + "'?", "Close Tab?", function(rslt, data) {
-                if (rslt == "YES") {
-                    data.removeTab(data.currentTab);
-                }
-            });
-            $("#B-Say-Dialog").dialog("option", "BData", this.tabset);
-        }, tab);
-        td.appendChild(btn);    
-    }
+    var btn = document.createElement("div");
+    btn.className = "BTabCloser";
+    btn.innerHTML = "X";
+    btn.onclick = $.proxy(function(event) {
+        var tab = this;
+        this.tabset.setTab(tab.id);
+        askWarn("Are you sure you want to close the tab '" + tab.title + "'?", "Close Tab?", function(rslt, data) {
+            if (rslt == "YES") {
+                data.removeTab(data.currentTab);
+            }
+        });
+        $("#B-Say-Dialog").dialog("option", "BData", this.tabset);
+    }, tab);
+    td.appendChild(btn);
     td.onclick = $.proxy(function(event) {
         var el = $(event.target)[0]; // A collection even though only one
         var td = $(el).closest("td")[0];            

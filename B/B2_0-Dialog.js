@@ -391,6 +391,7 @@ B.Form.prototype.setReadOnly = function(nam, yorn) {
 		if (yorn == "toggle") yorn = !el.readOnly;
 		el.readOnly = yorn;
 		el.style.borderColor = (yorn ? "transparent":"");
+		el.style.color = (yorn ? "silver":"");
 		fld.readonly = yorn;
 	}
 }
@@ -461,7 +462,10 @@ B.Form.prototype.get = function(nam) {
 B.Form.prototype.setFromTableRow = function(rowdata) {
 	for (var key in rowdata) {
 		if (this.fields[key] != undefined) {
-			this.set(key, rowdata[key].val);			
+			var fld = this.fields[key];
+			var val = rowdata[key].val;
+			if (fld.vtype == "date") val = B.format.MDYYYY(val);
+			this.set(key, val);			
 		}
 	}
 }
@@ -481,7 +485,10 @@ B.Form.prototype.set = function() {
 			} else if (fld.type == "select") {
 				fld.els[0].value = val;
 			} else if (fld.type == "radio") {
-				fld.els[0].value = val;
+				for (var i = 0; i < fld.els.length; i++) {
+					var el = fld.els[i];
+					if (el.value == val) el.checked = true;
+				}
 			} else if (fld.type == "checkbox") {
 				if (typeof val == "string") val = (B.is.ONEOF(val,"Y,YES,OK"));
 				fld.els[0].checked = val;

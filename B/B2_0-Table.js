@@ -65,7 +65,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 			if (attribs.indexOf("R")>=0) col.align = "right";
 			if (attribs.indexOf("B")>=0) col.bold = true;
 			cell.style.textAlign = col.align;
-			cell.style.border = "1px solid transparent";
+			cell.style.border = "1px solid white";
 		}
 		if (this.embedScrollbar) {
 			var pad = document.createElement("th");
@@ -102,9 +102,6 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		this.unpick();
 		var rd = this.dataset.getRow(row.rowIndex);
 		rd["clickedColumn"] = this.columns[cell.cellIndex];
-		for (var key in this.footer.buttons) {
-			if (this.footer.buttons[key].watchpick) this.footer.enableButton(key);
-		}
 		var rslt = this.onclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd, row.rowIndex != this.current.rownum);
 		if (rslt == undefined) rslt = true;
 		if (rslt) {
@@ -314,14 +311,16 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		},
 		startAdd: $.proxy(function() {
 			var frm = new B.Form(this.editForm.formid);
-			frm.set("ACT","add");
 			frm.reset();
+			this.setKeysReadOnly("add");
+			frm.set("ACT","add");
 			openDialog(this.editForm.formid); 
 			var btn = document.getElementById(this.editForm.formid + "_saveButton");
 			btn.innerHTML = "Save New";
 		}, this),
 		startEdit: $.proxy(function() {
 			var frm = new B.Form(this.editForm.formid);
+			this.setKeysReadOnly("edit");
 			frm.set("ACT","edit");
 			frm.setFromTableRow(this.getDataRow());
 			openDialog(this.editForm.formid); 
@@ -330,6 +329,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		}, this),
 		startCopy: $.proxy(function() {
 			var frm = new B.Form(this.editForm.formid);
+			this.setKeysReadOnly("copy");
 			frm.set("ACT","copy");
 			frm.setFromTableRow(this.getDataRow());
 			openDialog(this.editForm.formid); 
@@ -346,7 +346,15 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 				}
 			}, this));
 		}, this)
-	}
+	};
+	this.setKeysReadOnly = function(act) {
+		var frm = new B.Form(this.editForm.formid);
+		for (var k in frm.fields) {
+			if (k != "ACT") {
+				if (frm.fields[k].key) frm.setReadOnly(k, (act == "edit"));
+			}
+		}		
+	};
 	this.setForm = function(formid, remote, supportCodes, deletePrompt) {
 		var allowEdit = false;
 		var allowAdd = false;
@@ -383,23 +391,23 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		this.editForm.deletePrompt = deletePrompt;
 		if (allowAdd) {
 			this.footer.addButton("add_item", "Add", $.proxy(function() { this.editForm.startAdd(); }, this), false);
-			this.contextMenu.addMenu("add_item", B.img("ADD"), "Add...", $.proxy(function() { this.editForm.startAdd(); }, this), false);
+			this.contextMenu.addMenu("add_item", B.img("ADD"), "Add " + this.txt1 + "...", $.proxy(function() { this.editForm.startAdd(); }, this), false);
 		}
 		if (allowEdit) {
 			this.footer.addButton("edit_item", "Edit", $.proxy(function() { this.editForm.startEdit(); }, this), true).disable();
-			this.contextMenu.addMenu("edit_item", B.img("PENCIL"), "Edit...", $.proxy(function() { this.editForm.startEdit(); }, this), false);
+			this.contextMenu.addMenu("edit_item", B.img("PENCIL"), "Edit " + this.txt1 + "...", $.proxy(function() { this.editForm.startEdit(); }, this), false);
 		}
 		if (allowCopy) {
 			this.footer.addButton("copy_item", "Copy", $.proxy(function() { this.editForm.startCopy(); }, this), true).disable();
-			this.contextMenu.addMenu("copy_item", B.img("COPY"), "Copy...", $.proxy(function() { this.editForm.startCopy(); }, this), false);
+			this.contextMenu.addMenu("copy_item", B.img("COPY"), "Copy " + this.txt1 + "...", $.proxy(function() { this.editForm.startCopy(); }, this), false);
 		}
 		if (allowDelete) {			
 			this.footer.addButton("delete_item", "Delete", $.proxy(function() { this.editForm.startDelete(); }, this), true).disable();
-			this.contextMenu.addMenu("delete_item", B.img("X"), "Delete...", $.proxy(function() { this.editForm.startDelete(); }, this), false);
+			this.contextMenu.addMenu("delete_item", B.img("X"), "Delete " + this.txt1 + "...", $.proxy(function() { this.editForm.startDelete(); }, this), false);
 		}
-		this.footer.addSpace();
+		//this.footer.addSpace();
 		if (allowEdit) {
-			this.contextMenu.addSpace();
+			//this.contextMenu.addSpace();
 			this.ondblclick = function(tbl, row, cell, rn, cn, rd) {
 				this.editForm.startEdit();
 			};
@@ -422,14 +430,15 @@ B.ScrollingTable.prototype.setFooterMessage = function(txt) {
 	if (txt == undefined) {
 		var cnt = this.dataTable.rows.length;
 		if (cnt == 0) cnt = "No";
-		txt = cnt + " " + (this.dataTable.rows.length == 1 ? this.txt1 : this.txt2)
+		txt = B.format.COMMAS(cnt) + " " + (this.dataTable.rows.length == 1 ? this.txt1 : this.txt2);
 	}
 	this.footerMessageDIV.innerHTML = txt;
-}
+};
 B.ScrollingTable.prototype.getDataRow = function(rownum) {
 	if (rownum == undefined) rownum = this.current.rownum;
+	if (rownum > (this.dataTable.rows.length - 1)) return null;
 	return this.dataset.getRow(rownum);
-}
+};
 B.ScrollingTable.prototype.prepareRow = function(dr, rownum) {
 	var tr = document.createElement("tr");
 	var tds = {};
@@ -456,11 +465,12 @@ B.ScrollingTable.prototype.prepareRow = function(dr, rownum) {
 		tds[this.columns[i].id] = tr.cells[i];
 	}
 	return { tr:tr, tds:tds };
-}
+};
 B.ScrollingTable.prototype.addRows = function(data, clear) {
 	if (clear) this.clear();
 	var rows = data.split("\n");
 	for (var i = 0; i < rows.length; i++) {
+		if (rows[i].length == 0) continue;
 		this.dataset.addRows(rows[i]);
 		var dr = this.dataset.getRow(this.dataset.data.length-1);
 		var itm = this.prepareRow(dr, i); // Contains a tr and a tds collection
@@ -470,11 +480,15 @@ B.ScrollingTable.prototype.addRows = function(data, clear) {
 		if (rslt) this.dataTableBody.appendChild(itm.tr);
 	}
 	this.setFooterMessage();
-}
+};
 B.ScrollingTable.prototype.pick = function(row, cell) {
+	for (var key in this.footer.buttons) {
+		if (this.footer.buttons[key].watchpick) this.footer.disableButton(key);
+	}
 	if (isNaN(row)) {
 		this.current.rownum = row.rowIndex;		
 	} else {
+		if (row > (this.dataTableBody.rows.length-1)) return;
 		this.current.rownum = row;
 		row = this.dataTableBody.rows[row];
 	}
@@ -491,6 +505,9 @@ B.ScrollingTable.prototype.pick = function(row, cell) {
 	if (B.isOneOf(this.highlightItem, "TD,CELL,COLUMN,TRTD,BOTH")) {
 		if (row) B.addClass(cell, "picked");
 	}
+	for (var key in this.footer.buttons) {
+		if (this.footer.buttons[key].watchpick) this.footer.enableButton(key);
+	}
 };
 B.ScrollingTable.prototype.unpick = function() {
 	for (var key in this.footer.buttons) {
@@ -500,7 +517,7 @@ B.ScrollingTable.prototype.unpick = function() {
 		var tr = this.dataTable.rows[this.current.rownum];
 		B.removeClass(tr, "picked");
 		if (this.current.cellnum >= 0) {
-			B.removeClass(tr.cells[this.current.cellnum], "picked");
+			if (tr != undefined) B.removeClass(tr.cells[this.current.cellnum], "picked");
 		}
 	}
 	this.current.rownum = -1;
@@ -508,7 +525,10 @@ B.ScrollingTable.prototype.unpick = function() {
 };
 B.ScrollingTable.prototype.clear = function() {
 	this.unpick();
+	this.current.rownum = -1;
+	this.current.cellnum = -1;
+	this.dataset.data = [];
 	this.dataTableBody.innerHTML = "";
 	this.setFooterMessage();
-}
+};
 
