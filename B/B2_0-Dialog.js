@@ -1,5 +1,8 @@
 // Dialogs -- These are defined at global level to make the simple to use.
-
+B.settings.say = {
+	defaultTitle: 'System Message',
+	tinting: false
+}
 // TODO
 // BUG: askValue - Enter key submits page (reload)
 

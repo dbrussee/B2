@@ -1,4 +1,5 @@
 // Remote calls
+B.settings.RemoteMethod = { URL: '' }
 B.RestfulService = function(baseURL) {
 	this.baseURL = baseURL;
 	this.getText = function(urlEnd, callback) {

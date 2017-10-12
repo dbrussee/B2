@@ -1,4 +1,12 @@
 // B2.0 Table
+B.settings.ScrollingTable = {
+	highlightItem: 'tr',
+	embedScrollbar: false,
+	fieldBackgroundColor: 'ghostwhite',
+	footerBackgroundColor: 'gainsboro',
+	footerHoverColor: 'aqua',
+	JQTheme: true // false for using stylesheet (BQTable, BQTableHeader)
+}
 
 B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollbar) {
 	this.embedScrollbar = embedScrollbar;
@@ -196,7 +204,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		addButton: function(id, txt, onclick, watchpick) {
 			if (watchpick == undefined) watchpick = false;
 			var div = document.createElement("div");
-			div.style.cssText = "display:inline-block; background-color:transparent; vertical-align:middle; height:17px; " +
+			div.style.cssText = "display:inline-block; background-color:transparent; vertical-align:middle; height:17px; cursor:pointer; " +
 				"padding-right:5px; padding-left: 5px; padding-top: 4px; padding-bottom: 4px; border:1px solid transparent; color:navy; font-size:9pt; cursor:pointer";
 			div.id = this.rootId + "_footer_" + id;
 			div.onmouseover = function() { this.style.backgroundColor = B.settings.ScrollingTable.footerHoverColor; }

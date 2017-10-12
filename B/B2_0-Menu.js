@@ -1,3 +1,13 @@
+B.settings.SlideMenu = {
+	PushStyle: false, // true pushes page content to the right when Slide Menu opens (Not ready for use)
+	Multisection: false,  // Only one section open at a time on SlideMenu
+	Slidetime: 250, SectionSlidetime: 200,
+	FG: "white", BG: "black",
+	SectionFG: "navy", SectionBG: "lightyellow",
+	ItemFG: "white", ItemBG: "navy", ItemHoverFG: "yellow", ItemHoverBG: "navy"
+}
+
+
 B.PopupMenu = function(onbeforeshow) {
     this.items = {};
     this.itemlist = [];
