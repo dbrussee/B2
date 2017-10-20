@@ -14,6 +14,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 	this.rootId = rootId;
 	this.height = height;
 	this.dataset = new B.Dataset(ColumnSet);
+	this.actualRowCount = 0;
 	this.highlightItem = B.settings.ScrollingTable.highlightItem.toUpperCase();
 	if (this.highlightItem == undefined) this.highlightItem = "TR";
 	this.txt1 = txt1;
@@ -432,8 +433,23 @@ B.ScrollingTable.prototype.setMaxSelectedRows = function(num) {
 B.ScrollingTable.prototype.setFooterMessage = function(txt) {
 	if (txt == undefined) {
 		var cnt = this.dataTable.rows.length;
-		if (cnt == 0) cnt = "No";
-		txt = B.format.COMMAS(cnt) + " " + (this.dataTable.rows.length == 1 ? this.txt1 : this.txt2);
+		var h = cnt;
+		if (cnt == 0) {
+			h = "No";
+		} else {
+			h = B.format.COMMAS(cnt);
+		}
+		if (this.actualRowCount > cnt) {
+			txt = "<span style='color:red;'>";
+			if (cnt == 0) {
+				txt += "0";
+			} else {
+				txt += B.format.COMMAS(cnt);
+			}
+			txt += " of " + B.format.COMMAS(this.actualRowCount) + "</span> " + this.txt2;
+		} else {
+			txt = h + " " + (this.dataTable.rows.length == 1 ? this.txt1 : this.txt2);
+		}
 	}
 	this.footerMessageDIV.innerHTML = txt;
 };
@@ -472,6 +488,10 @@ B.ScrollingTable.prototype.updateRow = function(data) {
 	var itm = this.prepareRow(dr, this.current.rownum);
 	this.onBeforeRowRender(this.current.rownum, dr, itm.tr, itm.tds);
 	this.dataTableBody.rows[this.current.rownum] = itm.tr;
+};
+B.ScrollingTable.prototype.setActualRowCount = function(rowcount) {
+	this.actualRowCount = rowcount;
+	this.setFooterMessage();
 };
 B.ScrollingTable.prototype.addRows = function(data, clear) {
 	if (clear) this.clear();
