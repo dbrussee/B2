@@ -7,7 +7,6 @@ B.settings.SlideMenu = {
 	ItemFG: "white", ItemBG: "navy", ItemHoverFG: "yellow", ItemHoverBG: "navy"
 }
 
-
 B.PopupMenu = function(onbeforeshow) {
     this.items = {};
     this.itemlist = [];
@@ -79,7 +78,7 @@ B.PopupMenu.prototype.make = function() {
     
     var oldTree = this.tree;
 
-    this.tree = new B.Tree(this.object, null, false);
+    this.tree = new B.Tree(this.object, null, true); // Only one submenu at a time
     for (var i = 0; i < this.itemlist.length; i++) {
         var itm = this.itemlist[i];
         itm.tree = this;

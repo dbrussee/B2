@@ -2,7 +2,7 @@
 B.settings.say = {
 	defaultTitle: 'System Message',
 	tinting: false
-}
+};
 // TODO
 // BUG: askValue - Enter key submits page (reload)
 
@@ -343,7 +343,7 @@ B.Form = function(formID, forceReload) {
 			}
 			
 			if (B.isOneOf(tag, "TEXT")) {
-				if (el.readOnly) el.style.borderColor = "transparent";
+				if (el.readOnly) el.style.borderColor = "gainsboro";
 				if (rec.type == "date") $(el).datepicker({ dateFormat: "m/d/yy" });
 			}
 
@@ -374,6 +374,10 @@ B.Form = function(formID, forceReload) {
 			this.fields[el.name].els.push(el);
 		}
 	}
+	for (var k in this.fields) {
+		var fld = this.fields[k];
+		if (fld.readonly) this.setReadOnly(k, true);
+	}
 	this.onsubmit = function() { return true; };
 	return this;
 };
@@ -394,7 +398,9 @@ B.Form.prototype.setReadOnly = function(nam, yorn) {
 		if (yorn == "toggle") yorn = !el.readOnly;
 		el.readOnly = yorn;
 		el.style.borderColor = (yorn ? "transparent":"");
-		el.style.color = (yorn ? "silver":"");
+		el.style.backgroundColor = (yorn ? "beige":"");
+		el.style.color = (yorn ? "darkcyan":"");
+		//el.style.color = (yorn ? "silver":"");
 		fld.readonly = yorn;
 	}
 }
@@ -433,8 +439,12 @@ B.Form.prototype.get = function(nam) {
 				rslt[nameList[nn]] = null;
 			} else if (fld.type == "text") {
 				rslt[fld.name] = fld.els[0].value;
+				if (fld.trim) rslt[fld.name] = B.trim(rslt[fld.name]);
+				if (fld.upper) rslt[fld.name] = rslt[fld.name].toUpperCase();
 			} else if (fld.type == "textarea") {
 				rslt[fld.name] = fld.els[0].value;
+				if (fld.trim) rslt[fld.name] = B.trim(rslt[fld.name]);
+				if (fld.upper) rslt[fld.name] = rslt[fld.name].toUpperCase();
 			} else if (fld.type == "select") {
 				var sel = fld.els[0];
 				if (sel.selectedIndex < 0) {
@@ -457,7 +467,6 @@ B.Form.prototype.get = function(nam) {
 				// No idea what this thing is!!!!
 				rslt[fld.name] = "";
 			}
-			if (fld.trim) rslt[fld.name] = B.trim(rslt[fld.name]);
 		}
 		return rslt;
 	}

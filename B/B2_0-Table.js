@@ -34,29 +34,24 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 	this.contextMenu = new B.PopupMenu();
 	this.maxSelectedRows = 1;
 	this.onBeforeRowRender = function(rn, rd, tr, tds) { return; };
-	if (B.settings.ScrollingTable.JQTheme) {
-		B.addClass(this.header, "ui-widget-header,ui-priority-primary");
-	}
+	if (B.settings.ScrollingTable.JQTheme) B.addClass(this.header, "ui-widget-header,ui-priority-primary");
 
 	// Build the actual header from the template
 	for (var rn = 0; rn < this.header.rows.length; rn++) {
 		var row = this.header.rows[rn];
-		if (B.settings.ScrollingTable.JQTheme) {
-			//B.addClass(row, "ui-widget-header,ui-priority-primary");
-		}
+		//if (B.settings.ScrollingTable.JQTheme) B.addClass(row, "ui-widget-header,ui-priority-primary");
 		for (var cn = 0; cn < row.cells.length; cn++) {
 			var cell = row.cells[cn];
-			B.addClass(cell, "BScrollingTableHeaderCell");
 			if (cell.getAttribute("colspan") != null) {
 				var numcols = parseInt(cell.getAttribute("colspan"), 10);
 				if (numcols > 1) {
-					// This does not represent a data element
-					cell.style.fontWeight = "bold";
-					cell.style.textAlign = "center";
-					cell.style.border = "1px solid transparent";
+					cell.style.cssText = "font-weight:bold; text-align:center; border:1px solid transparent; border-bottom:1px solid white !important;";
+					B.addClass(cell, "BScrollingTableHeaderCell");
 					continue;
 				}
 			}
+			cell.style.cssText = "border-left:1px solid white; border-right:1px solid white";
+			B.addClass(cell, "BScrollingTableHeaderCell");
 			var data = cell.getAttribute("data").split(","); // columnName, widthInPixels, attributes
 			var id = data[0];
 			var wid = 100; // 100 pixels -- will get overridden by data value next
@@ -73,7 +68,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 			if (attribs.indexOf("R")>=0) col.align = "right";
 			if (attribs.indexOf("B")>=0) col.bold = true;
 			cell.style.textAlign = col.align;
-			cell.style.border = "1px solid white";
+			//cell.style.border = "1px solid white";
 		}
 		if (this.embedScrollbar) {
 			var pad = document.createElement("th");
@@ -204,7 +199,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		addButton: function(id, txt, onclick, watchpick) {
 			if (watchpick == undefined) watchpick = false;
 			var div = document.createElement("div");
-			div.style.cssText = "display:inline-block; background-color:transparent; vertical-align:middle; height:17px; cursor:pointer; " +
+			div.style.cssText = "display:inline-block; background-color:transparent; vertical-align:middle; height:17px; " +
 				"padding-right:5px; padding-left: 5px; padding-top: 4px; padding-bottom: 4px; border:1px solid transparent; color:navy; font-size:9pt; cursor:pointer";
 			div.id = this.rootId + "_footer_" + id;
 			div.onmouseover = function() { this.style.backgroundColor = B.settings.ScrollingTable.footerHoverColor; }
@@ -458,12 +453,8 @@ B.ScrollingTable.prototype.prepareRow = function(dr, rownum) {
 		if (rownum == 0 && this.dataTableBody.rows.length == 0) {
 			sty += "width:" + tblcol.width + "px;";
 		}
-		if (tblcol.align != "left") {
-			sty += "text-align:" + tblcol.align + ";";
-		}
-		if (tblcol.bold) {
-			sty += "font-weight:bold;";
-		}
+		if (tblcol.align != "left") sty += "text-align:" + tblcol.align + ";";
+		if (tblcol.bold) sty += "font-weight:bold;";
 		var dcol = dr[tblcol.id];
 		if (sty.length > 0) h += " style='" + sty + "'";
 		h += ">" + (dcol == null ? "" : dcol.disp) + "</td>";
@@ -473,6 +464,14 @@ B.ScrollingTable.prototype.prepareRow = function(dr, rownum) {
 		tds[this.columns[i].id] = tr.cells[i];
 	}
 	return { tr:tr, tds:tds };
+};
+B.ScrollingTable.prototype.updateRow = function(data) {
+	// Remove the current row and replace with new
+	this.dataset.data.splice(this.current.rownum, 1, data);
+	var dr = this.getDataRow();
+	var itm = this.prepareRow(dr, this.current.rownum);
+	this.onBeforeRowRender(this.current.rownum, dr, itm.tr, itm.tds);
+	this.dataTableBody.rows[this.current.rownum] = itm.tr;
 };
 B.ScrollingTable.prototype.addRows = function(data, clear) {
 	if (clear) this.clear();
