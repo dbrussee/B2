@@ -402,8 +402,17 @@ B.Form.prototype.setReadOnly = function(nam, yorn) {
 		el.style.color = (yorn ? "darkcyan":"");
 		//el.style.color = (yorn ? "silver":"");
 		fld.readonly = yorn;
+	} else if (fld.type == "select") {
+		var el = fld.els[0]; // There should only be one
+		if (yorn == "toggle") yorn = !el.readOnly;
+		el.disabled = yorn;
+		el.style.borderColor = (yorn ? "transparent":"");
+		el.style.backgroundColor = (yorn ? "beige":"");
+		el.style.color = (yorn ? "darkcyan":"");
+		//el.style.color = (yorn ? "silver":"");
+		fld.readonly = yorn;
 	}
-}
+};
 B.Form.prototype.focus = function(nam) {
 	var fld = this.fields[nam];
 	if (fld == null) return null;
@@ -475,7 +484,10 @@ B.Form.prototype.setFromTableRow = function(rowdata) {
 	for (var key in rowdata) {
 		if (this.fields[key] != undefined) {
 			var fld = this.fields[key];
-			var val = rowdata[key].val;
+			var val = "";
+			if (fld != null) {
+				val = rowdata[key].val;
+			}
 			if (fld.vtype == "date") val = B.format.MDYYYY(val);
 			this.set(key, val);			
 		}
@@ -497,9 +509,17 @@ B.Form.prototype.set = function() {
 			} else if (fld.type == "select") {
 				fld.els[0].value = val;
 			} else if (fld.type == "radio") {
-				for (var i = 0; i < fld.els.length; i++) {
-					var el = fld.els[i];
-					if (el.value == val) el.checked = true;
+				if (typeof val == "string") {
+					for (var i = 0; i < fld.els.length; i++) {
+						var el = fld.els[i];
+						if (el.value == val) el.checked = true;
+					}
+				} else if (typeof val == "boolean") {
+					for (var i = 0; i < fld.els.length; i++) {
+						var el = fld.els[i];
+						if (val == true && el.value == "Y") el.checked = true;
+						if (val == false && el.value == "N") el.checked = true;
+					}
 				}
 			} else if (fld.type == "checkbox") {
 				if (typeof val == "string") val = (B.is.ONEOF(val,"Y,YES,OK"));
