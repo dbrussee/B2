@@ -23,6 +23,14 @@ $(document).ready(function() {
 		}
 		this.outerHTML = h;	
 	});
+	var lst = $(".BDialog.BLegend");
+	for (var i = 0; i < lst.length; i++) {
+		var div = document.createElement("div");
+		div.style.cssText = "position:relative;bottom:0;left:0;color:brown;font-size:.8em;text-align:right; padding-right:1em;";
+		var h = B.img("LEDYELLOW") + "<i> Primary Key, </i>&nbsp;&nbsp;" + B.img("LEDOFF") + "<i> Required</i>";
+		div.innerHTML = h;
+		$(lst[i]).after(div);		
+	} 	
     if (typeof init === 'function') init();
 });
 B.clearSelection = function() {
