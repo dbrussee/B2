@@ -16,7 +16,7 @@ B.PopupMenu = function(onbeforeshow) {
     this.branch = null;
     if (onbeforeshow == undefined) onbeforeshow = null;
     if (onbeforeshow == null) onbeforeshow = function() { return true; };
-    this.onbeforeshow = onbeforeshow;
+    this.onBeforeShow = onbeforeshow;
     this.onclose = function() { };
     this.handler = null;
     this.made = false; // After the first MAKE... we need to track the status of open/closed submenus
@@ -126,6 +126,9 @@ B.PopupMenu.prototype.showAt = function(x,y) {
 	window.setTimeout(this.handler, 10);
 }
 B.PopupMenu.prototype.show = function(event) {
+	var rslt = this.onBeforeShow(this);
+	if (rslt == undefined) rslt = true;
+	if (!rslt) return;
     this.showing = true;
 	try {
 		event.preventDefault();
