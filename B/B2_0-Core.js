@@ -406,6 +406,19 @@ B.is = {
 		}
 		return false; // Looks the same to me
 	},
+	LASTDAYOFMONTH: function(d) {
+		if (d == undefined || d == null) d = new Date();
+		if (!B.is.DATE(d)) {
+			return false;
+		} else {
+			if (typeof d == "string") d = new Date(d);
+			var d2 = new Date();
+			d2.setTime(d.getTime());
+			d2.setDate(d.getDate() + 1);
+			if (d2.getMonth() == d.getMonth()) return false;
+			return true;
+		}
+	},
 	NOTONEOF: function() { return B.whichOneOf.apply(null, arguments) < 0; },
 	ONEOF: function() { return B.whichOneOf.apply(null, arguments) >= 0; }
 };
@@ -531,7 +544,7 @@ B.char = {
 	BULLET:		"&#x23fa",		KEY:		"&#x1f511;",	FOLDER:		"&#128193",
 	PLUS:		"&#x2795;",		TIMES:		"&#x2716;",		MINUS:		"&#x2796",		DIVIDE:		"&#x2797",
 	FLAG:		"&#x2690;",		BLACKFLAG:	"&#x2691;", 	BLOCK:		"&#x23f9;",		X:			"&#x2718;",
-	STAR:		"&#x2606;",		BLACKSTAR:	"&#x2605;",		CLOUD:		"&#x2601;",
+	STAR:		"&#x2606;",		BLACKSTAR:	"&#x2605;",		CLOUD:		"&#x2601;",		GRID:		"&#x2637",
 	CARD_S:		"&#9824;",		CARD_C:		"&#9827;",		CARD_H:		"&#9829;",		CARD_D:		"&#9830"
 };
 B.contains = function(str, test, caseInsensitive) {
@@ -655,7 +668,38 @@ B.MappedList.prototype.remove = function() { // Finds items in the collection, t
 		var pos = this.collection.indexOf(key);
 		if (pos >= 0) this.splice(pos,1);
 	}
-}
+};
+B.dataStringToSet = function(dataString, columnMapArray) {
+	// dataString: "A\tB\tC"
+	// columnMapArray:  [COLA,COLB,COLC] or "COLA,COLB,COLC";
+	// rslt: {COLA:A,COLB:B,COLC:C}
+	var rslt = {}; // Collection of columns (empty to start with)
+	if (typeof columnMapArray == 'string') columnMapArray = columnMapArray.split(",");
+	var cols = dataString.split("\t");
+	for (var c = 0; c < cols.length; c++) {
+		var dataItem = B.format.TRIM(cols[c]);
+		var colName = ""; // Default
+		var colType = "";
+		if (c <= columnMapArray.length) colName = columnMapArray[c]; // If named
+		if (colName.indexOf(".") > 0) {
+			var parts = colName.split(".");
+			colName = parts[0];
+			colType = parts[1].toUpperCase();
+		}
+		if (colName == "") colName = "COL_" + c; // Skipped name
+		if (colType == "DATE") dataItem = new Date(dataItem);
+		rslt[colName] = dataItem;
+	}
+	return rslt;
+};
+B.addToString = function(str, newtext, sep) {
+	if (str == "") {
+		return newtext;
+	} else {
+		if (sep == undefined) sep = ", ";
+		return str + sep + newtext;
+	}
+};		
 
 
 B.cssSheet = document.createElement("style");
