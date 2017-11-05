@@ -758,7 +758,7 @@ B.setCSSRule(".shaded",
 	"background: -o-linear-gradient(left, khaki, white, khaki) !important; "+ /* For Opera 11.1 to 12.0 */
 	"background: -moz-linear-gradient(left, khaki, white, khaki) !important; "+ /* For Firefox 3.6 to 15 */
 	"background: linear-gradient(to right, khaki, white, khaki) !important;") /* Standard syntax */ 
-B.setCSSRule("table.BTableData tr.picked td.picked", "background-color: aqua !important;");
+B.setCSSRule("table.BTableData tr.picked td.picked", "background-color: khaki !important;");
 B.setCSSRule("table.BTableData tr td",
 	"border-left:1px dotted silver; "+
 	"border-right:1px dotted silver; "+

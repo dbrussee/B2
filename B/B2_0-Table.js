@@ -10,8 +10,8 @@ B.settings.ScrollingTable = {
 }
 
 B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollbar) {
-	this.embedScrollbar = embedScrollbar;
-	if (embedScrollbar == undefined) this.embedScrollbar = B.settings.ScrollingTable.embedScrollbar;
+	this.embedScrollbar = B.settings.ScrollingTable.embedScrollbar;
+	if (embedScrollbar != undefined) this.embedScrollbar = embedScrollbar;
 	this.rootId = rootId;
 	this.height = height;
 	this.frozen = false;
@@ -48,6 +48,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 			if (cell.getAttribute("colspan") != null) {
 				var numcols = parseInt(cell.getAttribute("colspan"), 10);
 				if (numcols > 1) {
+					if (this.header.rows.length > 1) cell.setAttribute("colspan", numcols+1);
 					cell.style.cssText = "font-weight:bold; text-align:center; border:1px solid transparent; border-bottom:1px solid white !important;";
 					B.addClass(cell, "BScrollingTableHeaderCell");
 					continue;
@@ -73,14 +74,18 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 			cell.style.textAlign = col.align;
 			//cell.style.border = "1px solid white";
 		}
-		if (this.embedScrollbar) {
-			var pad = document.createElement("th");
-			pad.style.width = "17px";
-			pad.style.border = "1px solid transparent";
-			row.appendChild(pad);
-		}
 	}
-	this.header.style.tableLayout = "fixed";
+	if (this.embedScrollbar) {
+		// Grab the last row
+		var row = this.header.rows[this.header.rows.length-1]; 
+		// Make the last row's right border transparent
+		row.cells[row.cells.length-1].style.borderRight = "1px solid transparent";
+		var pad = document.createElement("th");
+		pad.style.width = "17px";
+		pad.style.border = "1px solid transparent";
+		row.appendChild(pad);
+	}
+this.header.style.tableLayout = "fixed";
 
 	this.surround = document.createElement("div");
 	this.surround.id = this.rootId + "_surround";
@@ -562,7 +567,7 @@ B.ScrollingTable.prototype.pick = function(row, cell, wasRow) {
 	}
 	var isDiff = true;
 	if (wasRow != undefined) isDiff = (row.rowIndex != wasRow);
-	this.onclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, this.getDataRow(row.rowIndex), isDiff);
+	if (row) this.onclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, this.getDataRow(row.rowIndex), isDiff);
 };
 B.ScrollingTable.prototype.unpick = function() {
 	for (var key in this.footer.buttons) {
