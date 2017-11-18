@@ -56,20 +56,22 @@ B.DynamicTabset.prototype.addTab = function(position, id, title, width, content)
     var td = document.createElement("td");
     td.data = id;
     td.style.position = "relative";
-    var btn = document.createElement("div");
-    btn.className = "BTabCloser";
-    btn.innerHTML = "X";
-    btn.onclick = $.proxy(function(event) {
-        var tab = this;
-        this.tabset.setTab(tab.id);
-        askWarn("Are you sure you want to close the tab '" + tab.title + "'?", "Close Tab?", function(rslt, data) {
-            if (rslt == "YES") {
-                data.removeTab(data.currentTab);
-            }
-        });
-        $("#B-Say-Dialog").dialog("option", "BData", this.tabset);
-    }, tab);
-    td.appendChild(btn);
+    if (!B.hasClass(content, "noclose")) {
+        var btn = document.createElement("div");
+        btn.className = "BTabCloser";
+        btn.innerHTML = "X";
+        btn.onclick = $.proxy(function(event) {
+            var tab = this;
+            this.tabset.setTab(tab.id);
+            askWarn("Are you sure you want to close the tab '" + tab.title + "'?", "Close Tab?", function(rslt, data) {
+                if (rslt == "YES") {
+                    data.removeTab(data.currentTab);
+                }
+            });
+            $("#B-Say-Dialog").dialog("option", "BData", this.tabset);
+        }, tab);
+        td.appendChild(btn);
+    }
     td.onclick = $.proxy(function(event) {
         var el = $(event.target)[0]; // A collection even though only one
         var td = $(el).closest("td")[0];            
