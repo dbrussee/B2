@@ -302,7 +302,11 @@ this.header.style.tableLayout = "fixed";
 					}
 				}
 				this.tbl.addRows(data);
-				if (this.remote != null) this.remote.run();
+				if (this.remote != null) {
+					this.remote.run();
+				} else {
+					popDialog();
+				}
 			} else if (chk.ACT == "edit") {
 				var rownum = this.tbl.current.rownum;
 				var colset = this.tbl.dataset.columnSet.colset;
@@ -334,7 +338,11 @@ this.header.style.tableLayout = "fixed";
 					tr.cells[i].innerHTML = itm.tr.cells[i].innerHTML;
 				}
 				this.tbl.onclick(this.tbl.dataTable, tr, tr.cells[0], rownum, 0, dr, true);
-				if (this.remote != null) this.remote.run();
+				if (this.remote != null) {
+					this.remote.run();
+				} else {
+					popDialog();
+				}
 			} else {
 				sayError("I dont know what ACT '" + chk.ACT + "' is. Sorry");
 			}
@@ -514,6 +522,7 @@ B.ScrollingTable.prototype.updateRow = function(data) {
 	var itm = this.prepareRow(dr, this.current.rownum);
 	this.onBeforeRowRender(this.current.rownum, dr, itm.tr, itm.tds);
 	this.dataTableBody.rows[this.current.rownum] = itm.tr;
+	return itm.tr;
 };
 B.ScrollingTable.prototype.setActualRowCount = function(rowcount) {
 	this.actualRowCount = rowcount;
