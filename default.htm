@@ -49,9 +49,13 @@ function init() {
 	m = dd.addMenu("b", "Tests");
 		m.addMenu("b1", "1", "Test MappedList", function() { doTestMappedList(); });
 		m.addMenu("b2", "2", "Test string to element", function() { 
+			//msg, title, callback, height, width
+			say("<span id='locFormSpot'></span><br><span id='locImageSpot'></span>.", "Created From Strings", null, 300, 300); 
 			var el = B.stringToElement("<table class='form'><tr><th>Prompt:</th><td><input value='just testing'></td></tr></table>");
-			say("This is an form table: <span id='testImageID' onclick='alert(this.innerHTML);'></span>."); 
-			document.getElementById("testImageID").appendChild(el);
+			document.getElementById("locFormSpot").appendChild(el);
+			el = B.stringToElement("<img style='width:80px;' src='https://media.giphy.com/media/8K5wuRWo4f8xq/giphy.gif'>");
+			document.getElementById("locImageSpot").appendChild(el);
+			
 		});
 		m.addMenu("b3", "3", "Second - Third");
 	m = dd.addMenu("c", "Third");
@@ -308,8 +312,6 @@ function doFormValidate() {
 		<div id='ddMenu'></div>
 		<br>
 		<span id='ddBody'></span>
-		<button onclick='ts1.moveTab(2,1);'>Move Tab 2 to 1</button>
-		<button onclick='ts1.removeTab(0);'>Remove first tab</button>
 	</div>
 </div>
 
