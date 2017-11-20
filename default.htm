@@ -21,6 +21,17 @@ function init() {
 	var now = new Date();
 	frm.set("month", now.getMonth()+1, "day", now.getDate());
 
+	// Fill character category list
+	for (var key in B.char.cat) {
+		var itm = B.char.cat[key];
+		if (typeof itm == 'object') {
+			var opt = document.createElement("option");
+			opt.value = key;
+			opt.innerHTML = key;
+			document.getElementById("selCharCat").appendChild(opt);
+		}
+	}
+
 	window.dd = new B.DropdownMenu();
 	var m = dd.addMenu("a", B.img("LEDGREEN") + " First", function() { $("#ddBody").html("You clicked the first item"); });
 		m.addMenu("a1", "", "Bank Routing Number...", function() { askValue("Enter a bank routing number to validate", "Number:", bankNumber, "ABA Routing Number", function(rslt) {
@@ -91,7 +102,7 @@ function init() {
 	sm.addMenu("a", "#", "Trivia about Episode count", function() { doRestTest(4); });
 	sm.addMenu("b", "Y", "Trivia about First Year", function() { doRestTest(3); });
 	tblA.contextMenu.addMenu("imdb", B.char.FLAG, "IMDb actor link", function() { doIMDB(); });
-	tblA.contextMenu.addMenu("unpick", "#", "Unpick Row", function() { tblA.unpick(); });
+	tblA.contextMenu.addMenu("unpick", B.char.cat.symb.NOENTRY, "Unpick Row", function() { tblA.unpick(); });
 
 	tblA.addRows(example_data);
 
@@ -213,27 +224,23 @@ function doImageTest() {
 	$("#dlgImageExample").html("Click an image above to see the code here.");
 }
 function doCharTest() {
-	openDialog("dlgImages");
-	var el = document.getElementById("dlgImageTarget");
-	el.style.fontSize = "14pt";
+	openDialog("dlgChars");
+	var el = document.getElementById("dlgCharsDisplay");
+	var chk = new B.Form("dlgChars").get();
 	el.innerHTML = "";
-	var cnt = 0;
-	for (var key in B.char) {
-		var fn = function() { $("#dlgImageExample").html("B.char." + this.data + ";"); };
-		var spn = document.createElement("span");
-		if (cnt++ == 8) {
-			spn.innerHTML = B.char[key] + "<br>";
-			cnt = 0;
-		} else {
-			spn.innerHTML = B.char[key];			
-		}
-		spn.style.paddingRight = "1.5em";
-		spn.onclick = fn;
-		spn.data = key;
-		spn.style.cursor = "pointer";
-		el.appendChild(spn)
+	var h = "<table style='width:100%;'>";
+	var coll = B.char;
+	if (chk.selCharCat != "") coll = B.char.cat[chk.selCharCat];
+	for (var key in coll) {
+		if (typeof coll[key] == 'object') continue;
+		h += "<tr><td style='width:50px; font-size:20pt'>" + coll[key] + "<td>";
+		var txt = 'B.char.';
+		if (chk.selCharCat != '') txt += chk.selCharCat + ".";
+		
+		h += "<td>" + txt + key + "</td></tr>";
 	}
-	$("#dlgImageExample").html("Click a character above to see the code here.");
+	h += "</table>";
+	el.innerHTML = h;
 }
 function setHighlight() {
 	var chk = new B.Form("frmTableHighlight").get(); //  Only one item!!
@@ -375,6 +382,15 @@ function doFormValidate() {
 	<br><br><div id='dlgImageExample'></div>
 	<button class='BDialogButton' onclick='popDialog();'>Close</button>
 </div>
+
+<form id='dlgChars' class='BDialog' style='height:420px; width:550px;' title='B.char'>
+	<select name='selCharCat' id='selCharCat' onchange='doCharTest();'>
+		<option value=''>Main List</option>;
+	</select><br>
+	<div style='width:100%; height:250px; overflow-y: scroll;' id='dlgCharsDisplay'></div>
+	<span id='dlgCharExample'></span>
+	<button class='BDialogButton' onclick='popDialog();'>Close</button>
+</form>
 
 <form id='actorForm' class='BDialog' style='height:350px; width: 450px;' title='Actor Information'>
 	<input type='hidden' name='ACT'>

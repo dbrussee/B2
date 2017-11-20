@@ -545,7 +545,39 @@ B.char = {
 	PLUS:		"&#x2795;",		TIMES:		"&#x2716;",		MINUS:		"&#x2796",		DIVIDE:		"&#x2797",
 	FLAG:		"&#x2690;",		BLACKFLAG:	"&#x2691;", 	BLOCK:		"&#x23f9;",		X:			"&#x2718;",
 	STAR:		"&#x2606;",		BLACKSTAR:	"&#x2605;",		CLOUD:		"&#x2601;",		GRID:		"&#x2637",
-	CARD_S:		"&#9824;",		CARD_C:		"&#9827;",		CARD_H:		"&#9829;",		CARD_D:		"&#9830"
+	CARD_S:		"&#9824;",		CARD_C:		"&#9827;",		CARD_H:		"&#9829;",		CARD_D:		"&#9830",
+	cat: {
+		symb: { // http://unicode.org/charts/
+			STAR:"&#2605;", STAR_OL:"&#2606;", PHONE:"&#x260E;", PHONE_OL:"&#x260F;", FLEUR:"&#x269C;", CAUTION:"&#x26A0;", ELECTRICITY:"&#x26A1;", COFFIN:"&#x26B0;",
+			BOX:"&#x2610;", BOXCHECK:"&#x2611;", BOXX:"&#x2612;", X:"&#x2613;", COFFEE:"&#x2615;", POINTL:"&#x261C;", POINTU:"&#x261D;", POINTR:"&#x261E;", POINTD:"&#x261F;",
+			SKULL:"&#x2620;", RADIOACTIVE:"&#x2622;", ANCH:"&#x2625;", RUSSIAN:"&#x262D;", PEACE:"&#x262E;", YINYANG:"&#x262F;",
+			HAMBURGER:"&#x2630;", GRID:"&#x2637;", NOTE:"&#x2669;", NOTE8:"&#x266A;", NOTES:"&#x266B;", FLAT:"&#x266D;", SHARP:"&#x266F;",
+			RECYCLE:"&#x267B;", RECYCLEOL:"&#x2672;", WHEELCHAIR:"&#x267F;", FLAGOL:"&#x2690;", FLAG:"&#x2691;", HAMMERCHISEL:"&#x2692;", ANCHOR:"&#x2693;",
+			SWORDS:"&#x2694;", CADUCEUS:"&#x2695;", SCALES:"&#x2696;", ATOMIC:"&#x269B;", PICKAXE:"&#x26CF;", RR:"&#x26D2;", NOENTRY:"&#x26D4;", TWOLANE:"&#x26D7;",
+			TRUCK:"&#x26DF;", HOSPITAL:"&#x26E8;", CHURCH:"&#x26EA;", MOUNTAIN:"&#x26F0;", BEACH:"&#x26F1;", FOUNTAIN:"&#x26F2;", BOAT:"&#x26F4;", SAILBOAT:"&#x26F5;",
+			TENT:"&#x26FA;", GASPUMP:"&#x26FD;", SQUAREKEY:"&#x26BF;", TARGET:"&#x2316;", WATCH:"&#x231A;", ALARM:"&#x23F0;", STOPWATCH:"&#x23F1;", NUT:"&#x23E3;", OCRBANK:"&#x2446;"
+		},
+		tech: {
+			NULL:"&#x2300;", SEARCH:"&#x2315;", NUMBER:"&#x2317;", COMMAND:"&#x2318;", HOURGLASS:"&#x23F3;", DELETE:"&#x2326;", CANCEL:"&#x2327;", KEYBOARD:"&#x2328;",
+			BACKSPACE:"&#x232B;", RETURN:"&#x23CE;", EJECT:"&#x23CF;", FF:"&#x23E9;", REWIND:"&#x23DA;", NEXT:"&#x23ED;", PREV:"&#x23EE;", TOEND:"&#x23EF;",
+			BACKWARD:"&#x23F4;", FORWARD:"&#x23F5;", PAUSE:"&#x23F8;", STOP:"&#x23F9;", RECORD:"&#x23FA;", POWER:"&#x23FB;"
+		},
+		weather: {
+			SUN:"&#2600;", CLOUD:"&#2601;", UMBRELLA:"&#2602;", SNOW:"&#2603;", COMMET:"&#2604;", RAIN:"&#x2614;", SNOWMAN:"&#x26C4;",
+			PARTLYSUNNY:"&#x26C5;", THUNDERSTORM:"&#x26C8;"
+		},
+		face: {
+			SAD:"&#x2639;", HAPPY:"&#x263A;"
+		},
+		game: {
+			QUEENW:"&#x2654;", KINGW:"&#x2655;", ROOKW:"&#x2656;", BISHOPW:"&#x2657;", KNIGHTW:"&#x2658;", PAWNW:"&#x2659;",
+			QUEENB:"&#x265A;", KINGB:"&#x265B;", ROOKB:"&#x265C;", BISHOPB:"&#x265D;", KNIGHTB:"&#x265E;", PAWNB:"&#x265F;",
+			SPADE:"&#x2660;", SPADEOL:"&#x2664;", HEART:"&#x2665;", HEARTOL:"&#x2661;", DIAMOND:"&#x2666;", DIAMONDOL:"&#x2662;", CLUB:"&#x2663;", CLUBOL:"&#x2667;",
+			DIE1:"&#x2680;", DIE2:"&#x2681;", DIE3:"&#x2682;", DIE4:"&#x2683;", DIE5:"&#x2684;", DIE6:"&#x2685;",
+			CHECKERW:"&#x26C0;", CHECKERKINGW:"&#x26C1;", CHECKERB:"&#x26C2;", CHECKERKINGB:"&#x26C3;",
+			SOCCER:"&#x26BD;", BASEBALL:"&#x26BE;", GOLF:"&#x26F3;", SKIER:"&#x26F7;", ICESKATE:"&#x26F8;", BASKETBALL:"&#x26F9;"
+		}
+	}
 };
 B.contains = function(str, test, caseInsensitive) {
 	if (caseInsensitive == undefined) caseInsensitive = false;
