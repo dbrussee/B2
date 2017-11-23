@@ -532,53 +532,71 @@ B.imgdata = {
 	X: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAB2klEQVRoQ+2YvVHDQBCF36oB6AASIKUE6MCOGHL+SuIvZ4jsDqAEUiCBDqABLSPPiLFlWbd3+86Mh1Nq6+l991Z7qxNs+CUb7h8F4K8TLAmUBJwr8H9K6HZvclhVMqlrHV+8j1+cC7d0e6q+KYGZuMgTBNtQfNWqx0wIj34QYEG8XTcihFc/CHB/MPkAZGcpcwJEr/nfB+nn2et4N1SqQYDmISJ4FpEtJsSQeVX9VsWRpUyDAI1pNgTLfOPNBMCEYJqPAmBAsM1HA3ggcphPAkiByGU+GSAGIqd5F4AFQoErAa5nO3jnimmVQ3uBuQutEgm0WIUsdzqWeXcCLVQAYqFZM83TAAzlNINgm6cCNGJ3+9MTAR76ygYKVeD0/G30GJpvYn53vwPzZdSO3KoKkR5pwgDYhaMA9LXKdUG4AQZHYkVvF2J+FLkAQpsUIJeA3rBH8fkySgYImW/nefYoTnkHrOaN+4TrGzs6gVjzuSGiAFLN54QwA3jN54IwAbDM54AIArDNsyGCAKvOhRiD2WCLRcZzIYb5oSRi9IMJdEflGHHrVDmfRKy+CaCFqCpM6xojy4mZ1fzCNJugbwaINbSu/xeAda30queUBEoCzhUoJeRcQPftG5/AD1A5K09GOt+SAAAAAElFTkSuQmCC"
 };
 B.char = {
-	RIGHT:		"&#x25b6;",		LEFT:		"&#x25c4;",		UP:			"&#x25b2;",		DOWN:		"&#x25bc;",
-	RIGHT_CLR:	"&#x25b7;",
-	FF:			"&#x23e9;",		REWIND:		"&#x23ea;",		LAST:		"&#x23ed;",		FIRST:		"&#x23ee;",
-	PAUSE:		"&#x23f8;", 	RECORD:		"&#x23fa;",		SHARP:		"&#x266f;",		FLAT:		"&#x266d;",
-	TURNR:		"&#8635;",		TURNL:		"&#8634;",		NEWLINE:	"&#x21b2;",
-	CHECK: 		"&#x2714;",		THINCHECK:	"&#x2713;",		CHECKN:		"&#9744;",		CHECKY:		"&#9745;",
-	DELETE:		"&#x2717;",		NOTES:		"&#x266b;",		RECYCLE:	"&#x267b;",
-	QUESTION:	"&#x2753;",		EXCLAIM:	"&#x2757;",		WARN:		"&#x26A0;",		TRASH:		"&#x1f5d1;",
-	DIR_SE:		"&#x25e2;",		DIR_SW:		"&#x25e3;",		DIR_NW:		"&#x25e4;",		DIR_NE:		"&#x25e5;",
-	BULLET:		"&#x23fa",		KEY:		"&#x1f511;",	FOLDER:		"&#128193",
-	PLUS:		"&#x2795;",		TIMES:		"&#x2716;",		MINUS:		"&#x2796",		DIVIDE:		"&#x2797",
-	FLAG:		"&#x2690;",		BLACKFLAG:	"&#x2691;", 	BLOCK:		"&#x23f9;",		X:			"&#x2718;",
-	STAR:		"&#x2606;",		BLACKSTAR:	"&#x2605;",		CLOUD:		"&#x2601;",		GRID:		"&#x2637",
-	CARD_S:		"&#9824;",		CARD_C:		"&#9827;",		CARD_H:		"&#9829;",		CARD_D:		"&#9830",
+	BLOCK:"&#x23f9;", BULLET:"&#x23fa", CHECK:"&#x2714;", CHECKN:"&#9744;", CHECKY:"&#9745;", CHECK_THIN:"&#x2713;", CLOUD:"&#x2601;",
+	DELETE:"&#x2717;", DIR_NE:"&#x25e5;", DIR_NW:"&#x25e4;", DIR_SE:"&#x25e2;", DIR_SW:"&#x25e3;", DIVIDE:"&#x2797", DOWN:"&#x25bc;", 
+	EXCLAIM:"&#x2757;", 
+	FF:"&#x23e9;", FIRST:"&#x23ee;", FLAG:"&#x2691;", FLAG_OL:"&#x2690;", FLAT:"&#x266d;", FOLDER:"&#128193", 
+	GRID:"&#x2637", KEY:"&#x1f511;",
+	LAST:"&#x23ed;", LEFT:"&#x25c4;", MINUS:"&#x2796", NEWLINE:"&#x21b2;", NOTES:"&#x266b;",
+	PAUSE:"&#x23f8;", PLUS:"&#x2795;", QUESTION:"&#x2753;", 
+	RECORD:"&#x23fa;", RECYCLE:"&#x267b;", REWIND:"&#x23ea;", RIGHT:"&#x25b6;", RIGHT_OL:"&#x25b7;", 
+	SHARP:"&#x266f;", STAR:"&#x2605;", STAR_OL:"&#x2606;", TIMES:"&#x2716;", TRASH:"&#x1f5d1;",
+	TURNL:"&#8634;", TURNR:"&#8635;",
+	UP:"&#x25b2;", WARN:"&#x26A0;", X:"&#x2718;",
 	cat: {
 		symb: { // http://unicode.org/charts/
-			STAR:"&#2605;", STAR_OL:"&#2606;", PHONE:"&#x260E;", PHONE_OL:"&#x260F;", FLEUR:"&#x269C;", CAUTION:"&#x26A0;", ELECTRICITY:"&#x26A1;", COFFIN:"&#x26B0;",
-			BOX:"&#x2610;", BOXCHECK:"&#x2611;", BOXX:"&#x2612;", X:"&#x2613;", COFFEE:"&#x2615;", POINTL:"&#x261C;", POINTU:"&#x261D;", POINTR:"&#x261E;", POINTD:"&#x261F;",
-			SKULL:"&#x2620;", RADIOACTIVE:"&#x2622;", ANCH:"&#x2625;", RUSSIAN:"&#x262D;", PEACE:"&#x262E;", YINYANG:"&#x262F;",
-			HAMBURGER:"&#x2630;", GRID:"&#x2637;", NOTE:"&#x2669;", NOTE8:"&#x266A;", NOTES:"&#x266B;", FLAT:"&#x266D;", SHARP:"&#x266F;",
-			RECYCLE:"&#x267B;", RECYCLEOL:"&#x2672;", WHEELCHAIR:"&#x267F;", FLAGOL:"&#x2690;", FLAG:"&#x2691;", HAMMERCHISEL:"&#x2692;", ANCHOR:"&#x2693;",
-			SWORDS:"&#x2694;", CADUCEUS:"&#x2695;", SCALES:"&#x2696;", ATOMIC:"&#x269B;", PICKAXE:"&#x26CF;", RR:"&#x26D2;", NOENTRY:"&#x26D4;", TWOLANE:"&#x26D7;",
-			TRUCK:"&#x26DF;", HOSPITAL:"&#x26E8;", CHURCH:"&#x26EA;", MOUNTAIN:"&#x26F0;", BEACH:"&#x26F1;", FOUNTAIN:"&#x26F2;", BOAT:"&#x26F4;", SAILBOAT:"&#x26F5;",
-			TENT:"&#x26FA;", GASPUMP:"&#x26FD;", SQUAREKEY:"&#x26BF;", TARGET:"&#x2316;", WATCH:"&#x231A;", ALARM:"&#x23F0;", STOPWATCH:"&#x23F1;", NUT:"&#x23E3;", OCRBANK:"&#x2446;"
+			AIRPLANE:"&#x2708;", ALARM:"&#x23F0;", ANCH:"&#x2625;", ANCHOR:"&#x2693;", ATOMIC:"&#x269B;", 
+			BEACH:"&#x26F1;", BOAT:"&#x26F4;", BOX:"&#x2610;", BOXCHECK:"&#x2611;", BOXX:"&#x2612;", 
+			CADUCEUS:"&#x2695;", CAUTION:"&#x26A0;", CHURCH:"&#x26EA;", COFFEE:"&#x2615;", COFFIN:"&#x26B0;", CROSS:"&#x271D;", CROSS_3D:"&#x271E;", 
+			ELECTRICITY:"&#x26A1;", FIST:"&#x270A;", FLAT:"&#x266D;", FLEUR:"&#x269C;", FLOWER:"&#x2698", FOUNTAIN:"&#x26F2;", 
+			GASPUMP:"&#x26FD;", GRID:"&#x2637;", HAMBURGER:"&#x2630;", HAMMERCHISEL:"&#x2692;", HAND:"&#x270B;", HOSPITAL:"&#x26E8;", 
+			MOUNTAIN:"&#x26F0;", NOENTRY:"&#x26D4;", NOTE:"&#x2669;", NOTE8:"&#x266A;", NOTES:"&#x266B;", NUT:"&#x23E3;", 
+			OCRBANK:"&#x2446;",	PEACE:"&#x262E;", PEACE_HAND:"&#x270C;", PHONE:"&#x260E;", PHONE_OL:"&#x260F;", PICKAXE:"&#x26CF;", POINTD:"&#x261F;", 
+			POINTL:"&#x261C;", POINTR:"&#x261E;", POINTU:"&#x261D;", RADIOACTIVE:"&#x2622;", RECYCLE:"&#x267B;", 
+			RECYCLE_OL:"&#x2672;", RR:"&#x26D2;", RUSSIAN:"&#x262D;", SAILBOAT:"&#x26F5;", SCALES:"&#x2696;", 
+			SCISSORS:"&#x2700;", SCISSORS_OL:"&#x2704;", SHARP:"&#x266F;", 
+			SKULL:"&#x2620;", SQUAREKEY:"&#x26BF;", STAR:"&#x2605;", STAR_OL:"&#x2606;", STOPWATCH:"&#x23F1;", SWORDS:"&#x2694;", 
+			TARGET:"&#x2316;", TENT:"&#x26FA;", TRUCK:"&#x26DF;", TWOLANE:"&#x26D7;", X:"&#x2715;", YINYANG:"&#x262F;", 
+			WATCH:"&#x231A;", WHEELCHAIR:"&#x267F;", WRITE:"&#x270D;"
 		},
 		tech: {
-			NULL:"&#x2300;", SEARCH:"&#x2315;", NUMBER:"&#x2317;", COMMAND:"&#x2318;", HOURGLASS:"&#x23F3;", DELETE:"&#x2326;", CANCEL:"&#x2327;", KEYBOARD:"&#x2328;",
-			BACKSPACE:"&#x232B;", RETURN:"&#x23CE;", EJECT:"&#x23CF;", FF:"&#x23E9;", REWIND:"&#x23DA;", NEXT:"&#x23ED;", PREV:"&#x23EE;", TOEND:"&#x23EF;",
-			BACKWARD:"&#x23F4;", FORWARD:"&#x23F5;", PAUSE:"&#x23F8;", STOP:"&#x23F9;", RECORD:"&#x23FA;", POWER:"&#x23FB;"
+			BACKSPACE:"&#x232B;", BACKWARD:"&#x23F4;", CANCEL:"&#x2327;", COMMAND:"&#x2318;", DELETE:"&#x2326;", 
+			EJECT:"&#x23CF;", FF:"&#x23E9;", FORWARD:"&#x23F5;", HOURGLASS:"&#x23F3;", KEYBOARD:"&#x2328;",
+			NEXT:"&#x23ED;", NULL:"&#x2300;", NUMBER:"&#x2317;", PAUSE:"&#x23F8;", POWER:"&#x23FB;", PREV:"&#x23EE;", 
+			RECORD:"&#x23FA;", RETURN:"&#x23CE;", REWIND:"&#x23DA;", SEARCH:"&#x2315;", STOP:"&#x23F9;", TOEND:"&#x23EF;"
 		},
 		weather: {
-			SUN:"&#2600;", CLOUD:"&#2601;", UMBRELLA:"&#2602;", SNOW:"&#2603;", COMMET:"&#2604;", RAIN:"&#x2614;", SNOWMAN:"&#x26C4;",
-			PARTLYSUNNY:"&#x26C5;", THUNDERSTORM:"&#x26C8;"
+			CLOUD:"&#x2601;", COMMET:"&#x2604;", PARTLYSUNNY:"&#x26C5;", RAIN:"&#x2614;", SNOW:"&#x2603;", SNOWMAN:"&#x26C4;", SUN:"&#x2600;", 
+			THUNDERSTORM:"&#x26C8;", UMBRELLA:"&#x2602;"
 		},
 		face: {
-			SAD:"&#x2639;", HAPPY:"&#x263A;"
+			DEVIL:"&#x1F608;", HAPPY:"&#x1F642;", MEH:"&#x1F615;", PRAY:"&#x1F64F;", SAD:"&#x1F641;"
 		},
 		game: {
-			QUEENW:"&#x2654;", KINGW:"&#x2655;", ROOKW:"&#x2656;", BISHOPW:"&#x2657;", KNIGHTW:"&#x2658;", PAWNW:"&#x2659;",
-			QUEENB:"&#x265A;", KINGB:"&#x265B;", ROOKB:"&#x265C;", BISHOPB:"&#x265D;", KNIGHTB:"&#x265E;", PAWNB:"&#x265F;",
-			SPADE:"&#x2660;", SPADEOL:"&#x2664;", HEART:"&#x2665;", HEARTOL:"&#x2661;", DIAMOND:"&#x2666;", DIAMONDOL:"&#x2662;", CLUB:"&#x2663;", CLUBOL:"&#x2667;",
+			BASEBALL:"&#x26BE;", BASKETBALL:"&#x26F9;", 
+			CARD_CLUB:"&#x2663;", CARD_CLUB_OL:"&#x2667;", 
+			CARD_DIAMOND:"&#x2666;", CARD_DIAMOND_OL:"&#x2662;", 
+			CARD_HEART:"&#x2665;", CARD_HEART_OL:"&#x2661;", 
+			CARD_SPADE:"&#x2660;", CARD_SPADE_OL:"&#x2664;",
+			CHECKER_W:"&#x26C0;", CHECKER_WKING:"&#x26C1;", CHECKER_B:"&#x26C2;", CHECKER_BKING:"&#x26C3;",
+			CHESS_BBISHOP:"&#x265D;", CHESS_WBISHOP:"&#x2657;", 
+			CHESS_BKING:"&#x265B;", CHESS_WKING:"&#x2655;", 
+			CHESS_BKNIGHT:"&#x265E;", CHESS_WKNIGHT:"&#x2658;", 
+			CHESS_BPAWN:"&#x265F;", CHESS_WPAWN:"&#x2659;",
+			CHESS_BQUEEN:"&#x265A;", CHESS_WQUEEN:"&#x2654;",
+			CHESS_BROOK:"&#x265C;", CHESS_WROOK:"&#x2656;", 
 			DIE1:"&#x2680;", DIE2:"&#x2681;", DIE3:"&#x2682;", DIE4:"&#x2683;", DIE5:"&#x2684;", DIE6:"&#x2685;",
-			CHECKERW:"&#x26C0;", CHECKERKINGW:"&#x26C1;", CHECKERB:"&#x26C2;", CHECKERKINGB:"&#x26C3;",
-			SOCCER:"&#x26BD;", BASEBALL:"&#x26BE;", GOLF:"&#x26F3;", SKIER:"&#x26F7;", ICESKATE:"&#x26F8;", BASKETBALL:"&#x26F9;"
+			GOLF:"&#x26F3;", ICESKATE:"&#x26F8;", SKIER:"&#x26F7;", SOCCER:"&#x26BD;"
 		}
 	}
 };
+B.literalChars = function(str) {
+	var rslt = "";
+	for (var i = 0; i < str.length; i++) {
+		rslt += "\\" + str.charAt(i);
+	}
+	return rslt;
+}
 B.contains = function(str, test, caseInsensitive) {
 	if (caseInsensitive == undefined) caseInsensitive = false;
 	if (caseInsensitive) {

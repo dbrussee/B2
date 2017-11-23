@@ -88,7 +88,7 @@ B.PopupMenu.prototype.make = function() {
             if (itm.disabled) {
                 itm.treenode = this.tree.addItem("<span style='color:silver;'>" + itm.text + "</span>", null, "&nbsp;");
             } else {
-                if (itm.img == "") itm.img = B.char.RIGHT_CLR;
+                if (itm.img == "") itm.img = B.char.RIGHT_OL;
                 itm.treenode = this.tree.addItem(itm.text, $.proxy(function() { 
                     var rslt = this.func(); 
                     if (rslt == undefined) rslt = true;
@@ -217,7 +217,7 @@ B.PopupSubmenu.prototype.make = function(branch) {
             if (itm.disabled) {
                 itm.treenode = itm.branch.addItem("<span style='color:silver;'>" + itm.text + "</span>", null, "&nbsp;");
             } else {
-                if (itm.img == "") itm.img = B.char.RIGHT_CLR;
+                if (itm.img == "") itm.img = B.char.RIGHT_OL;
                 itm.treenode = itm.branch.addItem(itm.text, $.proxy(function() { 
                     var rslt = this.func(); 
                     if (rslt == undefined) rslt = true;
@@ -848,7 +848,7 @@ B.TreeItem.prototype.render = function(branchElement) {
 		tr.className = "BAction";
 	} else {
 		tr.style.cursor = "default";
-		this.icon = B.char.RIGHT_CLR;
+		this.icon = B.char.RIGHT_OL;
 	}
 	var td = document.createElement("td");
 	td.style.cssText = "color:darkgreen;vertical-align:top; width:1.1em; text-align:center;";
