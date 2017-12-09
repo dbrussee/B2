@@ -280,7 +280,7 @@ this.header.style.tableLayout = "fixed";
 			var chk = new B.Form(this.formid).get();
 			if (chk.ACT == "del") {
 				var rownum = this.tbl.current.rownum;
-				this.remote.setProperty("DELETEDROW", this.tbl.getDataRow());
+				if (this.remote != null) this.remote.setProperty("DELETEDROW", this.tbl.getDataRow());
 				this.tbl.unpick();
 				// Remove it from the dataset
 				this.tbl.dataset.data.splice(rownum,1);
