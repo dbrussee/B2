@@ -544,26 +544,34 @@ B.char = {
 	TURNL:"&#8634;", TURNR:"&#8635;",
 	UP:"&#x25b2;", WARN:"&#x26A0;", X:"&#x2718;",
 	cat: {
+		cards: {
+			BACK:"&#x1F0A0;",
+			S1:"&#x1F0A1;", S2:"&#x1F0A2;", S3:"&#x1F0A3;", S4:"&#x1F0A4;", S5:"&#x1F0A5;", S6:"&#x1F0A6;", S7:"&#x1F0A7;", S8:"&#x1F0A8;", S9:"&#x1F0A9;", S10:"&#x1F0AA;", SJ:"&#x1F0AB;", SN:"&#x1F0AC;", SQ:"&#x1F0AD;", SK:"&#x1F0AE;",
+			H1:"&#x1F0B1;", H2:"&#x1F0B2;", H3:"&#x1F0B3;", H4:"&#x1F0B4;", H5:"&#x1F0B5;", H6:"&#x1F0B6;", H7:"&#x1F0B7;", H8:"&#x1F0B8;", H9:"&#x1F0B9;", H10:"&#x1F0BA;", HJ:"&#x1F0BB;", HN:"&#x1F0BC;", HQ:"&#x1F0BD;", HK:"&#x1F0BE;",
+			D1:"&#x1F0C1;", D2:"&#x1F0C2;", D3:"&#x1F0C3;", D4:"&#x1F0C4;", D5:"&#x1F0C5;", D6:"&#x1F0C6;", D7:"&#x1F0C7;", D8:"&#x1F0C8;", D9:"&#x1F0C9;", D10:"&#x1F0CA;", DJ:"&#x1F0CB;", DN:"&#x1F0CC;", DQ:"&#x1F0CD;", DK:"&#x1F0CE;",
+			C1:"&#x1F0D1;", C2:"&#x1F0D2;", C3:"&#x1F0D3;", C4:"&#x1F0D4;", C5:"&#x1F0D5;", C6:"&#x1F0D6;", C7:"&#x1F0D7;", C8:"&#x1F0D8;", C9:"&#x1F0D9;", C10:"&#x1F0DA;", CJ:"&#x1F0DB;", CN:"&#x1F0DC;", CQ:"&#x1F0DD;", CK:"&#x1F0DE;"
+		},
 		symb: { // http://unicode.org/charts/
 			AIRPLANE:"&#x2708;", ALARM:"&#x23F0;", ANCH:"&#x2625;", ANCHOR:"&#x2693;", ATOMIC:"&#x269B;", 
 			BEACH:"&#x26F1;", BOAT:"&#x26F4;", BOX:"&#x2610;", BOXCHECK:"&#x2611;", BOXX:"&#x2612;", 
-			CADUCEUS:"&#x2695;", CAUTION:"&#x26A0;", CHURCH:"&#x26EA;", COFFEE:"&#x2615;", COFFIN:"&#x26B0;", CROSS:"&#x271D;", CROSS_3D:"&#x271E;", 
+			CACTUS:"&#x1F335;", CADUCEUS:"&#x2695;", CAUTION:"&#x26A0;", CHURCH:"&#x26EA;", COFFEE:"&#x2615;", COFFIN:"&#x26B0;", CROSS:"&#x271D;", CROSS_3D:"&#x271E;", 
 			ELECTRICITY:"&#x26A1;", FIST:"&#x270A;", FLAT:"&#x266D;", FLEUR:"&#x269C;", FLOWER:"&#x2698", FOUNTAIN:"&#x26F2;", 
-			GASPUMP:"&#x26FD;", GRID:"&#x2637;", HAMBURGER:"&#x2630;", HAMMERCHISEL:"&#x2692;", HAND:"&#x270B;", HOSPITAL:"&#x26E8;", 
-			MOUNTAIN:"&#x26F0;", NOENTRY:"&#x26D4;", NOTE:"&#x2669;", NOTE8:"&#x266A;", NOTES:"&#x266B;", NUT:"&#x23E3;", 
-			OCRBANK:"&#x2446;",	PEACE:"&#x262E;", PEACE_HAND:"&#x270C;", PHONE:"&#x260E;", PHONE_OL:"&#x260F;", PICKAXE:"&#x26CF;", POINTD:"&#x261F;", 
+			GASPUMP:"&#x26FD;", GLOBE:"&#x1F30D;", GRID:"&#x2637;", HAMBURGER:"&#x2630;", HAMMERCHISEL:"&#x2692;", HAND:"&#x270B;", HOSPITAL:"&#x26E8;", 
+			KEY:"&#x1F511;", LOCK:"&#x1F512;", LOCKKEY:"&#x1F510;",
+			MOUNTAIN:"&#x26F0;", NATURAL:"&#x266E;", NOENTRY:"&#x26D4;", NOTE:"&#x2669;", NOTE8:"&#x266A;", NOTES:"&#x266B;", NUT:"&#x23E3;", 
+			OCRBANK:"&#x2446;",	PEACE:"&#x262E;", PEACE_HAND:"&#x270C;", PHONE:"&#x260E;", PHONE_OL:"&#x260F;", PICKAXE:"&#x26CF;", PIN:"&#x1F589;", POINTD:"&#x261F;", 
 			POINTL:"&#x261C;", POINTR:"&#x261E;", POINTU:"&#x261D;", RADIOACTIVE:"&#x2622;", RECYCLE:"&#x267B;", 
 			RECYCLE_OL:"&#x2672;", RR:"&#x26D2;", RUSSIAN:"&#x262D;", SAILBOAT:"&#x26F5;", SCALES:"&#x2696;", 
-			SCISSORS:"&#x2700;", SCISSORS_OL:"&#x2704;", SHARP:"&#x266F;", 
-			SKULL:"&#x2620;", SQUAREKEY:"&#x26BF;", STAR:"&#x2605;", STAR_OL:"&#x2606;", STOPWATCH:"&#x23F1;", SWORDS:"&#x2694;", 
-			TARGET:"&#x2316;", TENT:"&#x26FA;", TRUCK:"&#x26DF;", TWOLANE:"&#x26D7;", X:"&#x2715;", YINYANG:"&#x262F;", 
-			WATCH:"&#x231A;", WHEELCHAIR:"&#x267F;", WRITE:"&#x270D;"
+			SCISSORS:"&#x2700;", SCISSORS_OL:"&#x2704;", SHAMROCK:"&#x2618;", SHARP:"&#x266F;", 
+			SKULL:"&#x2620;", SPEACHR:"&#x1F5E9;", SPEACHL:"&#x1F5E8;", SQUAREKEY:"&#x26BF;", STAR:"&#x2605;", STAR_OL:"&#x2606;", STOPWATCH:"&#x23F1;", SWORDS:"&#x2694;", 
+			TARGET:"&#x2316;", TENT:"&#x26FA;", TRUCK:"&#x26DF;", TWOLANE:"&#x26D7;", UNLOCK:"&#x1F513;", X:"&#x2715;", YINYANG:"&#x262F;", 
+			WATCH:"&#x231A;", WHEELCHAIR:"&#x267F;", WRENCH:"&#x1F527;", WRITE:"&#x270D;"
 		},
 		tech: {
-			BACKSPACE:"&#x232B;", BACKWARD:"&#x23F4;", CANCEL:"&#x2327;", COMMAND:"&#x2318;", DELETE:"&#x2326;", 
-			EJECT:"&#x23CF;", FF:"&#x23E9;", FORWARD:"&#x23F5;", HOURGLASS:"&#x23F3;", KEYBOARD:"&#x2328;",
-			NEXT:"&#x23ED;", NULL:"&#x2300;", NUMBER:"&#x2317;", PAUSE:"&#x23F8;", POWER:"&#x23FB;", PREV:"&#x23EE;", 
-			RECORD:"&#x23FA;", RETURN:"&#x23CE;", REWIND:"&#x23DA;", SEARCH:"&#x2315;", STOP:"&#x23F9;", TOEND:"&#x23EF;"
+			BACKSPACE:"&#x232B;", BACKWARD:"&#x23F4;", CANCEL:"&#x2327;", COMMAND:"&#x2318;", DELETE:"&#x2326;", DOCUMENT:"&#x1F5CB;", 
+			ENVELOPE:"&#x1F582;", EJECT:"&#x23CF;", FF:"&#x23E9;", FOLDER:"&#x1F5C0;", FOLDEROPEN:"&#x1F5C1;", FORWARD:"&#x23F5;", HOURGLASS:"&#x23F3;", KEYBOARD:"&#x2328;",
+			NETWORK:"&#x1F5A7;", NEXT:"&#x23ED;", NULL:"&#x2300;", NUMBER:"&#x2317;", PAUSE:"&#x23F8;", POWER:"&#x1F50C;", PREV:"&#x23EE;", 
+			RECORD:"&#x23FA;", RETURN:"&#x23CE;", REWIND:"&#x23EA;", SEARCH:"&#x1F50D;", STOP:"&#x23F9;", TOEND:"&#x23EF;"
 		},
 		weather: {
 			CLOUD:"&#x2601;", COMMET:"&#x2604;", PARTLYSUNNY:"&#x26C5;", RAIN:"&#x2614;", SNOW:"&#x2603;", SNOWMAN:"&#x26C4;", SUN:"&#x2600;", 
