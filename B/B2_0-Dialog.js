@@ -238,36 +238,61 @@ function askValueWarn(msg, p, v, t, cb, h, w) { askValueIcon("WARN", msg, p, v, 
 function askValueError(msg, p, v, t, cb, h, w) { askValueIcon("ERROR", msg, p, v, t, cb, h, w); };
 
 function freeze(msg, title, with_timer, height, width) {
+	if (B.freezeStack == undefined) B.freezeStack = [];
 	if (with_timer == undefined) with_timer = false;
-	var h = "<div style='float:left; width:40px; text-align:center; padding-right:10px;'>"
-	h += B.img("SPINNER", 28);
-	if (with_timer) {
-		h += "<div id='freezeDialogTimer' style='width:100%; text-align:center; font-size:7pt;'>";
-		h += "&nbsp;"
+	if (title == undefined) title = B.settings.say.defaultTitle;
+	if (title == "") title = B.settings.say.defaultTitle;
+	var itm = {timer:with_timer, msg:msg, title:title};
+	if (B.freezeStack.length > 0) {
+		if (B.freezeStack.length > 0) msg += "<br><i>...Plus " + B.freezeStack.length + "</i>";
+		updateFreezeText(itm.msg + "<br><i>...Plus " + B.freezeStack.length + "</i>");
+		var dlg = $("#B-Say-Dialog");
+		dlg.dialog('option', 'title', itm.title);
+	} else {
+		var h = "<div style='float:left; width:40px; text-align:center; padding-right:10px;'>"
+		h += B.img("SPINNER", 28);
+		if (with_timer) {
+			h += "<div id='freezeDialogTimer' style='width:100%; text-align:center; font-size:7pt;'>";
+			h += "&nbsp;"
+			h += "</div>";
+			B.freezeStart = new Date();
+			B.freezeTimer = setInterval(function() {
+				var et = B.format.ELAPSE(B.freezeStart, new Date());
+				document.getElementById("freezeDialogTimer").innerHTML = et;
+			}, 1005);
+		}
 		h += "</div>";
-		B.freezeStart = new Date();
-		B.freezeTimer = setInterval(function() {
-			var et = B.format.ELAPSE(B.freezeStart, new Date());
-			document.getElementById("freezeDialogTimer").innerHTML = et;
-		}, 1005);
+		if (B.freezeStack.length > 0) msg += "<br><i>...Plus " + B.freezeStack.length + "</i>";
+		h += "<span id='freezeMessageText'>" + msg + "</span>";
+		sayBase(h, title, null, height, width, ["NONE"]);
 	}
-	h += "</div>";
-	h += "<span id='freezeMessageText'>" + msg + "</span>";
-	sayBase(h, title, null, height, width, ["NONE"]);
+	B.freezeStack.push(itm);
+	return B.freezeStack.length-1; // Position of item to be popped off
 }
 function timedFreeze(msg, title, height, width) {
-	freeze(msg, title, true, height, width);
+	return freeze(msg, title, true, height, width);
 }
 
 function updateFreezeText(msg) {
 	$("#freezeMessageText").html(msg);
 }
-function thaw() { 
-	if (B.freezeTimer != null) {
-		clearInterval(B.freezeTimer);
-		B.freezeTimer = null;
+function thaw(stackPosition) { 
+	if (stackPosition == undefined) stackPosition = B.freezeStack.length-1; // Top
+	B.freezeStack.splice(stackPosition,1); // Remove the one being thawed
+	if (B.freezeStack.length > 0) {
+		var itm = B.freezeStack[B.freezeStack.length-1];
+		var plus = "";
+		if (B.freezeStack.length > 1) plus = "<br><i>...Plus " + B.frezeStack.length-1 + "</i>";
+		updateFreezeText(itm.msg + plus);
+		var dlg = $("#B-Say-Dialog");
+		dlg.dialog('option', 'title', itm.title);
+	} else {
+		if (B.freezeTimer != null) {
+			clearInterval(B.freezeTimer);
+			B.freezeTimer = null;
+		}
+		closeDialog("B-Say-Dialog"); 
 	}
-	closeDialog("B-Say-Dialog"); 
 }
 
 // Form - Simple handling of form data

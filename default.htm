@@ -148,10 +148,12 @@ function init() {
 		})
 	})
 	br.addItem("Freeze the screen", function() { 
+		timedFreeze("This is really the first message. The one showing first covered this one.."); 
+		window.setTimeout(function() { thaw(); }, 10000);
 		timedFreeze("This message will disappear using the thaw() method in 10 seconds. " +
 			"Use freeze(msg) for normal stuff, but when calling remote operations that may " +
 			"take some time, you may want to include a timer."); 
-		window.setTimeout(function() { thaw(); }, 10000);
+		window.setTimeout(function() { thaw(); }, 4000);
 	});
 	br.addItem("Open up a form dialog", function() { openDialog("dlg1", "Close"); new B.Form("dlg1").setClean(); });
 	br = tree1.addBranch("Some Other Actions", false);
