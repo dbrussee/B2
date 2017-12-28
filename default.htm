@@ -68,9 +68,16 @@ function init() {
 			document.getElementById("locImageSpot").appendChild(el);
 			
 		});
-		m.addMenu("b3", "3", "Second - Third");
+		m.addMenu("b3", "3", "String template test", function() {
+			var txt = "{{fn}} {{ln}} is {{age}} years old. Yay, {{fn}}!";
+			var t2 = B.format.TEMPLATE(txt, { ln:'Jones', age:27, fn:'Frank'});
+			say("Template: " + txt + "<br><br>Result: " + t2);
+		});
 	m = dd.addMenu("c", "Third");
-		m.addMenu("c1", "1", "Third - First");
+		m.addMenu("c1", "1", "Strip Chars Test", function() {
+			var txt = "Dzaznz zzIzszz zzzGrezzat.";
+			say(txt + "<br>--&gt; " + B.stripChars(txt,"z"));
+		});
 		m.addMenu("c2", "2", "Third - Second");
 		m.addMenu("c3", "3", "Third - Third");
 	dd.addMenu("d", "Last", function() { $("#ddBody").html("You clicked the last item"); });

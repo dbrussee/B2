@@ -176,6 +176,16 @@ B.format = {
 		rslt += scs + "s";
 		return B.trim(rslt);
 	},
+	TEMPLATE: function(tmp) { // B.format.TEMPLATE("{{LNAM}}, {{FNAM}}", {FNAM:'Dan', LNAM:'Brussee'}) => "Brussee, Dan"
+		var rslt = tmp;
+		for (var i = 1; i < arguments.length; i++) {
+			var dta = arguments[i];
+			for (var key in dta) {
+				rslt = rslt.split("{{" + key + "}}").join(dta[key]);
+			}
+		}
+		return rslt;
+	},
 	HHNNSS: function(d) {
 		var parts = B.getDateParts(d);
 		if (d == null) return "";
@@ -268,6 +278,19 @@ B.format = {
 	},
 	DATE: function(d) { return B.format.MDYYYY(d); },
 	TS: function(d) { return B.format.MDYYYYHNNSS(d); }
+};
+B.keepChars = function(txt,charsToKeep) {
+	var orig = txt;
+	if (charsToKeep == "#") charsToKeep = "0123456789";
+	if (charsToKeep == ".") charsToKeep = "0123456789.";
+	if (charsToKeep == "A") charsToKeep = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	if (charsToKeep == "a") charsToKeep = "abcdefghijklmnopqrstuvwxyz";
+	if (charsToKeep == "Aa") charsToKeep = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	var rslt = "";
+	for (var i = 0; i < txt.length; i++) {
+		if (charsToKeep.indexOf(txt.charAt(i)) >= 0) rslt += orig.charAt(i);
+	}
+	return rslt;
 };
 B.stripChars = function(txt,charsToStrip,ignoreCase) {
 	var rslt = txt.toString();
