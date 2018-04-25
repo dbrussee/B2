@@ -1,4 +1,4 @@
-// Dialogs -- These are defined at global level to make the simple to use.
+// Dialogs -- These are defined at global level to make them simpler to use.
 B.settings.say = {
 	defaultTitle: 'System Message',
 	tinting: false
