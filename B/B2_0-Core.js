@@ -845,7 +845,7 @@ B.setCSSRule("table.BTableData tr td",
 	"border-right:1px dotted silver; "+
 	"border-bottom:1px dotted silver;");
 B.setCSSRule("table.BTable tr th", "font-size: 1.05em;");
-B.setCSSRule("table.BTable tr td, table.BTable tr th", "box-sizing: border-box;");
+B.setCSSRule("table.BTable tr td, table.BTable tr th", "box-sizing:border-box; white-space:nowrap; word-wrap:break-word;");
 B.setCSSRule("table.BTableHeader", "display:none;");
 B.setCSSRule("table.BTableHeader tr th", "font-weight:normal !important;");
 

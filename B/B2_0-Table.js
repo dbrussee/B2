@@ -64,13 +64,14 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 			cell.style.width = wid + "px";
 			cell.style.fontWeight = "bold";
 			var weight = "N";
-			var col = { index:cn, id:id, headText:cell.innerText, width:wid, bold:false, align:'left' };
+			var col = { index:cn, id:id, headText:cell.innerText, width:wid, bold:false, align:'left', wrap:false };
 			this.columns.push(col);
 			var attribs = "L"; // Left justification as default
 			if (data.length > 2) attribs = data[2].toUpperCase(); // CB (Center Bold), etc
 			if (attribs.indexOf("C")>=0) col.align = "center";
 			if (attribs.indexOf("R")>=0) col.align = "right";
 			if (attribs.indexOf("B")>=0) col.bold = true;
+			if (attribs.indexOf("W")>=0) col.wrap = true;
 			cell.style.textAlign = col.align;
 			//cell.style.border = "1px solid white";
 		}
@@ -505,6 +506,7 @@ B.ScrollingTable.prototype.prepareRow = function(dr, rownum) {
 		}
 		if (tblcol.align != "left") sty += "text-align:" + tblcol.align + ";";
 		if (tblcol.bold) sty += "font-weight:bold;";
+		if (tblcol.wrap) sty += "word-wrap:break-word;white-space:normal;";
 		var dcol = dr[tblcol.id];
 		if (sty.length > 0) h += " style='" + sty + "'";
 		h += ">" + (dcol == null ? "" : dcol.disp) + "</td>";
