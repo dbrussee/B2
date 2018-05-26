@@ -12,6 +12,7 @@ B.settings.ScrollingTable = {
 B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollbar) {
 	this.embedScrollbar = B.settings.ScrollingTable.embedScrollbar;
 	if (embedScrollbar != undefined) this.embedScrollbar = embedScrollbar;
+	this.title = "";
 	this.rootId = rootId;
 	this.height = height;
 	this.frozen = false;
@@ -26,6 +27,9 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 	this.header.style.cssText = "border-collapse:collapse; border-right:2px solid transparent; border-left:2px solid transparent";
 	// Create the container div
 	this.container = document.createElement("div");
+	this.titleContainer = document.createElement("div");
+	this.titleContainer.style.cssText = "font-size:1.2em;font-weight:bold;color:navy;padding:2px;";
+	this.container.appendChild(this.titleContainer);
 	this.container.id = rootId + "_container";
 	// Insert it before the existing header table
 	this.header.parentNode.insertBefore(this.container, this.header);
@@ -85,7 +89,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		pad.style.border = "1px solid transparent";
 		row.appendChild(pad);
 	}
-this.header.style.tableLayout = "fixed";
+	this.header.style.tableLayout = "fixed";
 
 	this.surround = document.createElement("div");
 	this.surround.id = this.rootId + "_surround";
@@ -386,6 +390,11 @@ this.header.style.tableLayout = "fixed";
 			}, this));
 		}, this)
 	};
+	this.setTitle = function(title) {
+		this.title = title;
+		this.titleContainer.innerHTML = title;
+	}
+	this.getTitle = function() { return this.title; }
 	this.setKeysReadOnly = function(act) {
 		var frm = new B.Form(this.editForm.formid);
 		for (var k in frm.fields) {
