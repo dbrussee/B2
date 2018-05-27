@@ -17,14 +17,14 @@
 <script src="B/B2_0-Growl.js"></script>
 <script>
 var bankNumber = "307070115"; // Wyoming
-var growl = null;
+var grwlTime = null;
 function init() {
 	var frm = new B.Form("dlg1");
 	var now = new Date();
 	frm.set("month", now.getMonth()+1, "day", now.getDate());
 
-	growl = new B.Growl(); // "bottom" (default) or "top";
-	growl.msg("General Message", "The B Library is available to download via <a href='http://www.github.com/dbrussee'>GitHub</a>", 0);
+	B.growl.init(); // "bottom" (default) or "top";
+	B.growl.msg("General Message", "The B Library is available to download via <a href='http://www.github.com/dbrussee'>GitHub</a>", 0);
 
 	// Fill character category list
 	for (var key in B.char.cat) {
@@ -87,9 +87,25 @@ function init() {
 		m.addMenu("c2", "2", "Third - Second");
 		m.addMenu("c3", "3", "Third - Third");
 	m = dd.addMenu("cx", "Growl Messages");
-		m.addMenu("gI", "", "Info Growl", function() { growl.msg("Information", "An Information message has been generated!"); });
-		m.addMenu("gW", "", "Warning Growl", function() { growl.warnmsg("Warning", "A Warning message has been generated!"); });
-		m.addMenu("gE", "", "Error Growl", function() { growl.errmsg("Bummer, Dude", "An Error message has been generated!"); });
+		m.addMenu("gtest", B.char.CHECKY, "Messages timed: Yes", function() {
+			var m = dd.menus["cx"].submenu.items['gtest'];
+			var icon = m.treenode.icon;
+			if (icon == B.char.CHECKY) {
+				grwlTime = 0;
+				m.treenode.icon = B.char.CHECKN;
+				m.treenode.iconTD.innerHTML = B.char.CHECKN;
+				m.treenode.textTD.innerHTML = "Messages timed: No";
+			} else {
+				grwlTime = null;
+				m.treenode.icon = B.char.CHECKY;
+				m.treenode.iconTD.innerHTML = B.char.CHECKY;
+				m.treenode.textTD.innerHTML = "Messages timed: Yes";
+			}
+			return false;
+		});
+		m.addMenu("gI", B.img("LEDBLUE"), "Info Growl", function() { B.growl.msg("Information", "An Information message has been generated!", grwlTime); return false; });
+		m.addMenu("gW", B.img("LEDYELLOW"), "Warning Growl", function() { B.growl.warnmsg("Warning", "A Warning message has been generated!", grwlTime); return false; });
+		m.addMenu("gE", B.img("LEDRED"), "Error Growl", function() { B.growl.errmsg("Bummer, Dude", "An Error message has been generated!", grwlTime); return false; });
 	dd.addMenu("d", "Last", function() { 
 		$("#ddBody").html("You clicked the last item"); 
 	});

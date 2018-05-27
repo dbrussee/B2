@@ -1,29 +1,32 @@
 // Remote calls
 B.settings.Growl = {  
     width: "280px",
-    defaultEdge: "bottom",
-    defaultTimeout: 9000
+    defaultEdge: "top",
+    defaultTimeout: 7000
 }
 
-B.Growl = function(edge) {
-    if (edge == undefined) edge = B.settings.Growl.defaultEdge;
-    this.edge = edge;
+B.growl = {
+    container: null,
+    edge: B.settings.Growl.defaultEdge
 }
-B.Growl.prototype.popup = function(typ, title, msg, timeout, icon) {
+B.growl.init = function(edge) {
+    B.growl.container = null;
+    if (edge == undefined) edge = B.settings.Growl.defaultEdge;
+    B.growl.edge = edge;
+}
+B.growl.popup = function(typ, title, msg, timeout, icon) {
     if (icon == undefined) icon = "";
-    if (timeout == undefined) timeout = B.settings.Growl.defaultTimeout;
-    var container = document.getElementById("BGrowlContainer");
-    if (container == null) {
-        container = document.createElement("div");
-        container.id = "BGrowlContainer";
-        container.style.cssText = "position:absolute;right:5px;width:" + B.settings.Growl.width + ";";
-        if (this.edge == "bottom") {
-            container.style.bottom = "5px";
+    if (timeout == undefined) timeout = null;
+    if (timeout == null) timeout = B.settings.Growl.defaultTimeout;
+    if (B.growl.container == null) {
+        B.growl.container = document.createElement("div");
+        B.growl.container.style.cssText = "position:absolute;right:5px;width:" + B.settings.Growl.width + ";";
+        if (B.growl.edge == "bottom") {
+            B.growl.container.style.bottom = "5px";
         } else {
-            container.style.top = "5px";
+            B.growl.container.style.top = "5px";
         }
-        $("body").append(container.outerHTML);
-        container = document.getElementById("BGrowlContainer");
+        $("body").append(B.growl.container);
     }
     var div = document.createElement("div");
     div.style.cssText = "padding:4px;border-radius:6px;margin-bottom:5px;";
@@ -33,22 +36,43 @@ B.Growl.prototype.popup = function(typ, title, msg, timeout, icon) {
     if (typ == "WARNING") { clr = "brown"; bclr = "yellow"; }
     div.style.backgroundColor = bclr;
     div.style.color = clr;
-    var h = "<table style='border-bottom:1px solid silver;width:100%'><tr>";
-    if (icon != "") h += "<td style='width:2.1em;'>" + B.img(icon, "2em") + "</td>";
-    h += "<td style='font-weight:bold;'>" + title + "</td>";
-    h += "<td style='width:4em;text-align:right;font-size:8pt;color:black;'>" + B.format.TS(new Date()) + "&nbsp;</td>";
-    if (timeout == 0) h += "<td style='width:1em'>" + B.img("CANCEL") + "</td>";
-    h += "</tr></table>";
-    h += msg;
-    div.innerHTML = h;
-    if (this.edge == "bottom") {
-        if (container.childNodes.length > 0) {
-            container.insertBefore(div, container.childNodes[0]);
+    var tbl = document.createElement("table");
+    tbl.style.cssText = "border-bottom:1px solid silver;width:100%";
+    var tr = document.createElement("tr");
+    tbl.appendChild(tr);
+    if (icon != "") {
+        var td = document.createElement("td");
+        td.style.cssText = "width:2.1em;";
+        td.innerHTML = B.img(icon, "2em");
+        tr.appendChild(td);
+    }
+    var td = document.createElement("td");
+    td.style.cssText = "font-weight:bold";
+    td.innerHTML = title;
+    tr.appendChild(td);
+    var td = document.createElement("td");
+    td.style.cssText = "width:4em;text-align:right;font-size:8pt;color:black;padding-right:.2em;";
+    td.innerHTML = B.format.TS(new Date());
+    tr.appendChild(td);
+    if (timeout == 0) {
+        var td = document.createElement("td");
+        td.style.cssText = "width:1em;cursor:pointer;position";
+        td.innerHTML = B.img("CHECKY");
+        td.onclick = $.proxy(function() { this.parentElement.removeChild(this); }, div);
+        tr.appendChild(td);
+    }
+    div.appendChild(tbl);
+    var spn = document.createElement("span");
+    spn.innerHTML = msg;
+    div.appendChild(spn);
+    if (B.growl.edge == "bottom") {
+        if (B.growl.container.childNodes.length > 0) {
+            B.growl.container.insertBefore(div, B.growl.container.childNodes[0]);
         } else {
-            container.appendChild(div);
+            B.growl.container.appendChild(div);
         }    
     } else {
-        container.appendChild(div);
+        B.growl.container.appendChild(div);
     }
     $(div).fadeTo(0,.8);
 
@@ -56,19 +80,17 @@ B.Growl.prototype.popup = function(typ, title, msg, timeout, icon) {
         window.setTimeout($.proxy(function() {
             $(div).fadeTo(300,0, function() { this.parentElement.removeChild(this); });
         }, div),timeout);
-    } else {
-        div.onclick = $.proxy(function() { this.parentElement.removeChild(this); }, div);
     }
 }
-B.Growl.prototype.msg = function(title, msg, timeout) {
+B.growl.msg = function(title, msg, timeout) {
     if (timeout == undefined) timeout = B.settings.Growl.defaultTimeout;
-    this.popup("NORMAL", title, msg, timeout, "LEDBLUE");
+    B.growl.popup("NORMAL", title, msg, timeout, "LEDBLUE");
 }
-B.Growl.prototype.errmsg = function(title, msg, timeout) {
+B.growl.errmsg = function(title, msg, timeout) {
     if (timeout == undefined) timeout = B.settings.Growl.defaultTimeout;
-    this.popup("ERROR", title, msg, timeout, "LEDRED");
+    B.growl.popup("ERROR", title, msg, timeout, "LEDRED");
 }
-B.Growl.prototype.warnmsg = function(title, msg, timeout) {
+B.growl.warnmsg = function(title, msg, timeout) {
     if (timeout == undefined) timeout = B.settings.Growl.defaultTimeout;
-    this.popup("WARNING", title, msg, timeout, "LEDYELLOW");
+    B.growl.popup("WARNING", title, msg, timeout, "LEDYELLOW");
 }
