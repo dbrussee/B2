@@ -43,16 +43,20 @@ B.PopupMenu.prototype.enable = function() {
     for (var i = 0; i < arguments.length; i++) {
         var itm = this.items[arguments[i]];
 		itm.disabled = false;
-		itm.treenode.enabled = true;
-		$(itm.treenode.textTD).fadeTo(0,1);
+		if (itm.treenode) {
+			itm.treenode.enabled = true;
+			$(itm.treenode.textTD).fadeTo(0,1);
+		}
     }
 }
 B.PopupMenu.prototype.disable = function() {
     for (var i = 0; i < arguments.length; i++) {
         var itm = this.items[arguments[i]];
-        itm.disabled = true;
-		itm.treenode.enabled = false;
-		$(itm.treenode.textTD).fadeTo(0,.3);
+		itm.disabled = true;
+		if (itm.treenode) {
+			itm.treenode.enabled = false;
+			$(itm.treenode.textTD).fadeTo(0,.3);	
+		}
     }
 }
 B.PopupMenu.prototype.getSubmenu = function(code) {
