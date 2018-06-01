@@ -56,8 +56,8 @@ B.growl.popup = function(typ, title, msg, timeout, icon) {
     tr.appendChild(td);
     if (timeout == 0) {
         var td = document.createElement("td");
-        td.style.cssText = "width:1em;cursor:pointer;position";
-        td.innerHTML = B.img("CHECKY");
+        td.style.cssText = "width:1em;cursor:pointer;position;";
+        td.innerHTML = "<span style='font-weight:bold;color:yellow;background-color:black;padding:.2em;border-radius:.8em;'>X</span>"; // B.img("CHECKY");
         td.onclick = $.proxy(function() { this.parentElement.removeChild(this); }, div);
         tr.appendChild(td);
     }

@@ -24,7 +24,7 @@ function init() {
 	frm.set("month", now.getMonth()+1, "day", now.getDate());
 
 	B.growl.init(); // "bottom" (default) or "top";
-	B.growl.msg("General Message", "The B Library is available to download via <a href='http://www.github.com/dbrussee'>GitHub</a>", 0);
+	B.growl.msg("General Message", "The B Library is available to download via my <span class='anchor' onclick='window.open(\"http://www.github.com/dbrussee\");'>GitHub</span> page.", 0);
 
 	// Fill character category list
 	for (var key in B.char.cat) {
@@ -51,8 +51,8 @@ function init() {
 				}
 			});
 		});
-		m.addMenu("a2", B.char.CHECKY, "Turn on routing number", function() { dd.enableItem("a", "a1")});
-		m.addMenu("a3", B.char.CHECKN, "Turn off routing number", function() { dd.disableItem("a", "a1")});
+		m.addMenu("a2", B.char.CHECKY, "Turn on routing number", function() { dd.enableItem("a", "a1"); return false;});
+		m.addMenu("a3", B.char.CHECKN, "Turn off routing number", function() { dd.disableItem("a", "a1"); return false;});
 		var mm = m.addSubmenu("aa", "Submenu Test");
 		mm.addMenu("aa1", "X", "Stay open when clicked!!", function() { $("#ddBody").html("The old man's down the road!"); return false; });
 		mm.addMenu("aa2", "Y", "Change text", function() { 

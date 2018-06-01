@@ -42,13 +42,17 @@ B.PopupMenu.prototype.addSubmenu = function(id, txt) {
 B.PopupMenu.prototype.enable = function() {
     for (var i = 0; i < arguments.length; i++) {
         var itm = this.items[arguments[i]];
-        itm.disabled = false;
+		itm.disabled = false;
+		itm.treenode.enabled = true;
+		$(itm.treenode.textTD).fadeTo(0,1);
     }
 }
 B.PopupMenu.prototype.disable = function() {
     for (var i = 0; i < arguments.length; i++) {
         var itm = this.items[arguments[i]];
         itm.disabled = true;
+		itm.treenode.enabled = false;
+		$(itm.treenode.textTD).fadeTo(0,.3);
     }
 }
 B.PopupMenu.prototype.getSubmenu = function(code) {
@@ -129,18 +133,22 @@ B.PopupMenu.prototype.show = function(event) {
 	var rslt = this.onBeforeShow(this);
 	if (rslt == undefined) rslt = true;
 	if (!rslt) return;
-    this.showing = true;
+	this.showing = true;
 	try {
 		event.preventDefault();
 		$("*").tooltip("close");
     } catch(e) {;}
-    this.make();    
-    if (B.is.IE()) {
-        $(this.object).css("top", event.clientY+5).css("left", event.clientX+5);
-    } else {
-        $(this.object).css("top", event.pageY+5).css("left", event.pageX+5);
-    }
-
+	this.make();  
+	if (event != undefined) {
+		if (B.is.IE()) {
+			$(this.object).css("top", event.clientY+5).css("left", event.clientX+5);
+		} else {
+			$(this.object).css("top", event.pageY+5).css("left", event.pageX+5);
+		}
+	}  
+	this.draw();
+}
+B.PopupMenu.prototype.draw = function() {
     $(this.object).show();
     this.handler = $.proxy(function() {
 		$("html").one("click", $.proxy(function(event) { 
@@ -201,7 +209,8 @@ B.PopupSubmenu.prototype.disable = function() { // Pass in "id,id" or "id", "id"
             this.disable(id.split(","));
         } else {
             var itm = this.items[id];
-            itm.disabled = true;
+			itm.disabled = true;
+			
         }
     }
 }
@@ -532,7 +541,7 @@ B.DropdownMenu = function(onbeforeshow) {
 B.DropdownMenu.prototype.addMenu = function(id, text, onclick) {
     var pop = new B.PopupMenu();
     if (onclick == undefined) onclick = function() { return true; };
-    var mnu = { id:id, ddmenu:this, text:text, submenu:pop, onclick:onclick };
+    var mnu = { id:id, ddmenu:this, text:text, submenu:pop, onclick:onclick, built:false };
     this.menus[id] = mnu;
     this.menulist.push(mnu);
     return mnu.submenu;
@@ -599,22 +608,29 @@ B.DropdownMenu.prototype.render = function(div) {
         td.className = "BAction";
         td.onclick = $.proxy(function() { // closing the menu
             this.onclick();
+			var mnu = this;
             if (this.submenu.showing) {
                 this.td.style.color = "";
                 this.td.style.backgroundColor = "";
             	this.submenu.hide();
             } else {
-                if (this.submenu.itemlist.length == 0) return;
-                var mnu = this;
-                var el = $(mnu.td);
-                var pos = el.offset();
-                this.submenu.onclose = $.proxy(function() { 
-                    this.style.color = "";
-                    this.style.backgroundColor = "";
-                }, mnu.td);
-                mnu.td.style.color = "white";
-                mnu.td.style.backgroundColor = "navy";        
-                mnu.submenu.showAt(pos.left, pos.top + el.outerHeight());    
+				if (this.submenu.itemlist.length == 0) return;
+				if (this.built) {
+					mnu.td.style.color = "white";
+					mnu.td.style.backgroundColor = "navy"; 
+					mnu.submenu.draw();    
+				} else {
+					this.built = true;
+					var el = $(mnu.td);
+					var pos = el.offset();
+					this.submenu.onclose = $.proxy(function() { 
+						this.style.color = "";
+						this.style.backgroundColor = "";
+					}, mnu.td);
+					mnu.td.style.color = "white";
+					mnu.td.style.backgroundColor = "navy";        
+					mnu.submenu.showAt(pos.left, pos.top + el.outerHeight());    
+				}
             }
         }, mnu);
         tr.appendChild(td);
@@ -824,6 +840,7 @@ B.TreeItem = function(tree, parent, html, data, icon) {
 	this.iconTD = null;
 	this.data = data || null;
 	this.html = html || "";
+	this.enabled = true;
 	this.textTD = null;
 	return this;
 }
@@ -865,12 +882,14 @@ B.TreeItem.prototype.render = function(branchElement) {
 		tr.onclick = $.proxy(function(e) {
 			try{e.stopPropagation();}catch(e){}			
 			try{event.cancelBubble = true;}catch(e){}
+			if (!this.enabled) return false;
 			this.data.call(); // In this case, data IS a function... so call it
 		}, this);
 	} else if (linktype == "item") { // call the global functin passing data
 		tr.onclick = $.proxy(function(e) {
 			try{e.stopPropagation();}catch(e){}			
 			try{event.cancelBubble = true;}catch(e){}
+			if (!this.enabled) return false;
 			this.tree.onItemclick(this.data);
 		}, this)
 	} else { // Do nothing, but stop going up the chain!

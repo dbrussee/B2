@@ -465,7 +465,7 @@ B.Form.prototype.get = function(nam) {
 		}
 		return this.get(nam);
 	} else {
-		var nameList = nam.split(","); // 'fnam,lnam,bday' -> ['Frank','Jones','9/1/1960']
+		var nameList = nam.split(","); // 'fnam,lnam,bday' -> {fnam:'Frank',lnam:'Jones',bday:'9/1/1960'}
 		var rslt = {};
 		for (var nn = 0; nn < nameList.length; nn++) {
 			var fld = this.fields[nameList[nn]];
