@@ -173,7 +173,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		if (rslt == undefined) rslt = true;
 		if (rslt) {
 			this.pick(row, cell, wasRow);
-			this.ondblclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd);
+			if (this.ondblclick) this.ondblclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd);
 		}
 	}, this);		
 
