@@ -423,8 +423,8 @@ B.Form.prototype.setReadOnly = function(nam, yorn) {
 		if (yorn == "toggle") yorn = !el.readOnly;
 		el.readOnly = yorn;
 		el.style.borderColor = (yorn ? "transparent":"");
-		el.style.backgroundColor = (yorn ? "beige":"");
-		el.style.color = (yorn ? "darkcyan":"");
+		//el.style.backgroundColor = (yorn ? "beige":"");
+		//el.style.color = (yorn ? "darkcyan":"");
 		//el.style.color = (yorn ? "silver":"");
 		fld.readonly = yorn;
 	} else if (fld.type == "select") {
@@ -432,8 +432,8 @@ B.Form.prototype.setReadOnly = function(nam, yorn) {
 		if (yorn == "toggle") yorn = !el.readOnly;
 		el.disabled = yorn;
 		el.style.borderColor = (yorn ? "transparent":"");
-		el.style.backgroundColor = (yorn ? "beige":"");
-		el.style.color = (yorn ? "darkcyan":"");
+		//el.style.backgroundColor = (yorn ? "beige":"");
+		//el.style.color = (yorn ? "darkcyan":"");
 		//el.style.color = (yorn ? "silver":"");
 		fld.readonly = yorn;
 	}
