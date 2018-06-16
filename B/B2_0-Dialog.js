@@ -502,7 +502,11 @@ B.Form.prototype.get = function(nam) {
 				rslt[fld.name] = "";
 			}
 		}
-		return rslt;
+		if (nameList.length == 1) {
+			return rslt[nameList[0]];
+		} else {
+			return rslt;
+		}
 	}
 };
 B.Form.prototype.setFromTableRow = function(rowdata) {
@@ -535,13 +539,13 @@ B.Form.prototype.set = function() {
 				fld.els[0].value = val;
 			} else if (fld.type == "radio") {
 				if (typeof val == "string") {
-					for (var i = 0; i < fld.els.length; i++) {
-						var el = fld.els[i];
+					for (var j = 0; j < fld.els.length; j++) {
+						var el = fld.els[j];
 						if (el.value == val) el.checked = true;
 					}
 				} else if (typeof val == "boolean") {
-					for (var i = 0; i < fld.els.length; i++) {
-						var el = fld.els[i];
+					for (var j = 0; j < fld.els.length; j++) {
+						var el = fld.els[j];
 						if (val == true && el.value == "Y") el.checked = true;
 						if (val == false && el.value == "N") el.checked = true;
 					}
