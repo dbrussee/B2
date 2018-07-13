@@ -1,4 +1,4 @@
-// Remote calls
+// Unobtrusive messaging
 B.settings.Growl = {  
     width: "280px",
     defaultEdge: "top",
