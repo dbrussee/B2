@@ -1,4 +1,4 @@
-// Remote calls
+// Unobtrusive messaging
 B.settings.Growl = {  
     width: "280px",
     defaultEdge: "top",
@@ -57,7 +57,7 @@ B.growl.popup = function(typ, title, msg, timeout, icon) {
     if (timeout == 0) {
         var td = document.createElement("td");
         td.style.cssText = "width:1em;cursor:pointer;position;";
-        td.innerHTML = "<span style='font-weight:bold;color:yellow;background-color:black;padding:.2em;border-radius:.8em;'>X</span>"; // B.img("CHECKY");
+        td.innerHTML = "<span style='font-weight:bold;color:yellow;background-color:black;padding:.2em;border-radius:.8em;'>X</span>";
         td.onclick = $.proxy(function() { this.parentElement.removeChild(this); }, div);
         tr.appendChild(td);
     }
@@ -77,9 +77,18 @@ B.growl.popup = function(typ, title, msg, timeout, icon) {
     $(div).fadeTo(0,.8);
 
     if (timeout > 0) {
-        window.setTimeout($.proxy(function() {
+        div.growlTimer = window.setTimeout($.proxy(function() {
             $(div).fadeTo(300,0, function() { this.parentElement.removeChild(this); });
         }, div),timeout);
+        div.onclick = function() {
+            window.clearTimeout(this.growlTimer);
+            var td = document.createElement("td");
+            td.style.cssText = "width:1em;cursor:pointer;position;";
+            td.innerHTML = "<span style='font-weight:bold;color:yellow;background-color:black;padding:.2em;border-radius:.8em;'>X</span>"; 
+            td.onclick = $.proxy(function() { this.parentElement.removeChild(this); }, div);
+            this.firstChild.rows[0].appendChild(td);
+            this.onclick = null;
+        }
     }
 };
 B.growl.msg = function(title, msg, timeout) {
