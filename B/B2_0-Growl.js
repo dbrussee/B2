@@ -88,7 +88,7 @@ B.growl.popup = function(typ, title, msg, timeout, icon) {
             td.onclick = $.proxy(function() { this.parentElement.removeChild(this); }, div);
             this.firstChild.rows[0].appendChild(td);
             this.onclick = null;
-        }
+        };
     }
 };
 B.growl.msg = function(title, msg, timeout) {
