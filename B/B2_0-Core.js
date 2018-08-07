@@ -11,17 +11,18 @@ $(document).ready(function() {
 	$(".BDialog").dialog({ autoOpen: false, resizable: true, modal: true, beforeClose: function() {  } });
 	$('form.block, form.BDialog').bind('submit',function(e){e.preventDefault();});
     $( document ).tooltip({ track: true });
-	$(":button").button();
+	//$(":button").button();
 	$("input[type='text'], textarea").attr('spellcheck',false);
 	$("*[class*='BIMG-']").each(function() {
 		var parts = this.className.split("-");
 		var kind = parts[1].toUpperCase();
-		if (B.imgdata[kind] == undefined) {
-			h = B.img("ERROR");
+		kind = kind.split(" ")[0];
+		if (B.imgdata[kind] == null) kind = "ERROR";
+		if (this.tagName == "IMG") {
+			this.src = B.imgdata[kind];
 		} else {
-			h = B.img(kind);
+			this.outerHTML = B.img(kind); 
 		}
-		this.outerHTML = h;	
 	});
 	var lst = $(".BDialog.BLegend");
 	for (var i = 0; i < lst.length; i++) {
@@ -65,9 +66,11 @@ B.getDateParts = function(d) {
 		ret.MMM = ret.MMMM.substr(0,3);
 		ret.DDDD = B.days[ret.DOW];
 		ret.DDD = ret.DDDD.substr(0,3);
-	} catch(e) {}
+	} catch(e) {
+		say(e);
+	}
 	return ret;
-}
+};
 B.format = {
 	RED: function(txt, bgclr) { return B.format.COLOR(txt, "red", bgclr); },
 	GREEN: function(txt, bgclr) { return B.format.COLOR(txt, "green", bgclr); },
@@ -112,7 +115,7 @@ B.format = {
 	ASLINK: function(html, onclicktext) {
 		var oc = "";
 		if (onclicktext != undefined) oc = onclicktext;
-		var spn = "<span class='anchor'"
+		var spn = "<span class='anchor'";
 		if (oc != "") spn += "onclick='" + oc;
 		spn += ">" + html + "</span>";
 		return spn;
@@ -308,7 +311,7 @@ B.stripChars = function(txt,charsToStrip,ignoreCase) {
 };
 
 B.whichOneOf = function(txt) {
-	var a = txt.toUpperCase();
+	var a = txt.toString().toUpperCase();
 	if (arguments.length > 2) {
 		for (var i = 1; i < arguments.length; i++) {
 			var b = B.trim(arguments[i]).toUpperCase();
@@ -449,7 +452,7 @@ B.stringToElement = function(str) {
 	var div = document.createElement("div");
 	div.innerHTML = str;
 	return div.firstChild;
-}
+};
 B.img = function(imgname, width, title, onclick, otherStyle, id, classes) {
 	if (classes == undefined) classes = "";
 	if (classes != "") classes = " class='" + classes + "'";
@@ -469,7 +472,7 @@ B.imgObject = function(imgname) {
 	var img = document.createElement("img");
 	img.src = B.imgdata[B.trim(imgname).toUpperCase()];
 	return img;
-}
+};
 B.imgsrc = function(el, imgname) {
 	if (typeof el != "object") el = document.getElementById(el);
 	el.setAttribute("src", B.imgdata[B.trim(imgname).toUpperCase()]);
@@ -627,7 +630,7 @@ B.literalChars = function(str) {
 		rslt += "\\" + str.charAt(i);
 	}
 	return rslt;
-}
+};
 B.contains = function(str, test, caseInsensitive) {
 	if (caseInsensitive == undefined) caseInsensitive = false;
 	if (caseInsensitive) {
@@ -635,14 +638,14 @@ B.contains = function(str, test, caseInsensitive) {
 		test = test.toUpperCase();
 	}
 	return (str.indexOf(test) != -1);
-}
+};
 B.hasClass = function(el, clsname) {
 	var lst = el.className.split(" ");
 	for (var i = 0; i < lst.length; i++) {
 		if (lst[i] == clsname) return true;
 	}
 	return false;
-}
+};
 B.addClass = function(el, clsname) {
 	if (typeof el == "string") el = document.getElementById(el);
 	var clslist = clsname.split(",");
@@ -687,15 +690,39 @@ B.removeClass = function(el, clsname) {
 		}
 	}
 	el.className = newcls;
-}
+};
 B.toggleClass = function(el, clsname) {
 	if (B.hasClass(el, clsname)) {
 		B.removeClass(el, clsname);
 	} else {
 		B.addClass(el, clsname);
 	}
-}
-
+};
+B.queryString = function(sField) { // Get text from the URL line
+	var sSearch = "";
+	sField = B.trim(sField.toUpperCase());
+	if (sField == "") return "";
+	try {
+		if (location.search.toUpperCase().indexOf(sField + "=") > -1) {
+			sSearch = location.search;
+		} else {
+			if (top.location.search.toUpperCase().indexOf(sField + "=") > -1) {
+				sSearch = top.location.search;
+			} else {
+				return "";
+			}
+		}
+		var arr = sSearch.split("?");
+		arr = arr[1].split("&");
+		for (var i=0; i < arr.length; i++) {
+			if (arr[i].indexOf("=") > -1) {
+				var arrNameValue = arr[i].split("=");
+				if (arrNameValue[0].toUpperCase().indexOf(sField) > -1) return unescape(arrNameValue[1]);
+			}
+		}
+    } catch(ex){ return ""; }
+	return "";
+};
 // Use this when you want a collection, but also want to iterate
 // or count the items in that collection.
 // obj.keys is an array of keys.
@@ -704,7 +731,7 @@ B.MappedList = function() {
 	this.keys = [];
 	this.collection = {};
 	return this;
-}
+};
 B.MappedList.prototype.set = function() { // adds items (key,val) to both the keys array and collection
 	for (var i = 0; i < arguments.length; i+=2) {
 		var key = arguments[i];
@@ -715,8 +742,8 @@ B.MappedList.prototype.set = function() { // adds items (key,val) to both the ke
 		this.collection[key] = val;	
 	}
 	return this;
-}
-B.MappedList.prototype.push = function() { return this.set.apply(this, arguments) }; // Same as set
+};
+B.MappedList.prototype.push = function() { return this.set.apply(this, arguments); }; // Same as set
 B.MappedList.prototype.sort = function(method) { // just sorts the keys
 	if (method == undefined) {
 		this.keys.sort();
@@ -724,25 +751,25 @@ B.MappedList.prototype.sort = function(method) { // just sorts the keys
 		this.keys.sort(method);
 	}
 	return this;
-}
+};
 B.MappedList.prototype.reverse = function() { // just reverses the order of the keys
 	this.keys.reverse();
 	return this;
-}
+};
 B.MappedList.prototype.get = function(pos) { // Returns an item based on numeric array index or key from collection
 	if (typeof pos == "number") {
 		return this.collection[this.keys[pos]];
 	} else {
 		return this.collection[pos];
 	}
-}
+};
 B.MappedList.prototype.splice = function(pos,num) { // Slices the array and deletes those items from collection
 	var lst = this.keys.splice(pos,num);
 	for (var i = 0; i < lst.length; i++) {
 		delete this.collection[lst[i]];
 	}
 	return lst;
-}
+};
 B.MappedList.prototype.remove = function() { // Finds items in the collection, then calls slice on each one
 	for (var i = 0; i < arguments.length; i++) {
 		var key = arguments[i];
@@ -781,7 +808,80 @@ B.addToString = function(str, newtext, sep) {
 		return str + sep + newtext;
 	}
 };		
+B.cookie = {
+	SAVE: function(name, value) {
+		var oDate = new Date();
+	    oDate.setYear(oDate.getFullYear()+1);
+	    var sCookie = name + '=' + value + ';expires=' + oDate.toGMTString() + ';path=/';
+	    document.cookie= sCookie;
+	},
+	READ: function(name) {
+	    name = name.toLowerCase();
+	    var crumbs = document.cookie.split(';');
+	    for(var i=0; i<crumbs.length;i++)
+	    {
+	    	try {
+		        var oPair= crumbs[i].split('=');
+		        var sKey = B.trim(oPair[0]).toLowerCase();
+		        var sValue = oPair.length>1?oPair[1]:'';
+		        if(sKey == name)
+		            return sValue;
+	    	} catch(err) { }
+	    }
+	    return "";
+	},
+	DELETE: function(name) {
+	    B.cookie.SAVE(name, "");
+	}
+};
 
+B.copyElementToClipboard = function(el) {
+	var body = document.body;
+	var range = null;
+	var sel = null;
+    if (document.createRange && window.getSelection) {
+        range = document.createRange();
+        sel = window.getSelection();
+        sel.removeAllRanges();
+        try {
+            range.selectNodeContents(el);
+            sel.addRange(range);
+        } catch (e) {
+            range.selectNode(el);
+            sel.addRange(range);
+        }
+    } else if (body.createTextRange) {
+        range = body.createTextRange();
+        range.moveToElementText(el);
+        range.select();
+        range.execCommand("Copy");
+    }
+};	
+
+
+B.store = {
+	set: function(name, value) {
+		if (window.localStorage == undefined) {
+			B.cookie.SAVE(name, value);
+		} else {
+			window.localStorage.setItem(name, value);
+		}
+	},
+	get: function(name) {
+		if (window.localStorage == undefined) {
+			return B.cookie.GET(name);
+		} else {
+			return window.localStorage.getItem(name);
+		}
+	},
+	del: function(name) {
+		if (window.localStorage == undefined) {
+			B.cookie.SAVE(name, "");
+		} else {
+			window.localStorage.removeItem(name);
+		}
+	}
+};
 
 B.cssSheet = document.createElement("style");
 B.cssSheet.type = "text/css";
@@ -815,7 +915,7 @@ B.setCSSRule = function(selector, styles, checkfirst) {
 		}
 		B.cssSheet.insertRule(selector + " {" + styles + "}", len);
 	}
-}
+};
 B.setCSSRule(".ui-dialog .ui-dialog-titlebar, "+
 	"ui-dialog .ui-dialog-buttonpane, "+
 	"ui-widget-header .ui-priority-primary, "+
@@ -823,42 +923,47 @@ B.setCSSRule(".ui-dialog .ui-dialog-titlebar, "+
 B.setCSSRule(".ui-dialog .ui-dialog-content", "font-size:1em;");
 B.setCSSRule(".no-close .ui-dialog-titlebar-close", "display: none;");
 B.setCSSRule(".no-title .ui-dialog .ui-dialog-titlebar", "display: none;");
-B.setCSSRule("body", 
-	"font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; "+
+B.setCSSRule("body, div, td, th, form", 
+	"font-family:Geneva, Verdana, sans-serif; "+
 	"font-size: 10pt;");
 B.setCSSRule(".BDialog", 
 	"z-index: 9999; "+
 	"display: none;");
 
-//B.setCSSRule("table.BTableData tr td:hover", "border-bottom:1px solid navy;");
-B.setCSSRule("table.BTableData tr.picked", "background-color: cyan;");
-B.setCSSRule("table.BTableData tr td.picked", "background-color: cyan;");
+B.setCSSRule("table tr th", "font-weight:normal;");
+B.setCSSRule("table tr th.BScrollingTableHeaderCell", "font-weight:normal;");
+B.setCSSRule("table.BTableData tr.picked", "background-color: springgreen;");
+B.setCSSRule("table.BTableData tr td.picked", "background-color: springgreen;");
 B.setCSSRule(".shaded",
 	"background: aqua !important; "+ /* For browsers that do not support gradients */
 	"background: -webkit-linear-gradient(left, khaki, white, khaki) !important; "+ /* For Safari 5.1 to 6.0 */
 	"background: -o-linear-gradient(left, khaki, white, khaki) !important; "+ /* For Opera 11.1 to 12.0 */
 	"background: -moz-linear-gradient(left, khaki, white, khaki) !important; "+ /* For Firefox 3.6 to 15 */
-	"background: linear-gradient(to right, khaki, white, khaki) !important;") /* Standard syntax */ 
+	"background: linear-gradient(to right, khaki, white, khaki) !important;"); /* Standard syntax */ 
 B.setCSSRule("table.BTableData tr.picked td.picked", "background-color: khaki !important;");
 B.setCSSRule("table.BTableData tr td",
+	"font-size: 9pt; " +
+	"padding-left:2px; padding-right:2px; "+
 	"border-left:1px dotted silver; "+
 	"border-right:1px dotted silver; "+
 	"border-bottom:1px dotted silver;");
-B.setCSSRule("table.BTable tr th", "font-size: 1.05em;");
-B.setCSSRule("table.BTable tr td, table.BTable tr th", "box-sizing:border-box; white-space:nowrap; word-wrap:break-word;");
+B.setCSSRule("table.BTable tr th", "font-size: 10pt; padding-left:2px; padding-right:2px;");
+B.setCSSRule("table.BTable tr td", "font-size: 9pt; padding-left:2px; padding-right:2px;");
+B.setCSSRule("table.BTable tr td, table.BTable tr th", "font-weight:normal; box-sizing:border-box; white-space:nowrap; word-wrap:break-word;");
 B.setCSSRule("table.BTableHeader", "display:none;");
-B.setCSSRule("table.BTableHeader tr th", "font-weight:normal !important;");
+B.setCSSRule("table.BTableHeader tr th", "font-weight:normal !important;"); 
 
 B.setCSSRule("table.form tr th",
 	"padding-right:.1em; "+
 	"text-align:right; "+
 	"font-weight:bold; color:navy; "+
 	"background-color:transparent;");
+B.setCSSRule("table.form tr.header th",	"text-align:center");
 
 B.setCSSRule(".BTab",
 	"background-color: gainsboro; "+
-	"border-left: 1px solid silver; "+
-	"border-right: 1px solid silver; "+
+	"border-left: 1px solid transparent; "+
+	"border-right: 1px solid transparent; "+
 	"border-bottom: 1px solid navy; "+
 	"border-top: 5px solid transparent; "+
 	"text-align: center; "+
@@ -892,10 +997,50 @@ B.setCSSRule(".BTab:hover div.BTabCloser",
 	"font-size:11px; font-weight:bold; ");
 B.setCSSRule(".BTab:hover div.BTabCloser:hover", "color:white;background-color:red !important;");
 B.setCSSRule(".BTab div.BTabCloser", "display:none;");
-	
-B.setCSSRule(".BAction", "cursor: pointer;")
+B.setCSSRule("@media print", ".noprint{display:none;} .noprintREALLY{display:none;} ");	
+B.setCSSRule(".BAction", "cursor: pointer;");
 B.setCSSRule(".BAction:hover", "background-color: aqua; color: navy;");
 B.setCSSRule(".anchor", "color: blue; cursor: pointer;");
 B.setCSSRule(".anchor.bad", "color: red");
 B.setCSSRule(".anchor:hover", "color: darkgreen; text-decoration: underline;");
 
+B.getAllCSS = function() {
+	var css = "";
+	for (var ssn = 0; ssn < document.styleSheets.length; ssn++) {
+		var ss = document.styleSheets[ssn];
+		if (ss.href == null) {
+			var classList = ss.rules || ss.cssRules; // Browser differences?
+			if (classList != null) {
+				for (var clsn = 0; clsn < classList.length; clsn++) {
+					var cls = classList[clsn];
+					var val = (css.length == 0 ? "" : "\n");
+					if (cls.cssText) {
+						val += cls.cssText;
+					} else {
+						val += cls.style.cssText;
+					}
+					if (val.indexOf(cls.selectorText) < 0) {
+						val += cls.selectorText + "{" + val + "}";
+					}
+					css += val;
+				}
+			}			
+		}
+	}
+	//console.log(css);
+	return css;
+};
+B.addCSSToWindow = function(win, withJQ) {
+	var ss = win.document.createElement("style");
+	ss.type = "text/css";
+	var noprint = "\n.noprint { display:none; }";
+	ss.innerHTML = B.getAllCSS() + noprint;
+	win.document.getElementsByTagName("head")[0].appendChild(ss);	
+	ss = win.document.createElement("link");
+	if (withJQ == undefined) withJQ = true;
+	if (withJQ) {
+		ss.href = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/redmond/jquery-ui.css";
+		ss.rel = "stylesheet";
+		win.document.getElementsByTagName("head")[0].appendChild(ss);
+	}
+};

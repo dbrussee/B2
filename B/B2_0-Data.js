@@ -110,7 +110,7 @@ B.DataColumn.prototype.parse = function(val) {
 		// No idea what type this is... sorry.
 	}
 	return rslt;
-}
+};
 B.DataColumnSet = function(codes) {
 	this.colset = [];
 	this.colsetids = {}; // Links to colset items by id
@@ -128,16 +128,16 @@ B.DataColumnSet = function(codes) {
 		}
 	}
 	return this;
-}
+};
 B.DataColumnSet.prototype.addColumn = function(id, typecode) {
 	var dc = new B.DataColumn(id, typecode);
 	this.colset.push(dc);
 	this.colsetids[id] = dc; // Just another pointer to the same dc object
 	return dc;
-}
+};
 B.DataColumnSet.prototype.getColumn = function(id) {
 	return this.colsetids[id];
-}
+};
 
 // A dataset is combination of a B.DataColumnSet and 
 // a big string that can be split into rows and columns 
@@ -148,7 +148,7 @@ B.Dataset = function(columnSet, data) {
 	this.data = [];
 	this.rownumber = -1; // Before first row
 	this.addRows(data, true);
-}
+};
 /**
  * Adds rows based on existing columnSet
  * Optionally clears out initial data;
@@ -166,7 +166,7 @@ B.Dataset.prototype.addRows = function(data, clearFirst) {
 			this.data.push(ary[i]);
 		}
 	}
-}
+};
 /**
  * Returns a collection of items in the format:
  * { raw:'str', val:<obj>, disp:'str', err:'str' }
@@ -190,13 +190,25 @@ B.Dataset.prototype.getRow = function(rownum, valsonly) {
 		if (valsonly) rslt[col.id] = rslt.val;
 	}
 	// There may be more in the data than in the colset
-	for (var i = i; i < rawcols.length; i++) {
+	for (var j = i; j < rawcols.length; j++) {
 		if (valsonly) {
-			rslt["COL_" + (i+1)] = rawcols[i];
+			rslt["COL_" + (j+1)] = rawcols[j];
 		} else {
-			rslt["COL_" + (i+1)] = { "raw":rawcols[i], "val":rawcols[i], "disp":rawcols[i], "err":"" };
+			rslt["COL_" + (j+1)] = { "raw":rawcols[j], "val":rawcols[j], "disp":rawcols[j], "err":"" };
 		}
 	}
+	rslt.getValues = function() {
+		var ret = {};
+		for (var key in this) {
+			var itm = this[key];
+			if (typeof itm == "object") {
+				if (itm.val != undefined) {
+					ret[key] = itm.val;
+				}
+			}
+		}
+		return ret;
+	};
 	return rslt;
-}
+};
 

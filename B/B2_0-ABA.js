@@ -13,7 +13,7 @@ B.VALIDABAROUTINGNUMBER = function(val) {
     else if (B.is.ONEOF(chk,"2,3")) rslt.type = "Thrift";
     else if (B.is.ONEOF(chk,"6,7")) rslt.type = "Electronic";
     else if (B.is.ONEOF(chk,"8")) rslt.type = "Travelers Checks";
-    if (rslt.type == "") return "Invalid type"
+    if (rslt.type == "") return "Invalid type";
     chk = val.substr(0,2); // Two digits
     if (B.is.ONEOF(chk,"01,21,61")) rslt.fedbank = "Boston";
     else if (B.is.ONEOF(chk,"02,22,62")) rslt.fedbank = "New York";
@@ -29,6 +29,6 @@ B.VALIDABAROUTINGNUMBER = function(val) {
     else if (B.is.ONEOF(chk,"12,32,72")) rslt.fedbank = "San Francisco";
     else if (B.is.ONEOF(chk,"00")) rslt.fedbank = "Federal Government";
     else if (B.is.ONEOF(chk,"80")) rslt.fedbank = "Travelers Checks";
-    if (rslt.type == "") return "Invalid Fed Bank value"
+    if (rslt.type == "") return "Invalid Fed Bank value";
     return rslt;
-}
+};

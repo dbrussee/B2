@@ -2,17 +2,19 @@
 B.settings.ScrollingTable = {
 	highlightItem: 'tr',
 	embedScrollbar: false,
+	wrapCells: false,
 	fieldBackgroundColor: 'ghostwhite',
 	footerStyle: 'buttons',
 	footerBackgroundColor: 'gainsboro',
 	footerHoverColor: 'aqua',
 	JQTheme: true // false for using stylesheet (BQTable, BQTableHeader)
-}
+};
 
 B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollbar) {
 	this.embedScrollbar = B.settings.ScrollingTable.embedScrollbar;
 	if (embedScrollbar != undefined) this.embedScrollbar = embedScrollbar;
 	this.title = "";
+	this.subTitle = "";
 	this.rootId = rootId;
 	this.height = height;
 	this.frozen = false;
@@ -27,8 +29,8 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 	this.header.style.cssText = "border-collapse:collapse; border-right:2px solid transparent; border-left:2px solid transparent";
 	// Create the container div
 	this.container = document.createElement("div");
+	this.container.style.marginBottom = ".5em";
 	this.titleContainer = document.createElement("div");
-	this.titleContainer.style.cssText = "font-size:1.2em;font-weight:bold;color:navy;padding:2px;";
 	this.container.appendChild(this.titleContainer);
 	this.container.id = rootId + "_container";
 	// Insert it before the existing header table
@@ -46,28 +48,24 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 	// Build the actual header from the template
 	for (var rn = 0; rn < this.header.rows.length; rn++) {
 		var row = this.header.rows[rn];
-		//if (B.settings.ScrollingTable.JQTheme) B.addClass(row, "ui-widget-header,ui-priority-primary");
 		for (var cn = 0; cn < row.cells.length; cn++) {
 			var cell = row.cells[cn];
+			B.addClass(cell, "BScrollingTableHeaderCell,ui-widget-header,ui-priority-primary");
 			if (cell.getAttribute("colspan") != null) {
 				var numcols = parseInt(cell.getAttribute("colspan"), 10);
 				if (numcols > 1) {
 					if (this.header.rows.length > 1) cell.setAttribute("colspan", numcols+1);
-					cell.style.cssText = "font-weight:bold; text-align:center; border:1px solid transparent; border-bottom:1px solid white !important;";
-					B.addClass(cell, "BScrollingTableHeaderCell");
+					cell.style.cssText = "text-align:center; border-bottom:1px solid white !important;";
 					continue;
 				}
 			}
 			cell.style.cssText = "border-left:1px solid white; border-right:1px solid white";
-			B.addClass(cell, "BScrollingTableHeaderCell");
 			var data = cell.getAttribute("data").split(","); // columnName, widthInPixels, attributes
 			var id = data[0];
 			var wid = 100; // 100 pixels -- will get overridden by data value next
 			if (data.length > 1) wid = parseInt(data[1],10);
 			this.dataWidth += wid;
 			cell.style.width = wid + "px";
-			cell.style.fontWeight = "bold";
-			var weight = "N";
 			var col = { index:cn, id:id, headText:cell.innerText, width:wid, bold:false, align:'left', wrap:false };
 			this.columns.push(col);
 			var attribs = "L"; // Left justification as default
@@ -77,7 +75,6 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 			if (attribs.indexOf("B")>=0) col.bold = true;
 			if (attribs.indexOf("W")>=0) col.wrap = true;
 			cell.style.textAlign = col.align;
-			//cell.style.border = "1px solid white";
 		}
 	}
 	if (this.embedScrollbar) {
@@ -91,6 +88,10 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		row.appendChild(pad);
 	}
 	this.header.style.tableLayout = "fixed";
+	this.getHeaderRow = function() {
+		var tbl = document.getElementById(this.rootId);
+		return tbl.rows[0];
+	};
 
 	this.surround = document.createElement("div");
 	this.surround.id = this.rootId + "_surround";
@@ -117,15 +118,16 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		var row = $(cell).closest("tr")[0];
 		if (row == undefined) return;
 		this.unpick();
-		var rd = this.dataset.getRow(row.rowIndex);
+		var rd = this.getDataRow(row.rowIndex);
 		rd["clickedColumn"] = this.columns[cell.cellIndex];
-		var rslt = this.onclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd, row.rowIndex != wasRow);
+		var rslt = this.onbeforeclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd, row.rowIndex != wasRow);
 		if (rslt == undefined) rslt = true;
 		if (rslt) {
 			this.pick(row, cell, wasRow);
 		}
 	}, this);	
 	$(this.dataTable).on("contextmenu", $.proxy(function(event) {
+		if (this.maxSelectedRows == 0) return;
 		var wasRow = this.current.rownum;
 		var el = $(event.target)[0]; // A collection even though only one
 		var cell = $(el).closest("td")[0];
@@ -138,7 +140,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		for (var key in this.footer.buttons) {
 			if (this.footer.buttons[key].watchpick) this.footer.enableButton(key);
 		}
-		var rslt = this.onclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd, row.rowIndex != this.current.rownum);
+		var rslt = this.onbeforeclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd, row.rowIndex != this.current.rownum);
 		if (rslt == undefined) rslt = true;
 		if (rslt) {
 			this.pick(row, cell, wasRow);
@@ -151,6 +153,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		}
 	}, this));
 	this.onBeforeRightClick = function(rownum, tr, td, dataRow, changed, event) {
+		if (this.maxSelectedRows == 0) return;
 		try {event.preventDefault();} catch(e) {;}
 		if (this.contextMenu.items.length > 0) this.contextMenu.show(event); 
 	};
@@ -169,11 +172,13 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		for (var key in this.footer.buttons) {
 			if (this.footer.buttons[key].watchpick) this.footer.enableButton(key);
 		}
-		var rslt = this.onclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd, row.rowIndex != wasRow);
+		var rslt = this.onbeforeclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd, row.rowIndex != wasRow);
 		if (rslt == undefined) rslt = true;
 		if (rslt) {
 			this.pick(row, cell, wasRow);
-			if (this.ondblclick) this.ondblclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd);
+			if (this.ondblclick != undefined) {
+				this.ondblclick(this.dataTable, row, cell, row.rowIndex, cell.cellIndex, rd);
+			}
 		}
 	}, this);		
 
@@ -230,8 +235,8 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 			div.style.cssText = "display:inline-block; background-color:transparent; vertical-align:middle; height:17px; " +
 				"padding-right:5px; padding-left: 5px; padding-top: 4px; padding-bottom: 4px; border:1px solid transparent; color:navy; font-size:9pt; cursor:pointer";
 			div.id = this.rootId + "_footer_" + id;
-			div.onmouseover = function() { this.style.backgroundColor = B.settings.ScrollingTable.footerHoverColor; }
-			div.onmouseout = function() { this.style.backgroundColor = "transparent"; }
+			div.onmouseover = function() { this.style.backgroundColor = B.settings.ScrollingTable.footerHoverColor; };
+			div.onmouseout = function() { this.style.backgroundColor = "transparent"; };
 			div.innerHTML = txt;
 			if (onclick == undefined) onclick = function() {};
 			div.onclick = onclick;
@@ -258,6 +263,10 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 			};
 			return this.buttons[id]; // The footer
 		},
+		setText: function(id, html) {
+			var div = this.buttons[id].div;
+			div.innerHTML = html;
+		},
 		disableButton: function(id) {
 			var div = this.buttons[id].div;
 			div.onclick = function() {};
@@ -270,7 +279,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 			var btn = this.buttons[id];
 			var div = btn.div;
 			div.onclick = btn.onclick;
-			div.onmouseover = function() { this.style.backgroundColor = B.settings.ScrollingTable.footerHoverColor; }
+			div.onmouseover = function() { this.style.backgroundColor = B.settings.ScrollingTable.footerHoverColor; };
 			div.style.color = "navy";
 			div.style.cursor = "pointer";
 			return this;
@@ -284,76 +293,18 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 		save: function() {
 			var chk = new B.Form(this.formid).get();
 			if (chk.ACT == "del") {
-				var rownum = this.tbl.current.rownum;
-				if (this.remote != null) this.remote.setProperty("DELETEDROW", this.tbl.getDataRow());
-				this.tbl.unpick();
-				// Remove it from the dataset
-				this.tbl.dataset.data.splice(rownum,1);
-				// Remove from the table
-				this.tbl.dataTableBody.deleteRow(rownum);
-				this.tbl.setFooterMessage();
 				if (this.remote != null) this.remote.run();
 			} else if (B.is.ONEOF(chk.ACT, "add,copy")) {
-				var colset = this.tbl.dataset.columnSet.colset;
-				data = "";
-				for (var i = 0; i < colset.length; i++) {
-					if (i > 0) data += "\t";
-					var col = colset[i];
-					var val = chk[col.id];
-					if (col.typ == "b") {
-						data += (val ? "Y":"N");
-					} else {
-						data += val;
-					}
-				}
-				this.tbl.addRows(data);
-				if (this.remote != null) {
-					this.remote.run();
-				} else {
-					popDialog();
-				}
+				if (this.remote != null) this.remote.run();
 			} else if (chk.ACT == "edit") {
-				var rownum = this.tbl.current.rownum;
-				var colset = this.tbl.dataset.columnSet.colset;
-				var dr = this.tbl.dataset.getRow(rownum);				
-				data = "";
-				for (var i = 0; i < colset.length; i++) {
-					if (i > 0) data += "\t";
-					var col = colset[i];
-					var val = chk[col.id];
-					if (val == null) { // The form did not have the value
-						val = dr[col.id].val; // Get it from the original data
-					}
-					if (col.typ == "b") {
-						data += (val ? "Y":"N");
-					} else {
-						data += val;
-					}
-				}
-				this.tbl.dataset.data[rownum] = data;
-				// Reload the data row
-				dr = this.tbl.dataset.getRow(rownum);
-				var itm = this.tbl.prepareRow(dr, rownum); // Contains a tr and a tds collection
-				// Call the onbefore method on the Scrolling table object
-				var rslt = this.tbl.onBeforeRowRender(rownum, dr, itm.tr, itm.tds);
-				// Get the real TR with old data
-				var tr = this.tbl.dataTableBody.rows[rownum];
-				// Udate cells from changed data
-				for (var i = 0; i < tr.cells.length; i++) {
-					tr.cells[i].innerHTML = itm.tr.cells[i].innerHTML;
-				}
-				this.tbl.onclick(this.tbl.dataTable, tr, tr.cells[0], rownum, 0, dr, true);
-				if (this.remote != null) {
-					this.remote.run();
-				} else {
-					popDialog();
-				}
+				if (this.remote != null) this.remote.run();
 			} else {
 				sayError("I dont know what ACT '" + chk.ACT + "' is. Sorry");
 			}
 
 		},
 		startAdd: $.proxy(function() {
+			this.editForm.remote.setParameter("ACT","add");
 			var frm = new B.Form(this.editForm.formid);
 			frm.reset();
 			this.setKeysReadOnly("add");
@@ -363,39 +314,56 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 			btn.innerHTML = "Save New";
 		}, this),
 		startEdit: $.proxy(function() {
+			this.editForm.remote.setParameter("ACT","edit");
 			var frm = new B.Form(this.editForm.formid);
 			this.setKeysReadOnly("edit");
-			frm.set("ACT","edit");
 			frm.setFromTableRow(this.getDataRow());
+			frm.set("ACT","edit");
 			openDialog(this.editForm.formid); 
 			var btn = document.getElementById(this.editForm.formid + "_saveButton");
 			btn.innerHTML = "Save Changes";
 		}, this),
 		startCopy: $.proxy(function() {
+			this.editForm.remote.setParameter("ACT","copy");
 			var frm = new B.Form(this.editForm.formid);
 			this.setKeysReadOnly("copy");
-			frm.set("ACT","copy");
 			frm.setFromTableRow(this.getDataRow());
+			frm.set("ACT","copy");
 			openDialog(this.editForm.formid); 
 			var btn = document.getElementById(this.editForm.formid + "_saveButton");
 			btn.innerHTML = "Save Copy";
 		}, this),
 		startDelete: $.proxy(function() {
+			this.editForm.remote.setParameter("ACT","del");
 			var frm = new B.Form(this.editForm.formid);
 			frm.set("ACT","del");
-			askWarn(this.editForm.deletePrompt, "Delete " + this.txt1, $.proxy(function(rslt) {
+			askWarn(B.format.TEMPLATE(this.editForm.deletePrompt, this.getRowValues()), "Delete " + this.txt1, $.proxy(function(rslt) {
 				if (rslt == "YES") {
 					this.editForm.save();
-					//say("Sorry... I cannot delete this. I have not coded it.");
 				}
 			}, this));
 		}, this)
 	};
-	this.setTitle = function(title) {
+	this.setTitle = function(title,subtitle) {
+		if (title == undefined) title = "";
 		this.title = title;
-		this.titleContainer.innerHTML = title;
-	}
-	this.getTitle = function() { return this.title; }
+		if (subtitle == undefined) subtitle = "";
+		this.subTitle = subtitle;
+		var h = "";
+		if (title != "") {
+			h += "<span style='font-size:1.2em;font-weight:bold;color:navy;padding:2px;'>";
+			h += title;
+			h += "</span>";
+		}
+		if (subtitle != "") {
+			if (h != "") h += "&nbsp;&nbsp;";
+			h += "<span style='color:navy; padding:2px;'>";
+			h += subtitle;
+			h += "</span>";
+		}
+		this.titleContainer.innerHTML = h;
+	};
+	this.getTitle = function() { return this.title; };
 	this.setKeysReadOnly = function(act) {
 		var frm = new B.Form(this.editForm.formid);
 		for (var k in frm.fields) {
@@ -464,17 +432,137 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 			this.ondblclick = function() { };
 		}
 	};
+	this.onbeforeclick = function() { return true; };
 	this.onclick = function() {};
 	this.current = { rownum:-1, cellnum:-1 };
 	this.setFooterMessage();
-}
+};
+B.ScrollingTable.prototype.handleSaveResult = function(isSuccess, rpc) {
+	var act = rpc.getParameter("ACT");
+	var rownum = null;
+	if (!isSuccess) {
+		return rpc.getError();
+	}
+	if (B.isOneOf(act, "ADD,COPY")) {
+		if (rpc.cls == null) { // Simulated method call
+			var row = rpc.getResult("ROW");
+			if (row == null) row = rpc.getResult("DATA");
+			this.addRows(row);	
+		} else {
+			var row = rpc.getResult("ROW");
+			if (row == null) row = rpc.getResult("DATA");
+			this.addRows(row);	
+			this.pick(this.dataset.data.length-1);
+			popDialog();
+		}
+	} else if (B.isOneOf(act, "EDIT,EDIT-SILENT")) {
+		rownum = this.currentRowNumber;
+		if (rpc.cls == null) {
+			var dta = this.getDataRow(rownum);
+			this.dataset.form.getToData(dta);
+			this.reRenderRow(rownum);
+		} else {
+			var chk = new B.Form(this.editForm.formid).get();
+			var rownum = this.current.rownum;
+			var colset = this.dataset.columnSet.colset;
+			var dr = this.dataset.getRow(rownum);				
+			data = "";
+			for (var i = 0; i < colset.length; i++) {
+				if (i > 0) data += "\t";
+				var col = colset[i];
+				var val = chk[col.id];
+				if (val == null) { // The form did not have the value
+					val = dr[col.id].val; // Get it from the original data
+				}
+				if (col.typ == "b") {
+					data += (val ? "Y":"N");
+				} else {
+					data += val;
+				}
+			}
+			this.dataset.data[rownum] = data;
+//			this.reRenderRow(rownum);
+
+			// Reload the data row
+//			dr = this.dataset.getRow(rownum);
+//			var itm = this.prepareRow(dr, rownum); // Contains a tr and a tds collection
+			// Call the onbefore method on the Scrolling table object
+//			this.onBeforeRowRender(rownum, dr, itm.tr, itm.tds);
+			// Get the real TR with old data
+//			var tr = this.dataTableBody.rows[rownum];
+			// Udate cells from changed data
+//			for (var i = 0; i < tr.cells.length; i++) {
+//				tr.cells[i].innerHTML = itm.tr.cells[i].innerHTML;
+//			}
+//			this.onclick(this.dataTable, tr, tr.cells[0], rownum, 0, dr, true);
+		}
+	} else if (B.isOneOf(act, "DEL")) {
+		rownum = this.current.rownum;
+		this.unpick();
+		// Remove it from the dataset
+		this.dataset.data.splice(rownum,1);
+		// Remove from the table
+		this.dataTableBody.deleteRow(rownum);
+	}
+	this.setFooterMessage();
+	//this.onAfterRender(this.dataset.data.length);
+};
+
+B.exportToNewWindow = function() {
+	var dta = "<html><head></head>";
+	dta += "<body style='font-size:8pt;'>";
+	dta += "<button onclick='window.print();' class='noprintREALLY' style='position:absolute; right:0; top:0;'>" + B.img("PRINT") + " Print...</button>";
+	for (var argnum = 0; argnum < arguments.length; argnum++) {
+		var obj = arguments[argnum];
+		if (argnum > 0) dta += "<div style='height:.8em;'>&nbsp;</div>";
+		if (typeof obj == "string") obj = document.getElementById(obj);
+		if (obj instanceof B.ScrollingTable) {
+			dta += obj.getExportHTML();
+		} else if (obj.tagName.toUpperCase() == "CANVAS") {
+			dta += "<img src='" + obj.toDataURL("image/png") + "'>";
+		} else {
+			dta += obj.outerHTML;
+		}
+	}
+	dta += "</body></html>";
+	var winid = window.open("", "_blank?beef=" + new Date().getTime(), "height=400,width=600,resizable=1,scrollbars=1");
+	try {
+		$(winid.document.body).html(dta);
+		B.addCSSToWindow(winid);
+		winid.document.title = "Pop Out Data";		
+	} catch(e) {
+		sayError("Could not open window to export. Check that you do not have a popup blocker in effect.");		
+	}
+};
+B.ScrollingTable.prototype.getExportHTML = function() {
+	var dta = "<div style='padding:0; margin:0; font-size:10pt;'>";
+	if (this.title != "") dta = "<div style='font-size:1.1em;font-family:arial;font-weight:bold;'>" + this.title + "</div>";
+	var rows = document.getElementById(this.rootId).rows;
+	dta += "<table class='BScrollingTableHeader BTable BTableData' style='border-collapse:collapse;display:table'>";
+	var colcount = 0;
+	for (var rn = 0; rn < rows.length; rn++) {
+		var row = rows[rn];
+		colcount = row.cells.length;
+		dta += row.outerHTML;
+	}
+	var tbl = document.getElementById(this.rootId + "_data");
+	for (var i = 0; i < tbl.rows.length; i++) {
+		var row = tbl.rows[i];
+		colcount = row.cells.length;
+		dta += row.outerHTML;
+	}
+	dta += "<tr><td colspan='" + colcount + "' style='background-color:gainsboro;padding:.2em;text-align:right;font-size:9pt;'>" + this.footerMessageDIV.innerHTML + "</td></tr>";
+	dta += "</table></div>";
+	return dta;
+};
+
 B.ScrollingTable.prototype.editDataFromFormGet = function(rownum, chk) {
 
-}
+};
 B.ScrollingTable.prototype.setMaxSelectedRows = function(num) {
 	this.maxSelectedRows = num;
 	this.dataTable.style.cursor = (num == 0 ? "default" : "pointer");
-}
+};
 B.ScrollingTable.prototype.setFooterMessage = function(txt) {
 	if (txt == undefined) {
 		var cnt = this.dataTable.rows.length;
@@ -501,6 +589,11 @@ B.ScrollingTable.prototype.getDataRow = function(rownum) {
 	if (rownum == undefined) rownum = this.current.rownum;
 	if (rownum > (this.dataTable.rows.length - 1)) return null;
 	return this.dataset.getRow(rownum);
+};
+B.ScrollingTable.prototype.getRowValues = function(rownum) {
+	if (rownum == undefined) rownum = this.current.rownum;
+	if (rownum > (this.dataTable.rows.length - 1)) return null;
+	return this.dataset.getRow(rownum).getValues();
 };
 B.ScrollingTable.prototype.prepareRow = function(dr, rownum) {
 	var tr = document.createElement("tr");
@@ -556,9 +649,11 @@ B.ScrollingTable.prototype.addRows = function(data, clear, actualCount) {
 		this.actualRowCount = parseInt(actualCount,10);
 	}
 	this.setFooterMessage();
+	return this.dataset.data.length;
 };
 B.ScrollingTable.prototype.pick = function(row, cell, wasRow) {
-	var initialRowNumber = this.current.rownum;
+	this.unpick();
+	//var initialRowNumber = this.current.rownum;
 	for (var key in this.footer.buttons) {
 		if (this.footer.buttons[key].watchpick) this.footer.disableButton(key);
 	}

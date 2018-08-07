@@ -5,7 +5,7 @@ B.settings.SlideMenu = {
 	FG: "white", BG: "black",
 	SectionFG: "navy", SectionBG: "lightyellow",
 	ItemFG: "white", ItemBG: "navy", ItemHoverFG: "yellow", ItemHoverBG: "navy"
-}
+};
 
 B.PopupMenu = function(onbeforeshow) {
     this.items = {};
@@ -14,31 +14,32 @@ B.PopupMenu = function(onbeforeshow) {
     this.object = null;
     this.tree = null;
     this.branch = null;
+    this.target = null;
     if (onbeforeshow == undefined) onbeforeshow = null;
     if (onbeforeshow == null) onbeforeshow = function() { return true; };
     this.onBeforeShow = onbeforeshow;
     this.onclose = function() { };
     this.handler = null;
     this.made = false; // After the first MAKE... we need to track the status of open/closed submenus
-}
+};
 B.PopupMenu.prototype.addMenu = function(id, img, txt, func, disabled) {
     if (disabled == undefined) disabled = false;
     if (func == undefined) func = function() { return true; };
     var itm = { kind:'menu', id:id, img:img, text:txt, func:func, disabled:disabled, treenode:null };
     this.items[id] = itm;
     this.itemlist.push(itm);
-}
+};
 B.PopupMenu.prototype.addSpace = function() {
     var itm = { kind:'space' };
     // No reference in items collection
     this.itemlist.push(itm); 
-}
+};
 B.PopupMenu.prototype.addSubmenu = function(id, txt) {
     var itm = { kind:'submenu', id:id, text:txt, menu:new B.PopupSubmenu(this, this, id, txt), treenode:null };
     this.items[id] = itm;
     this.itemlist.push(itm);
     return itm.menu;
-}
+};
 B.PopupMenu.prototype.enable = function() {
     for (var i = 0; i < arguments.length; i++) {
         var itm = this.items[arguments[i]];
@@ -48,7 +49,7 @@ B.PopupMenu.prototype.enable = function() {
 			$(itm.treenode.textTD).fadeTo(0,1);
 		}
     }
-}
+};
 B.PopupMenu.prototype.disable = function() {
     for (var i = 0; i < arguments.length; i++) {
         var itm = this.items[arguments[i]];
@@ -58,7 +59,7 @@ B.PopupMenu.prototype.disable = function() {
 			$(itm.treenode.textTD).fadeTo(0,.3);	
 		}
     }
-}
+};
 B.PopupMenu.prototype.getSubmenu = function(code) {
     // code is <submenuid>.<submenuid>
     // example: a.b.c
@@ -74,13 +75,13 @@ B.PopupMenu.prototype.getSubmenu = function(code) {
         }
     }
     return menu;
-}
+};
 
 B.PopupMenu.prototype.make = function() {
     if (!this.made) {
         this.object = document.createElement("div");
         this.object.style.cssText = "position:absolute; display:none; border:1px dotted navy; border-top: 3px solid navy; padding:3px; background-color:white; box-shadow:5px 5px 10px gray;";
-        $(this.object).appendTo("body")
+        $(this.object).appendTo("body");
     }
     this.object.innerHTML = ""; // Clean it out each time!
     
@@ -120,7 +121,7 @@ B.PopupMenu.prototype.make = function() {
     }
     this.tree.render();
     this.made = true;
-}
+};
 B.PopupMenu.prototype.showAt = function(x,y) {
     this.showing = true;
     this.make();
@@ -132,11 +133,12 @@ B.PopupMenu.prototype.showAt = function(x,y) {
 		}, this));		
     }, this);
 	window.setTimeout(this.handler, 10);
-}
+};
 B.PopupMenu.prototype.show = function(event) {
-	var rslt = this.onBeforeShow(this);
+	var rslt = this.onBeforeShow(this, event);
 	if (rslt == undefined) rslt = true;
 	if (!rslt) return;
+	this.target = event.target;
 	this.showing = true;
 	try {
 		event.preventDefault();
@@ -151,7 +153,7 @@ B.PopupMenu.prototype.show = function(event) {
 		}
 	}  
 	this.draw();
-}
+};
 B.PopupMenu.prototype.draw = function() {
     $(this.object).show();
     this.handler = $.proxy(function() {
@@ -160,14 +162,15 @@ B.PopupMenu.prototype.draw = function() {
 		}, this));		
 	}, this);
 	window.setTimeout(this.handler, 10);
-}
+};
 B.PopupMenu.prototype.hide = function() {
     if (this.handler != null) $("html").unbind("click", this.handler);
     this.handler = null;
     $(this.object).hide();
-    this.onclose();
+    this.onclose(this);
+    this.target = null;
     this.showing = false;
-}
+};
 
 // This is basically a re-implementation of the Tree.Branch item
 B.PopupSubmenu = function(menu, parentBranch, id, text) {
@@ -177,27 +180,27 @@ B.PopupSubmenu = function(menu, parentBranch, id, text) {
     this.branch = null;
     this.items = {};
     this.itemlist = [];
-}
+};
 B.PopupSubmenu.prototype.addMenu = function(id, img, txt, func, disabled) {
     if (disabled == undefined) disabled = false;
     if (func == undefined) func = function() { return true; };
     var itm = { kind:'menu', id:id, img:img, text:txt, func:func, disabled:disabled, treenode:null };
     this.items[id] = itm;
     this.itemlist.push(itm);
-}
+};
 B.PopupSubmenu.prototype.addSpace = function() {
     var itm = { kind:'space' };
     // No reference in items collection
     this.itemlist.push(itm); 
-}
+};
 B.PopupSubmenu.prototype.addSubmenu = function(id, txt) {
     var itm = { kind:'submenu', id:id, text:txt, menu:new B.PopupSubmenu(this.menu, this, id, txt), treenode:null };
     // No reference in items collection
     this.itemlist.push(itm);
-}
+};
 B.PopupSubmenu.prototype.enable = function() { // Pass in "id,id" or "id", "id"
     for (var i = 0; i < arguments.length; i++) {
-        var id = argumenst[i];
+        var id = arguments[i];
         if (id.indexOf(",") > -1) {
             this.enable(id.split(","));
         } else {
@@ -205,10 +208,10 @@ B.PopupSubmenu.prototype.enable = function() { // Pass in "id,id" or "id", "id"
             itm.disabled = false;
         }
     }
-}
+};
 B.PopupSubmenu.prototype.disable = function() { // Pass in "id,id" or "id", "id"
     for (var i = 0; i < arguments.length; i++) {
-        var id = argumenst[i];
+        var id = arguments[i];
         if (id.indexOf(",") > -1) {
             this.disable(id.split(","));
         } else {
@@ -217,7 +220,7 @@ B.PopupSubmenu.prototype.disable = function() { // Pass in "id,id" or "id", "id"
 			
         }
     }
-}
+};
 B.PopupSubmenu.prototype.make = function(branch) {
     for (var i = 0; i < this.itemlist.length; i++) {
         var itm = this.itemlist[i];
@@ -248,7 +251,7 @@ B.PopupSubmenu.prototype.make = function(branch) {
         }
     }
 
-}
+};
 
 B.SlideMenu = function(title, width, multi, clr, bgclr) {
 	if (bgclr == undefined) bgclr = B.settings.SlideMenu.BG;
@@ -321,7 +324,7 @@ B.SlideMenu = function(title, width, multi, clr, bgclr) {
 				}, this));		
 			}, this), 10);			
 		}
-	}
+	};
 	this.pushDiv = document.createElement("span");
 	this.pushDiv.style.position = "absolute";
 	this.pushDiv.style.top = "0px";
@@ -340,7 +343,7 @@ B.SlideMenu = function(title, width, multi, clr, bgclr) {
 			}, this));
 			this.isOpen = false;
 		}
-	}
+	};
 	this.close = this.hide;
 	this.toggle = function() {
 		if (this.isOpen) {
@@ -348,18 +351,18 @@ B.SlideMenu = function(title, width, multi, clr, bgclr) {
 		} else {
 			this.show();
 		}
-	}
+	};
 	this.items = [];
 	this.sections = {};
 	this.curSec = null; // No sections
 	
-	this.onbeforeopen = function() { return true; }
-	this.onafteropen = function() { }
-	this.onbeforeclose = function() { return true; }
-	this.onafterclose = function() { }
+	this.onbeforeopen = function() { return true; };
+	this.onafteropen = function() { };
+	this.onbeforeclose = function() { return true; };
+	this.onafterclose = function() { };
 	
 	return this;
-}
+};
 B.SlideMenu.prototype.addMenu = function(text, handler, iconname, section, clr, bgclr, hvrclr, hvrbgclr) {
 	if (clr == undefined) clr = B.settings.SlideMenu.ItemFG;
 	this.clr = clr;
@@ -395,7 +398,7 @@ B.SlideMenu.prototype.addMenu = function(text, handler, iconname, section, clr, 
 	this.items.push(itm);
 	this.enable(this.items.length-1);
 	return itm;
-}
+};
 B.SlideMenu.prototype.addSection = function(id, title, clr, bgclr) {
 	if (clr == undefined) clr = B.settings.SlideMenu.SectionFG;
 	if (bgclr == undefined) bgclr = B.settings.SlideMenu.SectionBG;
@@ -443,7 +446,7 @@ B.SlideMenu.prototype.addSection = function(id, title, clr, bgclr) {
 		}
 		this.mnu.curSec = this;
 		return this;
-	}
+	};
 	this.sections[id] = sec;
 
 	var div = document.createElement("div");
@@ -479,9 +482,9 @@ B.SlideMenu.prototype.addSection = function(id, title, clr, bgclr) {
 
 	return sec;
 
-}
-B.SlideMenu.prototype.setSection = function(id) { this.getSection(id).show(); return this; }
-B.SlideMenu.prototype.getSection = function(id) { return this.sections[id]; }
+};
+B.SlideMenu.prototype.setSection = function(id) { this.getSection(id).show(); return this; };
+B.SlideMenu.prototype.getSection = function(id) { return this.sections[id]; };
 B.SlideMenu.prototype.setDisabled = function(disValue) {
 	for (var i = 1; i < arguments.length; i++) {
 		if (disValue) {
@@ -490,7 +493,7 @@ B.SlideMenu.prototype.setDisabled = function(disValue) {
 			this.enable(arguments[i]);
 		}
 	}
-}
+};
 B.SlideMenu.prototype.disable = function() {
 	for (var i = 0; i < arguments.length; i++) {
 		var itm = this.items[arguments[i]];
@@ -502,7 +505,7 @@ B.SlideMenu.prototype.disable = function() {
 		itm.div.onmouseout = function() { };
 		itm.disabled = true;
 	}
-}
+};
 B.SlideMenu.prototype.enable = function() {
 	for (var i = 0; i < arguments.length; i++) {
 		var itm = this.items[arguments[i]];
@@ -532,7 +535,7 @@ B.SlideMenu.prototype.enable = function() {
         }
         itm.disabled = false;    
 	}
-}
+};
 
 B.DropdownMenu = function(onbeforeshow) {
     this.menus = {};
@@ -541,7 +544,7 @@ B.DropdownMenu = function(onbeforeshow) {
     if (onbeforeshow == undefined) onbeforeshow = null;
     if (onbeforeshow == null) onbeforeshow = function() { return true; };
     this.onbeforeshow = onbeforeshow;
-}
+};
 B.DropdownMenu.prototype.addMenu = function(id, text, onclick) {
     var pop = new B.PopupMenu();
     if (onclick == undefined) onclick = function() { return true; };
@@ -549,19 +552,19 @@ B.DropdownMenu.prototype.addMenu = function(id, text, onclick) {
     this.menus[id] = mnu;
     this.menulist.push(mnu);
     return mnu.submenu;
-}
+};
 B.DropdownMenu.prototype.setText = function(id, text) {
     var menu = this.menus[id];
     menu.text = text;
     if (this.object != null) {
         menu.td.innerHTML = text;
     }
-}
+};
 B.DropdownMenu.prototype.getText = function(id) {
     var menu = this.menus[id];
     if (menu != null) return menu.text;
     return null;
-}
+};
 B.DropdownMenu.prototype.getMenu = function(code) {
     // code is <menuid>.<submenuid>.<submenuid>
     // example: a.aa.aaa
@@ -572,19 +575,19 @@ B.DropdownMenu.prototype.getMenu = function(code) {
     var menu = this.menus[parts[0]].submenu; // This is a B.PopupMenu object
     menu = menu.getSubmenu(parts.slice(1).join("."));
     return menu; // This is either a PopupMenu or a subMenu of that PopupMenu
-}
+};
 B.DropdownMenu.prototype.getItem = function(menucode, itemid) {
     var menu = this.getMenu(menucode);
     return menu.items[itemid].treenode;
-}
+};
 B.DropdownMenu.prototype.enableItem = function(code, id) {
     var menu = this.getMenu(code);
     menu.enable(id);
-}
+};
 B.DropdownMenu.prototype.disableItem = function(code, id) {
     var menu = this.getMenu(code);
     menu.disable(id);
-}
+};
 B.DropdownMenu.prototype.closeAll = function() {
 	for (var k in this.menus) {
 		var mnu = this.menus[k];
@@ -592,7 +595,7 @@ B.DropdownMenu.prototype.closeAll = function() {
 			mnu.td.click();
 		}
 	}
-}
+};
 B.DropdownMenu.prototype.render = function(div) {
     if (typeof div == "string") div = document.getElementById(div);
     this.object = div;
@@ -640,7 +643,7 @@ B.DropdownMenu.prototype.render = function(div) {
         tr.appendChild(td);
     }
     this.object.appendChild(tbl);
-}
+};
 
 // B2.0 Tree
 // A Tree lives in a DIV. Any existing content will be destroyed
@@ -669,23 +672,23 @@ B.Tree.prototype.addBranch = function(html, showing) {
 	var branch = new B.TreeBranch(this, this, html, showing);
 	this.nodes.push(branch);
 	return branch;
-}
+};
 B.Tree.prototype.addItem = function(txt, data, icon) {
 	var item = new B.TreeItem(this, this, txt, data, icon);
 	this.nodes.push(item);
 	return item;
-}
+};
 B.Tree.prototype.closeAll = function() {
 	for (var i = 0; i < this.nodes.length; i++) {
-		var node = this.nodes[i]
+		var node = this.nodes[i];
 		if (node instanceof B.TreeBranch) node.closeAll();
 	}
-}
+};
 B.Tree.prototype.closeAllBut = function(keep) {
-	var keepNode = keep;
+	//var keepNode = keep;
 	if (typeof keep == "number") keepNode = this.nodes[keep];
 	for (var i = 0; i < this.nodes.length; i++) {
-		var node = this.nodes[i]
+		var node = this.nodes[i];
 		if (node instanceof B.TreeBranch) {
 			if (node == keep) {
 				if (!node.showing) node.open();
@@ -694,15 +697,15 @@ B.Tree.prototype.closeAllBut = function(keep) {
 			}
 		}
 	}
-}
+};
 B.Tree.prototype.openAll = function() {
 	for (var i = 0; i < this.nodes.length; i++) {
-		var node = this.nodes[i]
+		var node = this.nodes[i];
 		if (node instanceof B.TreeBranch) {
 			node.openAll();
 		}
 	}
-}
+};
 B.Tree.prototype.render = function() {
 	var prevOpen = false;
 	this.element.innerHTML = ""; // Clean it up first
@@ -719,7 +722,7 @@ B.Tree.prototype.render = function() {
 			this.nodes[i].render(tbody);
 		}
 	}
-}
+};
 
 B.TreeBranch = function(tree, parent, html, showing) {
 	this.tree = tree;
@@ -732,36 +735,36 @@ B.TreeBranch = function(tree, parent, html, showing) {
 	this.tbl = null;
 	this.itemDIV = null;
 	return this;
-}
+};
 B.TreeBranch.prototype.addBranch = function(html, showing) {
 	var branch = new B.TreeBranch(this.tree, this, html, showing);
 	this.nodes.push(branch);
 	return branch;
-}
+};
 B.TreeBranch.prototype.addItem = function(html, data, icon) {
 	var item = new B.TreeItem(this.tree, this, html, data, icon);
 	this.nodes.push(item);
 	return item;
-}
+};
 B.TreeBranch.prototype.close = function() {
 	$(this.tbl).hide();
 	this.showing = false;
 	this.tr.cells[0].innerHTML = this.tree.closedBranchIcon;
-}
+};
 B.TreeBranch.prototype.closeAll = function() {
 	this.close();
 	for (var i = 0; i < this.nodes.length; i++) {
-		var node = this.nodes[i]
+		var node = this.nodes[i];
 		if (node instanceof B.TreeBranch) {
 			node.closeAll();
 		}
 	}
-}
+};
 B.TreeBranch.prototype.closeAllBut = function(keep) {
-	var keepNode = keep;
+	//var keepNode = keep;
 	if (typeof keep == "number") keepNode = this.nodes[keep];
 	for (var i = 0; i < this.nodes.length; i++) {
-		var node = this.nodes[i]
+		var node = this.nodes[i];
 		if (node instanceof B.TreeBranch) {
 			if (node == keep) {
 				if (!node.showing) node.open();
@@ -770,24 +773,24 @@ B.TreeBranch.prototype.closeAllBut = function(keep) {
 			}
 		}
 	}
-}
+};
 B.TreeBranch.prototype.open = function() {
 	$(this.tbl).show();
 	this.showing = true;
 	this.tr.cells[0].innerHTML = this.tree.openBranchIcon;
-}
+};
 B.TreeBranch.prototype.openAll = function() {
 	this.open();
 	for (var i = 0; i < this.nodes.length; i++) {
-		var node = this.nodes[i]
+		var node = this.nodes[i];
 		if (node instanceof B.TreeBranch) {
 			node.openAll();
 		}
 	}
-}
+};
 B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
 	var tr = document.createElement("tr");
-	parentElement.appendChild(tr)
+	parentElement.appendChild(tr);
 	tr.style.cursor = "pointer";
 	//tr.className = "BAction";
 	var td = document.createElement("td");
@@ -835,7 +838,7 @@ B.TreeBranch.prototype.render = function(parentElement, previousOpen) {
 		}
 	}
 	tr.cells[0].innerHTML = (this.showing ? this.tree.openBranchIcon : this.tree.closedBranchIcon);
-}
+};
 
 B.TreeItem = function(tree, parent, html, data, icon) {
 	this.tree = tree;
@@ -847,15 +850,15 @@ B.TreeItem = function(tree, parent, html, data, icon) {
 	this.enabled = true;
 	this.textTD = null;
 	return this;
-}
+};
 B.TreeItem.prototype.setIcon = function(icon) {
 	this.icon = icon;
 	if (this.iconTD != null) this.iconTD.innerHTML = icon;
-}
+};
 B.TreeItem.prototype.setText = function(text) {
 	this.html = text;
 	if (this.textTD != null) this.textTD.innerHTML = text + "&nbsp;";
-}
+};
 B.TreeItem.prototype.render = function(branchElement) {
 	var linktype = null;
 	if (this.data instanceof Function) {
@@ -895,14 +898,14 @@ B.TreeItem.prototype.render = function(branchElement) {
 			try{event.cancelBubble = true;}catch(e){}
 			if (!this.enabled) return false;
 			this.tree.onItemclick(this.data);
-		}, this)
+		}, this);
 	} else { // Do nothing, but stop going up the chain!
 		tr.onclick = function(e) { 
 			try{e.stopPropagation();}catch(e){}			
 			try{event.cancelBubble = true;}catch(e){}
-		} 
+		} ;
 	}
 	
 	branchElement.appendChild(tr);
-}
+};
 

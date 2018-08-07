@@ -51,7 +51,7 @@ function openDialog(id, onEnterKey) {
 			}
 		}
 	}, dlg));
-	dlg.dialog("widget").find('.ui-dialog-titlebar-close').remove()
+	dlg.dialog("widget").find('.ui-dialog-titlebar-close').remove();
 
 	dlg.dialog("option", "closeOnEscape", false);
 	dlg.dialog("open");
@@ -85,7 +85,7 @@ function sayBase(msg, title, callback, height, width, btns) {
 	if (title == undefined) title = B.settings.say.defaultTitle;
 	if (title == "") title = B.settings.say.defaultTitle;
 
-	var h = "<form id='B-Say-Dialog' class='BDialog' title='" + B.settings.say.defaultTitle + "'>"
+	var h = "<form id='B-Say-Dialog' class='BDialog' title='" + B.settings.say.defaultTitle + "'>";
 	h += "<div id='B-Say-Dialog-Message' style='width: 100%; height: 100%; overflow-y: auto;'></div>";
 	h += "</form>";
 	$("body").append(h);
@@ -106,7 +106,7 @@ function sayBase(msg, title, callback, height, width, btns) {
 			clickDialogButton("B-Say-Dialog", 0);
 		}
 	});
-	dlg.dialog("widget").find('.ui-dialog-titlebar-close').remove()
+	dlg.dialog("widget").find('.ui-dialog-titlebar-close').remove();
 	dlg.dialog("open");
 	dlg.dialog('option', 'title', title);
 	$("#B-Say-Dialog-Message").html(msg);
@@ -129,8 +129,9 @@ function clickDialogButton(dlgid, btnid) {
 	if (btn) btn.click.call(btn);
 	return (btn); // boolean
 }
+function popSay() { closeDialog("B-Say-Dialog"); }
 function sayIcon(icon, msg, title, callback, height, width, btns) {
-	msg = B.img(icon, 28, "", "", "float: left; padding-right: 10px;") + msg;
+	if (icon != null) msg = B.img(icon, 26, "", "", "float: left; padding-right: 10px;") + msg;
 	sayBase(msg, title, callback, height, width, btns);
 	if (B.settings.say.tinting) {
 		if (icon == "WARN") {
@@ -141,6 +142,7 @@ function sayIcon(icon, msg, title, callback, height, width, btns) {
 	}
 };
 function say(msg, t, cb, h, w, bs) { sayIcon("INFO", msg, t, cb, h, w, bs); };
+function sayPlain(msg, t, cb, h, w, bs) { sayIcon(null, msg, t, cb, h, w, bs); };
 function sayWarn(msg, t, cb, h, w, bs) { sayIcon("WARN", msg, t, cb, h, w, bs); };
 function sayError(msg, t, cb, h, w, bs) { sayIcon("ERROR", msg, t, cb, h, w, bs); };
 function sayFix(fixlist, msg, title, height, width) {
@@ -171,6 +173,7 @@ chooseIcon = function(icon, msg, title, options, callback, height, width) {
 	sayIcon(icon, msg, title, callback, height, width, btns);
 };
 function choose(msg, t, opts, cb, h, w) { chooseIcon("HELP", msg, t, opts, cb, h, w); };
+function choosePlain(msg, t, opts, cb, h, w) { chooseIcon(null, msg, t, opts, cb, h, w); };
 function chooseWarn(msg, t, opts, cb, h, w) { chooseIcon("WARN", msg, t, opts, cb, h, w); };
 function chooseError(msg, t, opts, cb, h, w) { chooseIcon("ERROR", msg, t, opts, cb, h, w); };
 askIcon = function(icon, msg, title, callback, height, width) {
@@ -186,8 +189,9 @@ askIcon = function(icon, msg, title, callback, height, width) {
 			callback("NO", data);  } }
 	];
 	sayIcon(icon, msg, title, callback, height, width, btns);
-}
+};
 function ask(msg, t, cb, h, w) { askIcon("HELP", msg, t, cb, h, w); };
+function askPlain(msg, t, cb, h, w) { askIcon(null, msg, t, cb, h, w); };
 function askWarn(msg, t, cb, h, w) { askIcon("WARN", msg, t, cb, h, w); };
 function askError(msg, t, cb, h, w) { askIcon("ERROR", msg, t, cb, h, w); };
 askCIcon = function(icon, msg, title, callback, height, width) {
@@ -207,8 +211,9 @@ askCIcon = function(icon, msg, title, callback, height, width) {
 			callback("CANCEL", data);  } }
 	];
 	sayIcon(icon, msg, title, callback, height, width, btns);
-}
+};
 function askC(msg, t, cb, h, w) { askCIcon("HELP", msg, t, cb, h, w); };
+function askCPlain(msg, t, cb, h, w) { askCIcon(null, msg, t, cb, h, w); };
 function askCWarn(msg, t, cb, h, w) { askCIcon("WARN", msg, t, cb, h, w); };
 function askCError(msg, t, cb, h, w) { askCIcon("ERROR", msg, t, cb, h, w); };
 
@@ -232,8 +237,9 @@ askValueIcon = function(icon, msg, prompt, value, title, callback, height, width
 	sayIcon(icon, h, title, callback, height, width, btns);
 	if (value != undefined && value != null) $("#B-Say-Dialog-Value").val(value);
 	$("#B-Say-Dialog-Value").select().focus();
-}
+};
 function askValue(msg, p, v, t, cb, h, w) { askValueIcon("HELP", msg, p, v, t, cb, h, w); };
+function askValuePlain(msg, p, v, t, cb, h, w) { askValueIcon(null, msg, p, v, t, cb, h, w); };
 function askValueWarn(msg, p, v, t, cb, h, w) { askValueIcon("WARN", msg, p, v, t, cb, h, w); };
 function askValueError(msg, p, v, t, cb, h, w) { askValueIcon("ERROR", msg, p, v, t, cb, h, w); };
 
@@ -249,11 +255,11 @@ function freeze(msg, title, with_timer, height, width) {
 		var dlg = $("#B-Say-Dialog");
 		dlg.dialog('option', 'title', itm.title);
 	} else {
-		var h = "<div style='float:left; width:40px; text-align:center; padding-right:10px;'>"
+		var h = "<div style='float:left; width:40px; text-align:center; padding-right:10px;'>";
 		h += B.img("SPINNER", 28);
 		if (with_timer) {
 			h += "<div id='freezeDialogTimer' style='width:100%; text-align:center; font-size:7pt;'>";
-			h += "&nbsp;"
+			h += "&nbsp;";
 			h += "</div>";
 			B.freezeStart = new Date();
 			B.freezeTimer = setInterval(function() {
@@ -308,14 +314,29 @@ B.Form = function(formID, forceReload) {
 			return itm.form;	
 		}
 	}
-
 	this.id = formID;
 	this.form = document.getElementById(formID);
 	this.fields = {};
+	this.frozen = false;
 	var lst =  $(this.form).find(":input");
 	for (var x = 0; x < lst.length; x++) {
 		var el = lst[x];
-		if (el.name == "") continue; // Unnamed input?
+		if (el.name == "") {
+			if (el.type == "submit") {
+				this.fields["SUBMIT"] = { 
+						name:'SUBMIT', 
+						vtype:'button', valid:true, min:null, max:null,
+						els:[ el ], 
+						type:'button', 
+						readonly:el.readOnly, 
+						key:false, 
+						req:false, 
+						upper:false, 
+						trim:false, 
+						disabled:el.disabled };
+			}
+			continue; // Unnamed input?
+		}
 		if (this.fields[el.name] == null) { // First reference to this item... set up a default object
 			this.fields[el.name] = { 
 				name:el.name, 
@@ -368,12 +389,13 @@ B.Form = function(formID, forceReload) {
 			}
 			
 			if (B.isOneOf(tag, "TEXT")) {
-				if (el.readOnly) el.style.borderColor = "gainsboro";
+				// if (el.readOnly) el.style.borderColor = "transparent";
+				if (el.readOnly) this.setReadOnly(el.name, true);
 				if (rec.type == "date") $(el).datepicker({ dateFormat: "m/d/yy" });
 			}
 
 			if (B.isOneOf(tag, "TEXT,TEXTAREA,SELECT,HIDDEN")) { // text
-				var tmp = $(this.form).data("EMBELLISHED"); // Only mark up the form once!
+				//var tmp = $(this.form).data("EMBELLISHED"); // Only mark up the form once!
 				if (rec.req) {
 					var txt = "";
 					if (rec.key) {
@@ -408,12 +430,12 @@ B.Form = function(formID, forceReload) {
 };
 B.Form.prototype.setClean = function() {
 	this.cleanData = this.get();
-}
+};
 B.Form.prototype.isDirty = function(currentData) {
 	if (currentData == undefined) currentData = this.get();
 	if (currentData == null) currentData = this.get();
 	return B.is.CHANGED(this.cleanData, currentData);
-}
+};
 B.Form.prototype.setReadOnly = function(nam, yorn) {
 	if (yorn == undefined) yorn = true;
 	var fld = this.fields[nam];
@@ -423,6 +445,7 @@ B.Form.prototype.setReadOnly = function(nam, yorn) {
 		if (yorn == "toggle") yorn = !el.readOnly;
 		el.readOnly = yorn;
 		el.style.borderColor = (yorn ? "transparent":"");
+		$(el).css("border-bottom", (yorn ? "1px solid gainsboro" : ""));
 		//el.style.backgroundColor = (yorn ? "beige":"");
 		//el.style.color = (yorn ? "darkcyan":"");
 		//el.style.color = (yorn ? "silver":"");
@@ -432,6 +455,7 @@ B.Form.prototype.setReadOnly = function(nam, yorn) {
 		if (yorn == "toggle") yorn = !el.readOnly;
 		el.disabled = yorn;
 		el.style.borderColor = (yorn ? "transparent":"");
+		$(el).css("border-bottom", (yorn ? "1px solid gainsboro" : ""));
 		//el.style.backgroundColor = (yorn ? "beige":"");
 		//el.style.color = (yorn ? "darkcyan":"");
 		//el.style.color = (yorn ? "silver":"");
@@ -455,6 +479,71 @@ B.Form.prototype.focus = function(nam) {
 		fld.els[0].focus();
 	}
 	return this;
+};
+B.Form.prototype.getDisplay = function(nam) {
+	if (nam == undefined) {
+		nam = "";
+		for (var key in this.fields) {
+			if (nam.length > 0) nam += ",";
+			nam += key;
+		}
+		return this.getDisplay(nam);
+	} else {
+		var nameList = nam.split(","); // 'fnam,lnam,bday' -> {fnam:'Frank',lnam:'Jones',bday:'9/1/1960'}
+		var rslt = {};
+		for (var nn = 0; nn < nameList.length; nn++) {
+			var fld = this.fields[nameList[nn]];
+			if (fld == undefined) {
+				rslt[nameList[nn]] = null;
+			} else if (fld.type == "text") {
+				rslt[fld.name] = fld.els[0].value;
+				if (fld.trim) rslt[fld.name] = B.trim(rslt[fld.name]);
+				if (fld.upper) rslt[fld.name] = rslt[fld.name].toUpperCase();
+			} else if (fld.type == "textarea") {
+				rslt[fld.name] = fld.els[0].value;
+				if (fld.trim) rslt[fld.name] = B.trim(rslt[fld.name]);
+				if (fld.upper) rslt[fld.name] = rslt[fld.name].toUpperCase();
+			} else if (fld.type == "select") {
+				var sel = fld.els[0];
+				if (sel.selectedIndex < 0) {
+					rslt[fld.name] = null;
+				} else {
+					rslt[fld.name] = sel.options[sel.selectedIndex].innerHTML;
+				}
+			} else if (fld.type == "radio") {
+				rslt[fld.name] = null;
+				for (var rr = 0; rr < fld.els.length; rr++) { // Which radio button?
+					var rad = fld.els[rr];
+					if (rad.checked) {
+						rslt[fld.name] = rad.value;
+						var lab = rad.parentElement;
+						if (lab != null) {
+							if (lab.tagName.toUpperCase() == "LABEL") {
+								rslt[fld.name] = lab.innerText; // ??? WOuld this not contain the radio button too??
+							}
+						}
+						break;
+					}
+				}
+			} else if (fld.type == "checkbox") {
+				rslt[fld.name] = fld.els[0].checked; // boolean
+				var lab = fld.els[0].parentElement();
+				if (lab != null) {
+					if (lab.tagName == "label") {
+						rslt[fld.name] = lab.innerHTML; // ??? WOuld this not contain the radio button too??
+					}
+				}
+			} else {
+				// No idea what this thing is!!!!
+				rslt[fld.name] = "";
+			}
+		}
+		if (nameList.length == 1) {
+			return rslt[nameList[0]];
+		} else {
+			return rslt;
+		}
+	}
 };
 B.Form.prototype.get = function(nam) {
 	if (nam == undefined) {
@@ -521,7 +610,7 @@ B.Form.prototype.setFromTableRow = function(rowdata) {
 			this.set(key, val);			
 		}
 	}
-}
+};
 B.Form.prototype.set = function() {
 	if (typeof arguments[0] == "object") { // data collection
 		var data = arguments[0];
@@ -529,23 +618,23 @@ B.Form.prototype.set = function() {
 			this.set(key, data[key]);
 		}
 	} else {
-		for (var i = 0; i < arguments.length; i+=2) { // Pairs of key/values
-			var fld = this.fields[arguments[i]];
+		for (var argnum = 0; argnum < arguments.length; argnum+=2) { // Pairs of key/values
+			var fld = this.fields[arguments[argnum]];
 			if (fld == undefined) continue; // I dont know what this field is
-			var val = arguments[i+1];
+			var val = arguments[argnum+1];
 			if (fld.type == "text") {
 				fld.els[0].value = val;
 			} else if (fld.type == "select") {
 				fld.els[0].value = val;
 			} else if (fld.type == "radio") {
 				if (typeof val == "string") {
-					for (var j = 0; j < fld.els.length; j++) {
-						var el = fld.els[j];
-						if (el.value == val) el.checked = true;
+					for (var i = 0; i < fld.els.length; i++) {
+						var el = fld.els[i];
+						if (el.value == val) el.click();
 					}
 				} else if (typeof val == "boolean") {
-					for (var j = 0; j < fld.els.length; j++) {
-						var el = fld.els[j];
+					for (var i = 0; i < fld.els.length; i++) {
+						var el = fld.els[i];
 						if (val == true && el.value == "Y") el.checked = true;
 						if (val == false && el.value == "N") el.checked = true;
 					}
@@ -573,6 +662,7 @@ B.Form.prototype.freeze = function() {
 			if (el.type != "hidden") el.setAttribute("disabled", "disabled");
 		}
 	}
+	this.frozen = true;
 	return this;
 };
 B.Form.prototype.thaw = function() {
@@ -588,6 +678,7 @@ B.Form.prototype.thaw = function() {
 			}
 		}
 	}
+	this.frozen = false;
 	return this;
 };
 B.Form.prototype.getToData = function(data, names) {
@@ -623,7 +714,7 @@ B.Form.prototype.markIssues = function(fldList, clearFirst) {
 			// No idea what this thing is!!!!
 		}
 	}
-}
+};
 B.Form.prototype.validateRequired = function(fldname) {
 	var fld = this.fields[fldname];
 	var val = this.get(fldname);
@@ -638,7 +729,7 @@ B.Form.prototype.validateRequired = function(fldname) {
 		this.markIssues(fldname, false);
 		return false;
 	}
-}
+};
 B.Form.prototype.validateText = function(fldname, min, max) {
 	var fld = this.fields[fldname];
 	var val = this.get(fldname);
@@ -651,7 +742,7 @@ B.Form.prototype.validateText = function(fldname, min, max) {
 		return false;
 	}
 	return true;
-}
+};
 B.Form.prototype.validateInteger = function(fldname, min, max) {
 	var fld = this.fields[fldname];
 	var val = this.get(fldname);
@@ -669,7 +760,7 @@ B.Form.prototype.validateInteger = function(fldname, min, max) {
 		return false;
 	}
 	return true;
-}
+};
 B.Form.prototype.validateEmail = function(fldname) {
 	var fld = this.fields[fldname];
 	var val = this.get(fldname);
@@ -687,7 +778,7 @@ B.Form.prototype.validateEmail = function(fldname) {
 		return false;
 	}
 	return true;
-}
+};
 B.Form.prototype.validateNumber = function(fldname, min, max) { // Allows floating point
 	var fld = this.fields[fldname];
 	var val = this.get(fldname);
@@ -705,7 +796,7 @@ B.Form.prototype.validateNumber = function(fldname, min, max) { // Allows floati
 		return false;
 	}
 	return true;
-}
+};
 B.Form.prototype.validateZipcode = function(fldname) {
 	var fld = this.fields[fldname];
 	var val = this.get(fldname);
@@ -723,12 +814,12 @@ B.Form.prototype.validateZipcode = function(fldname) {
 		return false;
 	}
 	return true;
-}
+};
 B.Form.prototype.validateDate = function(fldname, min, max) {
 	var fld = this.fields[fldname];
 	var val = this.get(fldname);
 	var ok = true;
-	var dat = null;
+	//var dat = null;
 	if (val == "") {
 		if (fld.req) {
 			ok = false;
@@ -742,7 +833,7 @@ B.Form.prototype.validateDate = function(fldname, min, max) {
 		return false;
 	}
 	return true;
-}
+};
 B.Form.prototype.clearIssues = function(fldList) {
 	var lst = [];
 	if (fldList == undefined) {
@@ -755,7 +846,7 @@ B.Form.prototype.clearIssues = function(fldList) {
 	for (var i = 0; i < lst.length; i++) {
 		this.clearIssue(lst[i]);
 	}
-}
+};
 B.Form.prototype.clearIssue = function(fldname) {
 	var fld = this.fields[fldname];
 	if (fld.type == "text") {
@@ -775,7 +866,7 @@ B.Form.prototype.clearIssue = function(fldname) {
 	} else {
 		// No idea what this thing is!!!!
 	}
-}
+};
 B.Form.prototype.findLabels = function(els) {
 	var lst = [];
 	for (var i = 0; i < els.length; i++) {
@@ -787,7 +878,7 @@ B.Form.prototype.findLabels = function(els) {
 		}
 	}
 	return lst;
-}
+};
 
 B.Form.prototype.validate = function(chk) {
 	if (chk == undefined) chk = this.get();
@@ -805,4 +896,4 @@ B.Form.prototype.validate = function(chk) {
 		
 		if (!fld.valid) this.markIssues(k);
 	}
-}
+};

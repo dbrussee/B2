@@ -1,101 +1,97 @@
 B.iTabset = function(id, height, width) {
-      this.tabHeight = 28;
-      this.id = id;
-      this.height = height;
-      this.tabs = {};
-      this.onBeforeAddTab = function() { return true; };
-      this.onAfterAddTab = function() { return true; };
-      this.onBeforeRemoveTab = function() { return true; };
-      this.onAfterRemoveTab = function() { return true; };
-      this.onBeforeSetTab = function() { return true; };
-      this.onAfterSetTab = function() { return true; };
-      this.onBeforeUnsetTab = function() { return true; };
-      this.onAfterUnsetTab = function() { return true; };
-      this.container = document.getElementById(id);
-      this.container.style.height = (height + this.tabHeight + 4) + "px";
-      this.container.style.width = width;
-      // Add the tabs line
-      this.tabline = document.createElement("div");
-      this.tabline.style.cssText = "position:relative;padding:0;margin:0;width:100%;margin-left:1em;height:" + this.tabHeight + "px";
-      this.container.appendChild(this.tabline);
-      // Add the frame container (one tab will display in the container at a time,
-      // but all iFrames will be contained within it.
-      this.frameContainer = document.createElement("div");
-      this.frameContainer.style.cssText = "border:1px solid navy;display:inline-block;" +
-            "background-color:white;margin:0;padding:0;overflow:hidden;" +
-            "position:relative;height:" + height + "px;width:" + width;
-      this.container.appendChild(this.frameContainer);
+	this.tabHeight = 28;
+	this.id = id;
+	this.height = height;
+	this.tabs = {};
+	this.onBeforeAddTab = function() { return true; };
+	this.onAfterAddTab = function() { return true; };
+	this.onBeforeRemoveTab = function() { return true; };
+	this.onAfterRemoveTab = function() { return true; };
+	this.onBeforeSetTab = function() { return true; };
+	this.onAfterSetTab = function() { return true; };
+	this.onBeforeUnsetTab = function() { return true; };
+	this.onAfterUnsetTab = function() { return true; };
+	this.container = document.getElementById(id);
+	this.container.style.height = (height + this.tabHeight + 4) + "px";
+	this.container.style.width = width;	
+	// Add the tabs line
+	this.tabline = document.createElement("div");
+	this.tabline.style.cssText = "position:relative;padding:0;margin:0;width:100%;margin-left:1em;height:" + this.tabHeight + "px";
+	//this.tabline.innerHTML = "|";
+	this.container.appendChild(this.tabline);
+	// Add the frame container (one tab will display in the container at a time,
+	// but all iFrames will be contained within it.
+	this.frameContainer = document.createElement("div");
+	this.frameContainer.style.cssText = "border:1px solid navy;display:inline-block;" +
+		"background-color:white;margin:0;padding:0;overflow:hidden;" +
+		"position:relative;height:" + height + "px;width:" + width;
+	this.container.appendChild(this.frameContainer);
+	
+	this.getTabWindow = function(id) {
+		var rslt = null;
+		var tab = this.tabs[id];
+		if (tab != null) {
+			rslt = tab.iframe.contentWindow;
+		}
+		return rslt;
+	};
 
-      this.getTabWindow = function(id) {
-            var rslt = null;
-            var tab = this.tabs[id];
-            if (tab != null) {
-                  rslt = tab.iframe.contentWindow;
-            }
-            return rslt;
-      };
-      this.curtab = null;
+	this.curtab = null;
 };
-
 B.iTabset.prototype.addTab = function(id, title, src, setme) {
-      var rslt = this.onAfterAddTab(id, title, src);
-      if (rslt == undefined) rslt = true;
-      if (!rslt) return null;
-      var tab = { id:id, tabset:this, iframe:null, tab:null, window:null, setMe:null };
-      var itm = document.createElement("div");
-      itm.className = "BTab";
-      itm.style.cssText = "padding:.2em .75em 0;margin:0;position:relative;top:0;height:" + this.tabHeight + "px;border-right:1px solid navy;display:inline-block;";
-      itm.innerHTML = title;
-      itm.id = this.id + "_" + id;
-      this.tabline.appendChild(itm);
-      tab.tab = itm;
-      var frame = document.createElement("iframe");
-      frame.setAttribute("height", this.height);
-      frame.style.cssText = "display:none;padding:0;margin:0;border:0;width:100%;postion:relative:top:" + this.tabHeight + "px;" +
-            "sandbox:";
-      if (src != undefined && src != null) {
-            frame.src = src;
-      }
-      tab.iframe = frame;
-      this.frameContainer.appendChild(frame);
-      this.tabs[id] = tab;
-      this.onAfterAddTab(tab);
-      if (setme) this.setTab(id);
-      tab.window = frame.contentWindow;
-      tab.setMe = $.proxy(function(event) {
-            this.tabset.setTab(this.id);
-      }, tab);
+	var rslt = this.onAfterAddTab(id, title, src);
+	if (rslt == undefined) rslt = true;
+	if (!rslt) return null;
+	var tab = { id:id, tabset:this, iframe:null, tab:null, window:null, setMe:null };
+	var itm = document.createElement("div");
+	itm.className = "BTab";
+	itm.style.cssText = "padding:.2em .75em 0;margin:0;position:relative;top:0;height:" + this.tabHeight + "px;border-right:1px solid navy;display:inline-block;";
+	itm.innerHTML = title;
+	itm.id = this.id + "_" + id;
+	this.tabline.appendChild(itm);
+	tab.tab = itm;
+	var frame = document.createElement("iframe");
+	frame.setAttribute("height", this.height);
+	frame.style.cssText = "display:none;padding:0;margin:0;border:0;width:100%;postion:relative:top:" + this.tabHeight + "px;" +
+		"sandbox:";
+	if (src != undefined && src != null) {
+		frame.src = src;
+	}
+	tab.iframe = frame;
+	this.frameContainer.appendChild(frame);
+	this.tabs[id] = tab;
+	this.onAfterAddTab(tab);
+	if (setme) this.setTab(id);
+	tab.window = frame.contentWindow;
+	tab.setMe = $.proxy(function(event) {
+		this.tabset.setTab(this.id);
+	}, tab);
     tab.tab.onclick = $.proxy(function(event) {
         var el = $(event.target)[0]; // A collection even though only one
-        var itm = $(el).closest("div")[0];           
+        var itm = $(el).closest("div")[0];            
         var id = itm.id.split("_")[1];
         this.setTab(id);
     }, this);
-      return tab;
+	return tab;
 };
-
 B.iTabset.prototype.unsetTab = function() {
-      if (this.curtab == null) return;
-      var rslt = this.onBeforeUnsetTab(this.curtab); if (rslt == undefined) rslt = true;
-      if (!rslt) return;
-      B.curtab = null;
-      B.removeClass(this.curtab.tab, "current");
-      this.curtab.iframe.style.display = "none";
-      this.onAfterUnsetTab();
+	if (this.curtab == null) return;
+	var rslt = this.onBeforeUnsetTab(this.curtab); if (rslt == undefined) rslt = true;
+	if (!rslt) return;
+	B.curtab = null;
+	B.removeClass(this.curtab.tab, "current");
+	this.curtab.iframe.style.display = "none";
+	this.onAfterUnsetTab();
 };
-
 B.iTabset.prototype.setTab = function(id) {
-      this.unsetTab();
-      var tab = this.tabs[id];
-      var rslt = this.onBeforeSetTab(tab); if (rslt == undefined) rslt = true;
-      if (!rslt) return;
-      this.curtab = tab;
-      tab.iframe.style.display = "block";
-      B.addClass(this.curtab.tab, "current");
+	this.unsetTab();
+	var tab = this.tabs[id];
+	var rslt = this.onBeforeSetTab(tab); if (rslt == undefined) rslt = true;
+	if (!rslt) return;
+	this.curtab = tab;
+	tab.iframe.style.display = "block";
+	B.addClass(this.curtab.tab, "current");
 };
-	
-	
-
 
 B.DynamicTabset = function(id, width, height) {
     this.id = id;
@@ -108,15 +104,15 @@ B.DynamicTabset = function(id, width, height) {
     this.onBeforeTabSet = function() { return true; };
 
     this.container = document.createElement("div");
-    this.container.style.cssText = "padding:0; margin:0; border-collapse: collapse; height:" + (height+30) + "px; width:" + width + "px; ";
+    this.container.style.cssText = "padding:0; margin:0; height:" + (height+30) + "px; width:" + width + "px; ";
 
     this.tabsTable = document.createElement("table");
-    this.tabsTable.style.cssText = "width:100%;";
+    this.tabsTable.style.cssText = "width:100%;border-collapse: collapse;";
     this.container.appendChild(this.tabsTable);
     var tbody = document.createElement("tbody");
     this.tabsTable.appendChild(tbody);
     this.tabsRow = document.createElement("tr");
-    this.tabsRow.style.cssText = "height:2.2em;";
+    this.tabsRow.style.cssText = "height:2.0em;";
     tbody.appendChild(this.tabsRow);
     this.spacer = document.createElement("td");
     this.spacer.style.cssText = "border-bottom:1px solid navy; border-left:1px solid transparent; border-right:1px solid transparent; border-top:6px solid transparent;";
@@ -148,13 +144,18 @@ B.DynamicTabset = function(id, width, height) {
     }
 
     return this;
-}
+};
 B.DynamicTabset.prototype.addTab = function(position, id, title, width, content) {
     if (this.tabs[id]) return null;
     var tab = new B.DynamicTab(this, id, title, content);    
     var td = document.createElement("td");
+    tab.tab = td;
     td.data = id;
     td.style.position = "relative";
+    var bus = document.createElement("div");
+    bus.style.cssText = "z-index:50;position:absolute;display:inline;height:14px;width:14px;top:0;left:0;margin-left:3px;margin-top:3px;";
+    bus.id = "TAB_" + this.id + "_" + id + "_busy";
+    td.appendChild(bus);
     if (!B.hasClass(content, "noclose")) {
         var btn = document.createElement("div");
         btn.className = "BTabCloser";
@@ -182,6 +183,7 @@ B.DynamicTabset.prototype.addTab = function(position, id, title, width, content)
     td.className = "BTab";
     var span = document.createElement("span");
     span.id = td.id + "_title";
+    tab.titleSpan = span;
     span.innerHTML = title;
     td.appendChild(span);
     var beforeTab = this.spacer;
@@ -203,7 +205,7 @@ B.DynamicTabset.prototype.addTab = function(position, id, title, width, content)
         }
     }
     return tab;
-}
+};
 B.DynamicTabset.prototype.removeTab = function(pos, thenpick) {
     var tab = this.findTab(pos);
     if (tab == null) return;
@@ -223,12 +225,17 @@ B.DynamicTabset.prototype.removeTab = function(pos, thenpick) {
     if (thenpick != undefined) this.setTab(thenpick);
     this.onRemoveTab();
     return div;
-}
+};
+B.DynamicTabset.prototype.flashTab = function(id) {
+    var tab = this.findTab(id);
+    $(tab.tab).effect("highlight");
+    $(tab.titleSpan).effect("shake", {distance:1, times:3 });
+};
 B.DynamicTabset.prototype.setTabTitle = function(id, title) {
     var tab = this.findTab(pos);
-    var id = "TAB_" + this.id + "_" + tab.id + "_TITLE";
+    var id = "TAB_" + this.id + "_" + tab.id + "_title";
     $("#" + id).html(title);
-}
+};
 B.DynamicTabset.prototype.findTab = function(id) {
     if (typeof id == "number") {
         id = this.taborder[id];
@@ -236,7 +243,7 @@ B.DynamicTabset.prototype.findTab = function(id) {
         // This is the tab id already... nothing to do here
     }
     return this.tabs[id];
-}
+};
 B.DynamicTabset.prototype.moveTab = function(frompos, topos, pickit) {
     if (frompos < 0 || frompos > (this.taborder.length-1) || frompos == topos) return;
     if (topos < 0 || topos > (this.taborder.length-1)) return;
@@ -263,7 +270,7 @@ B.DynamicTabset.prototype.moveTab = function(frompos, topos, pickit) {
     this.tabsRow.cells[topos].id = tmpid;
     this.tabsRow.cells[topos].innerHTML = tmphtml;
     if (pickit != undefined && pickit) this.setTab(topos);
-}
+};
 B.DynamicTabset.prototype.setTab = function(id) {
     this.unsetTab();
     var tab = this.findTab(id);
@@ -273,7 +280,7 @@ B.DynamicTabset.prototype.setTab = function(id) {
     $(tab.div).show();
     B.addClass(document.getElementById("TAB_" + this.id + "_" + tab.id), "current");
     this.currentTab = id;
-}
+};
 B.DynamicTabset.prototype.unsetTab = function() {
 	var ok = this.onBeforeTabSet(this, null);
 	if (ok == undefined) ok = true;
@@ -287,7 +294,30 @@ B.DynamicTabset.prototype.unsetTab = function() {
         }
     }
     this.currentTab = null;    
-}
+};
+
+B.DynamicTabset.prototype.isTabBusy = function(id) {
+    var tab = this.findTab(id);
+    return tab.isBusy;
+};
+B.DynamicTabset.prototype.setTabBusy = function(id, isBusy) {
+	if (isBusy == undefined) isBusy = true;
+    var tab = this.findTab(id);
+    tab.isBusy = isBusy;
+    //var titleDiv = document.getElementById("TAB_" + tab.tabset.id + "_" + tab.id + "_title");
+    var busyID = "TAB_" + tab.tabset.id + "_" + tab.id + "_busy";
+    var el = document.getElementById(busyID);
+    var txt = "";
+    if (isBusy) {
+    	txt = B.img("SPINNER");
+    } else {
+    	if (tab.id != this.currentTab) {
+    		this.flashTab(id);
+    	}
+    }
+    el.innerHTML = txt;
+};
+
 B.DynamicTab = function(tabset, id, title, content) {
     this.tabset = tabset;
     this.div = null;
@@ -300,4 +330,5 @@ B.DynamicTab = function(tabset, id, title, content) {
     $(this.div).hide();
     this.title = title;
     this.id = id;
-}
+    this.isBusy = false;
+};

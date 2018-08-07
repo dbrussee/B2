@@ -1,19 +1,19 @@
-// Unobtrusive messaging
+// Remote calls
 B.settings.Growl = {  
     width: "280px",
     defaultEdge: "top",
     defaultTimeout: 7000
-}
+};
 
 B.growl = {
     container: null,
     edge: B.settings.Growl.defaultEdge
-}
+};
 B.growl.init = function(edge) {
     B.growl.container = null;
     if (edge == undefined) edge = B.settings.Growl.defaultEdge;
     B.growl.edge = edge;
-}
+};
 B.growl.popup = function(typ, title, msg, timeout, icon) {
     if (icon == undefined) icon = "";
     if (timeout == undefined) timeout = null;
@@ -77,29 +77,20 @@ B.growl.popup = function(typ, title, msg, timeout, icon) {
     $(div).fadeTo(0,.8);
 
     if (timeout > 0) {
-        div.growlTimer = window.setTimeout($.proxy(function() {
+        window.setTimeout($.proxy(function() {
             $(div).fadeTo(300,0, function() { this.parentElement.removeChild(this); });
         }, div),timeout);
-        div.onclick = function() {
-            window.clearTimeout(this.growlTimer);
-            var td = document.createElement("td");
-            td.style.cssText = "width:1em;cursor:pointer;position;";
-            td.innerHTML = "<span style='font-weight:bold;color:yellow;background-color:black;padding:.2em;border-radius:.8em;'>X</span>"; // B.img("CHECKY");
-            td.onclick = $.proxy(function() { this.parentElement.removeChild(this); }, div);
-            this.firstChild.rows[0].appendChild(td);
-            this.onclick = null;
-        }
     }
-}
+};
 B.growl.msg = function(title, msg, timeout) {
     if (timeout == undefined) timeout = B.settings.Growl.defaultTimeout;
     B.growl.popup("NORMAL", title, msg, timeout, "LEDBLUE");
-}
+};
 B.growl.errmsg = function(title, msg, timeout) {
     if (timeout == undefined) timeout = B.settings.Growl.defaultTimeout;
     B.growl.popup("ERROR", title, msg, timeout, "LEDRED");
-}
+};
 B.growl.warnmsg = function(title, msg, timeout) {
     if (timeout == undefined) timeout = B.settings.Growl.defaultTimeout;
     B.growl.popup("WARNING", title, msg, timeout, "LEDYELLOW");
-}
+};

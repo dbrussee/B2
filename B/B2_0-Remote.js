@@ -1,11 +1,11 @@
 // Remote calls
-B.settings.RemoteMethod = { URL: '' }
+B.settings.RemoteMethod = { URL: '/pcmedit/rpc' };
 B.RestfulService = function(baseURL) {
 	this.baseURL = baseURL;
 	this.getText = function(urlEnd, callback) {
 		$.get(this.baseURL + urlEnd, callback);
-	}
-}
+	};
+};
 
 // Blank or null cls does not call remote
 // Blank or null cls and numeric mth simulates running with a timeout
@@ -48,7 +48,7 @@ B.RemoteMethod = function(cls,mth,onBeforeStart,onComplete) {
 		this.onBeforeStart = onBeforeStart;
 	}
 	this.onAbort = function() { };
-}
+};
 B.RemoteMethod.prototype.setResult = function(key, val) {  // Override result value
 	this.results[key.toUpperCase()] = val; 
 };
@@ -90,7 +90,7 @@ B.RemoteMethod.prototype.abort = function() {
 	this.aborted = true; 
 	this.onComplete(true,this); 
 	return this.running;
-}
+};
 B.RemoteMethod.prototype.setTimings = function() {
 	this.timings.end = new Date();
     this.timings.totalmillis = this.timings.end.getTime() - this.timings.start.getTime();
@@ -101,7 +101,7 @@ B.RemoteMethod.prototype.setTimings = function() {
 		this.timings.remotemillis = parseInt(this.getResult("RUNTIME_MILLIS"), 10);
 		this.timings.overheadmillis = this.timings.totalmillis - this.timings.remotemillis;
 	}
-}
+};
 B.RemoteMethod.prototype.run = function() {
 	this.setParams.apply(this, arguments);
 	this.aborted = false;
