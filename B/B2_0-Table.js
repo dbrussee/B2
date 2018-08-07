@@ -21,7 +21,7 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 	this.dataset = new B.Dataset(ColumnSet);
 	this.actualRowCount = 0;
 	this.highlightItem = B.settings.ScrollingTable.highlightItem.toUpperCase();
-	if (this.highlightItem == undefined) this.highlightItem = "TR";
+	if (this.highlightItem == undefined) this.highlightItem = B.settings.ScrollingTable.highlightItem;
 	this.txt1 = txt1;
 	this.txt2 = txt2;
 	this.header = document.getElementById(this.rootId);

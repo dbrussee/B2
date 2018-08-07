@@ -591,11 +591,7 @@ B.Form.prototype.get = function(nam) {
 				rslt[fld.name] = "";
 			}
 		}
-		if (nameList.length == 1) {
-			return rslt[nameList[0]];
-		} else {
-			return rslt;
-		}
+		return rslt;
 	}
 };
 B.Form.prototype.setFromTableRow = function(rowdata) {
