@@ -1,3 +1,102 @@
+B.iTabset = function(id, height, width) {
+      this.tabHeight = 28;
+      this.id = id;
+      this.height = height;
+      this.tabs = {};
+      this.onBeforeAddTab = function() { return true; };
+      this.onAfterAddTab = function() { return true; };
+      this.onBeforeRemoveTab = function() { return true; };
+      this.onAfterRemoveTab = function() { return true; };
+      this.onBeforeSetTab = function() { return true; };
+      this.onAfterSetTab = function() { return true; };
+      this.onBeforeUnsetTab = function() { return true; };
+      this.onAfterUnsetTab = function() { return true; };
+      this.container = document.getElementById(id);
+      this.container.style.height = (height + this.tabHeight + 4) + "px";
+      this.container.style.width = width;
+      // Add the tabs line
+      this.tabline = document.createElement("div");
+      this.tabline.style.cssText = "position:relative;padding:0;margin:0;width:100%;margin-left:1em;height:" + this.tabHeight + "px";
+      this.container.appendChild(this.tabline);
+      // Add the frame container (one tab will display in the container at a time,
+      // but all iFrames will be contained within it.
+      this.frameContainer = document.createElement("div");
+      this.frameContainer.style.cssText = "border:1px solid navy;display:inline-block;" +
+            "background-color:white;margin:0;padding:0;overflow:hidden;" +
+            "position:relative;height:" + height + "px;width:" + width;
+      this.container.appendChild(this.frameContainer);
+
+      this.getTabWindow = function(id) {
+            var rslt = null;
+            var tab = this.tabs[id];
+            if (tab != null) {
+                  rslt = tab.iframe.contentWindow;
+            }
+            return rslt;
+      };
+      this.curtab = null;
+};
+
+B.iTabset.prototype.addTab = function(id, title, src, setme) {
+      var rslt = this.onAfterAddTab(id, title, src);
+      if (rslt == undefined) rslt = true;
+      if (!rslt) return null;
+      var tab = { id:id, tabset:this, iframe:null, tab:null, window:null, setMe:null };
+      var itm = document.createElement("div");
+      itm.className = "BTab";
+      itm.style.cssText = "padding:.2em .75em 0;margin:0;position:relative;top:0;height:" + this.tabHeight + "px;border-right:1px solid navy;display:inline-block;";
+      itm.innerHTML = title;
+      itm.id = this.id + "_" + id;
+      this.tabline.appendChild(itm);
+      tab.tab = itm;
+      var frame = document.createElement("iframe");
+      frame.setAttribute("height", this.height);
+      frame.style.cssText = "display:none;padding:0;margin:0;border:0;width:100%;postion:relative:top:" + this.tabHeight + "px;" +
+            "sandbox:";
+      if (src != undefined && src != null) {
+            frame.src = src;
+      }
+      tab.iframe = frame;
+      this.frameContainer.appendChild(frame);
+      this.tabs[id] = tab;
+      this.onAfterAddTab(tab);
+      if (setme) this.setTab(id);
+      tab.window = frame.contentWindow;
+      tab.setMe = $.proxy(function(event) {
+            this.tabset.setTab(this.id);
+      }, tab);
+    tab.tab.onclick = $.proxy(function(event) {
+        var el = $(event.target)[0]; // A collection even though only one
+        var itm = $(el).closest("div")[0];           
+        var id = itm.id.split("_")[1];
+        this.setTab(id);
+    }, this);
+      return tab;
+};
+
+B.iTabset.prototype.unsetTab = function() {
+      if (this.curtab == null) return;
+      var rslt = this.onBeforeUnsetTab(this.curtab); if (rslt == undefined) rslt = true;
+      if (!rslt) return;
+      B.curtab = null;
+      B.removeClass(this.curtab.tab, "current");
+      this.curtab.iframe.style.display = "none";
+      this.onAfterUnsetTab();
+};
+
+B.iTabset.prototype.setTab = function(id) {
+      this.unsetTab();
+      var tab = this.tabs[id];
+      var rslt = this.onBeforeSetTab(tab); if (rslt == undefined) rslt = true;
+      if (!rslt) return;
+      this.curtab = tab;
+      tab.iframe.style.display = "block";
+      B.addClass(this.curtab.tab, "current");
+};
+	
+	
+
+
 B.DynamicTabset = function(id, width, height) {
     this.id = id;
     var template = document.getElementById(id);
