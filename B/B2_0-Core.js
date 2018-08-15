@@ -807,7 +807,33 @@ B.addToString = function(str, newtext, sep) {
 		if (sep == undefined) sep = ", ";
 		return str + sep + newtext;
 	}
-};		
+};	
+B.frozenThings = [];
+B.freezeThings = function() {
+	var txt = arguments[arguments.length-1];
+	var lastarg = arguments.length;
+	if (typeof txt == "string") {
+		lastarg--;
+	} else {
+		txt = "";
+	}
+	for (var i = 0; i < lastarg; i++) {
+		arguments[i].freeze(txt);
+		B.frozenThings.push(arguments[i]);
+	}
+};
+B.thawThings = function() {
+	if (arguments.length == 0) {
+		for (var i = 0; i < B.frozenThings.length; i++) {
+			B.frozenThings[i].thaw();
+		}
+		B.frozenThings = [];
+	} else {
+		for (var i = 0; i < arguments.length; i++) {
+			arguments[i].thaw();
+		}		
+	}
+};
 B.cookie = {
 	SAVE: function(name, value) {
 		var oDate = new Date();
@@ -951,7 +977,7 @@ B.setCSSRule("table.BTable tr th", "font-size: 10pt; padding-left:2px; padding-r
 B.setCSSRule("table.BTable tr td", "font-size: 9pt; padding-left:2px; padding-right:2px;");
 B.setCSSRule("table.BTable tr td, table.BTable tr th", "font-weight:normal; box-sizing:border-box; white-space:nowrap; word-wrap:break-word;");
 B.setCSSRule("table.BTableHeader", "display:none;");
-B.setCSSRule("table.BTableHeader tr th", "font-weight:normal !important;"); 
+B.setCSSRule("table.BTableHeader tr th", "font-weight:normal !important;");
 
 B.setCSSRule("table.form tr th",
 	"padding-right:.1em; "+
@@ -987,15 +1013,15 @@ B.setCSSRule(".BTab:hover div.BTabCloser",
 	"position:absolute; "+
 	"display: inline; "+
 	"background-color:brown !important; "+
-	"color:white; "+
-	"height:14px; "+
-	"width:14px; "+
+	"color:silver; "+
+	"height:12px; "+
+	"width:12px; "+
 	"top:0; "+
 	"right:0; "+
 	"margin-right:-5px; "+
 	"margin-top:-8px; "+
-	"font-size:11px; font-weight:bold; ");
-B.setCSSRule(".BTab:hover div.BTabCloser:hover", "color:white;background-color:red !important;");
+	"font-size:9px; font-weight:bold; ");
+B.setCSSRule(".BTab:hover div.BTabCloser:hover", "color:yellow;background-color:red !important;width:18px;height:18px;font-size:12px;");
 B.setCSSRule(".BTab div.BTabCloser", "display:none;");
 B.setCSSRule("@media print", ".noprint{display:none;} .noprintREALLY{display:none;} ");	
 B.setCSSRule(".BAction", "cursor: pointer;");

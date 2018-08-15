@@ -629,6 +629,7 @@ B.DropdownMenu.prototype.render = function(div) {
 				} else {
 					this.built = true;
 					var el = $(mnu.td);
+					var tr = $(el).parent("tr");
 					var pos = el.offset();
 					this.submenu.onclose = $.proxy(function() { 
 						this.style.color = "";
@@ -636,7 +637,7 @@ B.DropdownMenu.prototype.render = function(div) {
 					}, mnu.td);
 					mnu.td.style.color = "white";
 					mnu.td.style.backgroundColor = "navy";        
-					mnu.submenu.showAt(pos.left, pos.top + el.outerHeight());    
+					mnu.submenu.showAt(pos.left, pos.top + tr.outerHeight());    
 				}
             }
         }, mnu);

@@ -131,7 +131,7 @@ function clickDialogButton(dlgid, btnid) {
 }
 function popSay() { closeDialog("B-Say-Dialog"); }
 function sayIcon(icon, msg, title, callback, height, width, btns) {
-	if (icon != null) msg = B.img(icon, 26, "", "", "float: left; padding-right: 10px;") + msg;
+	if (icon != null) msg = B.img(icon, 22, "", "", "float: left; padding-right: 10px;") + msg;
 	sayBase(msg, title, callback, height, width, btns);
 	if (B.settings.say.tinting) {
 		if (icon == "WARN") {
@@ -146,10 +146,12 @@ function sayPlain(msg, t, cb, h, w, bs) { sayIcon(null, msg, t, cb, h, w, bs); }
 function sayWarn(msg, t, cb, h, w, bs) { sayIcon("WARN", msg, t, cb, h, w, bs); };
 function sayError(msg, t, cb, h, w, bs) { sayIcon("ERROR", msg, t, cb, h, w, bs); };
 function sayFix(fixlist, msg, title, height, width) {
+	if (height == undefined) height = 300;
+	if (width == undefined) width = 400;
 	if (fixlist == "") return;
 	fixlist = fixlist.substr(1);
 	fixlist = "<li>" + fixlist.split("\n").join("</li><li>") + "</li>";
-	if (msg == undefined) msg = "Correct the following items and try again:";
+	if (msg == undefined) msg = "Correct the following items and try again:<br>";
 	msg += "<br><div style='height: 115px; position: relative; overflow-y: auto;'>";
 	msg += "<ul>" + fixlist + "</ul>";
 	msg += "</div>";
@@ -428,6 +430,11 @@ B.Form = function(formID, forceReload) {
 	this.onsubmit = function() { return true; };
 	return this;
 };
+B.Form.prototype.fillFromResults = function(rpc) {
+	for (var key in rpc.results) {
+		this.set(key, rpc.getResult(key));
+	}
+};
 B.Form.prototype.setClean = function() {
 	this.cleanData = this.get();
 };
@@ -591,7 +598,11 @@ B.Form.prototype.get = function(nam) {
 				rslt[fld.name] = "";
 			}
 		}
-		return rslt;
+		if (nameList.length == 1) {
+			return rslt[nameList[0]];
+		} else {
+			return rslt;
+		}
 	}
 };
 B.Form.prototype.setFromTableRow = function(rowdata) {
