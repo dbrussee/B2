@@ -1,7 +1,7 @@
 // Dialogs -- These are defined at global level to make them simpler to use.
 B.settings.say = {
 	defaultTitle: 'System Message',
-	tinting: false
+	tinting: true
 };
 // TODO
 // BUG: askValue - Enter key submits page (reload)
@@ -74,7 +74,7 @@ function closeDialog(id) {
 	return false;
 };
 
-function sayBase(msg, title, callback, height, width, btns) {
+B.sayBase = function(msg, title, callback, height, width, btns) {
 	if (btns == undefined) btns = [];
 	if (btns == "" || btns == null) btns = [];
 	if (callback == undefined) callback = null;
@@ -85,7 +85,7 @@ function sayBase(msg, title, callback, height, width, btns) {
 	if (title == undefined) title = B.settings.say.defaultTitle;
 	if (title == "") title = B.settings.say.defaultTitle;
 
-	var h = "<form id='B-Say-Dialog' class='BDialog' title='" + B.settings.say.defaultTitle + "'>";
+	var h = "<form id='B-Say-Dialog' class='BDialog' title='" + title + "'>";
 	h += "<div id='B-Say-Dialog-Message' style='width: 100%; height: 100%; overflow-y: auto;'></div>";
 	h += "</form>";
 	$("body").append(h);
@@ -132,7 +132,7 @@ function clickDialogButton(dlgid, btnid) {
 function popSay() { closeDialog("B-Say-Dialog"); }
 function sayIcon(icon, msg, title, callback, height, width, btns) {
 	if (icon != null) msg = B.img(icon, 22, "", "", "float: left; padding-right: 10px;") + msg;
-	sayBase(msg, title, callback, height, width, btns);
+	B.sayBase(msg, title, callback, height, width, btns);
 	if (B.settings.say.tinting) {
 		if (icon == "WARN") {
 			$("#B-Say-Dialog").css("background", "papayawhip");
@@ -272,7 +272,7 @@ function freeze(msg, title, with_timer, height, width) {
 		h += "</div>";
 		if (B.freezeStack.length > 0) msg += "<br><i>...Plus " + B.freezeStack.length + "</i>";
 		h += "<span id='freezeMessageText'>" + msg + "</span>";
-		sayBase(h, title, null, height, width, ["NONE"]);
+		B.sayBase(h, title, null, height, width, ["NONE"]);
 	}
 	B.freezeStack.push(itm);
 	return B.freezeStack.length-1; // Position of item to be popped off
@@ -598,11 +598,7 @@ B.Form.prototype.get = function(nam) {
 				rslt[fld.name] = "";
 			}
 		}
-		if (nameList.length == 1) {
-			return rslt[nameList[0]];
-		} else {
-			return rslt;
-		}
+		return rslt;
 	}
 };
 B.Form.prototype.setFromTableRow = function(rowdata) {

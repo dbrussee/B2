@@ -325,7 +325,9 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 
 		},
 		startAdd: $.proxy(function() {
-			this.editForm.remote.setParameter("ACT","add");
+			if (this.editForm.remote != undefined) {
+				this.editForm.remote.setParameter("ACT","add");
+			}
 			var frm = new B.Form(this.editForm.formid);
 			frm.reset();
 			this.setKeysReadOnly("add");
@@ -335,7 +337,9 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 			btn.innerHTML = "Save New";
 		}, this),
 		startEdit: $.proxy(function() {
-			this.editForm.remote.setParameter("ACT","edit");
+			if (this.editForm.remote != undefined) {
+				this.editForm.remote.setParameter("ACT","edit");
+			}
 			var frm = new B.Form(this.editForm.formid);
 			this.setKeysReadOnly("edit");
 			frm.setFromTableRow(this.getDataRow());
@@ -345,7 +349,9 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 			btn.innerHTML = "Save Changes";
 		}, this),
 		startCopy: $.proxy(function() {
-			this.editForm.remote.setParameter("ACT","copy");
+			if (this.editForm.remote != undefined) {
+				this.editForm.remote.setParameter("ACT","copy");
+			}
 			var frm = new B.Form(this.editForm.formid);
 			this.setKeysReadOnly("copy");
 			frm.setFromTableRow(this.getDataRow());
@@ -355,7 +361,9 @@ B.ScrollingTable = function(rootId, height, ColumnSet, txt1, txt2, embedScrollba
 			btn.innerHTML = "Save Copy";
 		}, this),
 		startDelete: $.proxy(function() {
-			this.editForm.remote.setParameter("ACT","del");
+			if (this.editForm.remote != undefined) {
+				this.editForm.remote.setParameter("ACT","del");
+			}
 			var frm = new B.Form(this.editForm.formid);
 			frm.set("ACT","del");
 			askWarn(B.format.TEMPLATE(this.editForm.deletePrompt, this.getRowValues()), "Delete " + this.txt1, $.proxy(function(rslt) {

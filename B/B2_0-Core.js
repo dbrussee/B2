@@ -282,13 +282,18 @@ B.format = {
 	DATE: function(d) { return B.format.MDYYYY(d); },
 	TS: function(d) { return B.format.MDYYYYHNNSS(d); }
 };
-B.keepChars = function(txt,charsToKeep) {
+B.keepChars = function(txt,charsToKeep,andSpaces) {
+	if (andSpaces == undefined) andSpaces = false;
 	var orig = txt;
-	if (charsToKeep == "#") charsToKeep = "0123456789";
+	if (charsToKeep == "#") charsToKeep = "0123456789.";
 	if (charsToKeep == ".") charsToKeep = "0123456789.";
 	if (charsToKeep == "A") charsToKeep = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	if (charsToKeep == "A#") charsToKeep = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.";
 	if (charsToKeep == "a") charsToKeep = "abcdefghijklmnopqrstuvwxyz";
+	if (charsToKeep == "a#") charsToKeep = "abcdefghijklmnopqrstuvwxyz0123456789.";
 	if (charsToKeep == "Aa") charsToKeep = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	if (charsToKeep == "Aa#") charsToKeep = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.";
+	if (andSpaces) charsToKeep += " ";
 	var rslt = "";
 	for (var i = 0; i < txt.length; i++) {
 		if (charsToKeep.indexOf(txt.charAt(i)) >= 0) rslt += orig.charAt(i);

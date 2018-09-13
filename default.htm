@@ -146,7 +146,7 @@ function init() {
 	window.tree1 = new B.Tree("tree1", null, true);
 	var br = tree1.addBranch("Dialog actions", false);
 	var b2 = br.addBranch("General messages", false);
-	b2.addItem("Say something via dialog", function() { say("Ok, I said something. So there."); }, B.img("INFO"));
+	b2.addItem("Say something via dialog", function() { say("Ok, I said something. So there.", "This is a custom Title"); }, B.img("INFO"));
 	b2.addItem("Ask something",
 		function() { askWarn("Are you happy you chose to have me ask you something?", "",
 			function(rslt) {
@@ -333,7 +333,7 @@ function doFormValidate() {
 </script>
 </head>
 <body>
-<h2 onclick='smnu.show()' style='cursor:pointer'><img class='BIMG-MENU' style='height:1.2em;'> B 2.0 Library Demo</h2>
+<h2 onclick='smnu.show()' style='cursor:pointer'><img class='BIMG-MENU' style='height:1.2em;'> B 2.0 Library Demonstration</h2>
 <div id='tabset1'>
 	<div id='tree1' class='noclose' data='Tree,6em' style='width:320px; padding:5px;'></div>
 	<div id='tableDIV' class='noclose' data='Table,9em'>
