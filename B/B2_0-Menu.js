@@ -1,5 +1,5 @@
 B.settings.SlideMenu = {
-	PushStyle: false, // true pushes page content to the right when Slide Menu opens (Not ready for use)
+	openStyle: "OVERLAY", // "PUSH" pushes page content to the right when Slide Menu opens (Not ready for use)
 	Multisection: false,  // Only one section open at a time on SlideMenu
 	Slidetime: 250, SectionSlidetime: 200,
 	FG: "white", BG: "black",
@@ -314,7 +314,7 @@ B.SlideMenu = function(title, width, multi, clr, bgclr) {
 			$(this.div).show("slide", B.settings.SlideMenu.Slidetime, $.proxy(function() { 
 				this.onafteropen(this); 
 			}, this)); 
-			if (B.settings.SlideMenu.PushStyle) {
+			if (B.settings.SlideMenu.openStyle == "PUSH") {
 				this.pushDiv.style.left = this.div.style.width;
 			}
 			this.isOpen = true;
@@ -336,7 +336,7 @@ B.SlideMenu = function(title, width, multi, clr, bgclr) {
 		if (rslt == undefined) rslt = true;
 		if (rslt) {
 			$(this.div).hide("slide", 100, $.proxy( function() { 
-				if (B.settings.SlideMenu.PushStyle) {
+				if (B.settings.SlideMenu.openStyle == "PUSH") {
 					this.pushDiv.style.left = "0px";
 				}
 				this.onafterclose(this);

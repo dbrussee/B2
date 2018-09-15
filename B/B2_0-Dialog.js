@@ -430,6 +430,7 @@ B.Form = function(formID, forceReload) {
 	this.onsubmit = function() { return true; };
 	return this;
 };
+B.SimpleForm = function(formID, forceReload) { return new B.Form(formID, forceReload); };
 B.Form.prototype.fillFromResults = function(rpc) {
 	for (var key in rpc.results) {
 		this.set(key, rpc.getResult(key));

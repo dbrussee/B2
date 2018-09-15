@@ -27,12 +27,11 @@ The **B** Library was created to collect a growing list of small utilities as we
 
 # Dialogs
 
-In general there is a B library feature that starts with 
-**Note:** All dialogs are "modal" unless otherwise indicated. "Modal" in this situation means that the dialog will block access for the user to any content in the window other than the dialog itself, so the user must interact with the dialog by closing it before they can interact with any other content. Other javascript code may still make changes to the content that exists "below" the say dialog while it is displayed.
+**Note:** All dialogs are "modal" unless otherwise indicated. "Modal" in this situation means that the dialog will block access for the user to any content in the window other than the dialog itself, so the user must interact with the dialog by closing it before they can interact with any other content. Other javascript code may still make changes to the content that exists "below" the dialog while it is displayed.
 
 
 ## `say`
-The B library `say` method is NOT defined inside the B library domain. This was done because it was meant to be used very commonly, so it made sense to make the actual method simple to implement.
+The B library `say` method is NOT defined inside the B library domain. This was done because it was meant to be used frequently, so it made sense to make the actual method simple to implement.
 
 General Syntax:<br>
 `say(msg, [title], [callback], [height], [width])`
@@ -91,7 +90,7 @@ if (msg != "") {
 ---
 
 ## `ask`
-The B library `ask` method is NOT defined inside the B library domain. This was done because it was meant to be used very commonly, so it made sense to make the actual method simple to implement.
+The B library `ask` method is NOT defined inside the B library domain. This was done because it was meant to be used frequently, so it made sense to make the actual method simple to implement.
 
 General Syntax:<br>
 `ask(msg, [title], [callback], [height], [width])`
@@ -135,7 +134,7 @@ ask("Do you agree to the license agreement?", "License",
 ---
 
 ## `askValue`
-The B library `askValue` method is NOT defined inside the B library domain. This was done because it was meant to be used very commonly, so it made sense to make the actual method simple to implement.
+The B library `askValue` method is NOT defined inside the B library domain. This was done because it was meant to be used frequently, so it made sense to make the actual method simple to implement.
 
 General Syntax:<br>
 `askValue(msg, prompt, [value], [title], [callback], [height], [width])`
@@ -177,7 +176,7 @@ askValue(msg, "Birthdate:", "1/1/1980", "Legalese",
 ---
 
 ## `choose`
-The B library `choose` method is NOT defined inside the B library domain. This was done because it was meant to be used very commonly, so it made sense to make the actual method simple to implement.
+The B library `choose` method is NOT defined inside the B library domain. This was done because it was meant to be used frequently, so it made sense to make the actual method simple to implement.
 
 General Syntax:<br>
 `choose(msg, title, options, [callback], [height], [width])`
@@ -218,7 +217,7 @@ askValue(msg, "Legalese 2", "Male,Female,Not Answered"
 ```
 
 ## `openDialog`
-The B library `openDialog` method is NOT defined inside the B library domain. This was done because it was meant to be used very commonly, so it made sense to make the actual method simple to implement.
+The B library `openDialog` method is NOT defined inside the B library domain. This was done because it was meant to be used frequently, so it made sense to make the actual method simple to implement.
 
 General Syntax:<br>
 `openDialog(id)`
@@ -600,4 +599,5 @@ This will add a yellow "bullet" to the right of the textbox indicating it is a K
 `<input name='test' data-validation='U'>` - Captial letter U<br>
 This will add a filter to the textbox such that letters will be displayed in Uppercase. While this does not actually change the value of the textbox, if you use the `frm.get()` feature, it will convert the value returned to uppercase.
 
-You can combine !, * and U data-validation items.
+You can combine !, * and U data-validation items. For example, to make a field Required and forced uppercase, use `data-validation='!U'`.
+
