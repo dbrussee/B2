@@ -5,7 +5,7 @@ Author: Dan Brussee<br>
 Last Updated: 8/10/2018<br>
 
 #### General Description
-The **B** Library was created to collect a growing list of small utilities as well as some larger functionality into a collection of easier-to-implement code. By putting most of the code into a common domain, this lessens the likelihood of trampling on other code. In addition, it should help keep the code features seperated from each other to make maintenance less of a chore.
+The **B** Library was created to collect a growing list of small utilities as well as some larger functionality into a collection of easier-to-implement code. By putting most of the code into a common domain (B), it lessens the likelihood of trampling on other code. In addition, it should help keep code features seperated from each other to make maintenance less of a chore.
 
 **Important**: The B library makes use of the [jQuery](http://jquery.org) library as well, so most of the features will not work without that library being loaded.
 
@@ -390,13 +390,13 @@ A general purpose method is provided to take a date and find all relevant parts 
 This function will return a collection of date information:
 ```javascript
 var stuff = B.getDateParts(new Date());
-// Assuming the date is 8/9/2017 at 3:09:28am, stuff looks like:
+// Assuming the date is 8/9/2017 at 3:09:28pm, stuff looks like:
 {
     M: 8, MM; '08', MMM: 'Aug', MMMM: 'August',
     D: 9, DD: '09', DOW: 4, DDDD: 'Thursday', DDD: 'Thu',
     YYYY: 2017,
-    H: 3, HH: '03',
-    ap: "a", AP: "A",
+    H: 3, HH: '15',
+    ap: "p", AP: "P",
     NN: '09'
     SS: '28',
     sss: '523' // Milliseconds (always < 1000)
@@ -404,24 +404,24 @@ var stuff = B.getDateParts(new Date());
 ```
 |`B.format.xxx(d)`  | Result                   |
 | ----------------  | ------------------------ |
-|`HHNNSS`           | 03:09:28                 |
-|`HHNNSSsss`        | 03:09:28.523             |
-|`HNNSS`            | 3:09:28a                 |
-|`HNNSSsss`         | 3:09:28.523a             |
-|`HHNN`             | 03:09                    |
-|`HNN`              | 3:09a                    |
+|`HHNNSS`           | 15:09:28                 |
+|`HHNNSSsss`        | 15:09:28.523             |
+|`HNNSS`            | 3:09:28p                 |
+|`HNNSSsss`         | 3:09:28.523p             |
+|`HHNN`             | 15:09                    |
+|`HNN`              | 3:09p                    |
 |`YYYYMMDD`         | 20170809                 |
 |`MMDDYYYY`         | 08/09/2017               |
 |`MDYYYY`, `DATE`   | 8/9/2017                 |
 |`MYYYY`            | 8/2017                   |
 |`MMYYYY`           | 08/2017                  |
-|`MMDDYYYYHHNNSS`   | 08/09/2017 03:09:28      |
-|`MDYYYYHHNNSS`     | 8/9/2017 03:09:28        |
-|`MDYYYYHNNSS`, `TS`| 8/9/2017 3:09:28a        |
-|`MDYYYYHNN`        | 8/9/2017 3:09a           |
-|`MDYYYYHNNSSsss`   | 8/9/2017 3:09:28.523a    |
-|`MMDDYYYYHHNN`     | 08/09/2017 03:09         |
-|`MDYYYYHHNN`       | 8/9/2017 03:09           |
+|`MMDDYYYYHHNNSS`   | 08/09/2017 15:09:28      |
+|`MDYYYYHHNNSS`     | 8/9/2017 15:09:28        |
+|`MDYYYYHNNSS`, `TS`| 8/9/2017 3:09:28p        |
+|`MDYYYYHNN`        | 8/9/2017 3:09p           |
+|`MDYYYYHNNSSsss`   | 8/9/2017 3:09:28.523p    |
+|`MMDDYYYYHHNN`     | 08/09/2017 15:09         |
+|`MDYYYYHHNN`       | 8/9/2017 15:09           |
 
 ### Miscellaneous String Manipulations
 
@@ -455,11 +455,11 @@ Returns an integer value indicating which of a list of items the text is a match
 Example:
 ```javascript
 B.whichOneOf("Dan", "John,Paul,George,Ringo"); // -1
-B.whichOneOf("Dan", ["John", "Paul", "George", "Ringo"], "DAN"); // 4
+B.whichOneOf("Dan", "John", "Paul", "George", "Ringo", "DAN"); // 4
 ```
 
 `B.isOneOf(text, values...)`<br>
-Uses the `B.whichOneOf(text, values)` and returns true if the result >= 0 or false if it is less than 0.
+Executes `B.whichOneOf(text, values)` and returns true if the result >= 0 or false if it is less than 0.
 
 Example:
 ```javascript
@@ -478,27 +478,19 @@ B.isNotOneOf("Dan", ["John", "Paul", "George", "Ringo"], "DAN"); // false
 
 ## `B.is.xxxx()` functions
 
-`B.is.IE()` - Returns true if the window.navigator.userAgent contains either 'MSIE ' or '.NET CLR '. This is a general-purpose test for the browser being Microsoft Internet Explorer.
-
-`B.is.ALLDIGITS(val)` - Returns true if the only characters in the value passed are 0,1,2,3,4,5,6,7,8 or 9. Spaces, decimal points and any other characters are not allowed.
-
-`B.is.ZIPCODE(val)` - Returns true if the values is either in a ##### or #####-#### format.
-
-`B.is.DATE(val, min, max)` - Tests for the value being a date. Also, if passed as a parameter, tests that the date is equal or greater than the `min` value. Also, if passed as a parameter, tests that the date is less than or equal to the `max` value.
-
-`B.is.EMAIL(val)` - Tests if the value appears to be a valid email using a generally accepted regular expression.
-
-`B.is.NUMBER(val, min, max)` - Tests for the value being a numeric value (integer or floating point). Also, if passed as a parameter, tests that the value is equal or greater than the `min` value. Also, if passed as a parameter, tests that the value is less than or equal to the `max` value.
-
-`B.is.INTEGER(val, min, max)` - Tests for the value being an integer. Also, if passed as a parameter, tests that the value is equal or greater than the `min` value. Also, if passed as a parameter, tests that the value is less than or equal to the `max` value.
-
-`B.is.CHANGED(objA, objB)` - Iterates through both objects to determine if keys and values (and sub-object keys, values, etc) are a match. Order of keys is not considered, just existance and value matching.
-
-`B.is.LASTDAYOFMONTH(date)` - Returns true if the data is valid and if it is the last day of a month. This is useful to determine if a user entered a date that is expected as an expiration of a last day of month value.
-
-`B.is.ONEOF()` - Passes all values to the `B.isOneOf()` method.
-
-`B.is.NOTONEOF()` - Passes all values to the `B.isNotOneOf()` method.
+|`B.is.xxx(???)`    | Description / Result                          |
+| ----------------  | --------------------------------------------- |
+|`.IE()`            | Returns true if the window.navigator.userAgent contains either 'MSIE ' or '.NET CLR '. This is a general-purpose test for the browser being Microsoft Internet Explorer.|
+|`.ALLDIGITS(val)`  | Returns true if the only characters in the value passed are 0,1,2,3,4,5,6,7,8 or 9. Spaces, decimal points and any other characters are not allowed.    |
+|`.ZIPCODE(val)`    | Returns true if the values is either in a ##### or #####-#### format. |
+|`.DATE(val, min, max)`| Tests for the value being a date. Also, if passed as a parameter, tests that the date is equal or greater than the `min` value. Also, if passed as a parameter, tests that the date is less than or equal to the `max` value.|
+|`.EMAIL(val)`      | Tests if the value appears to be a valid email using a generally accepted regular expression. |
+|`.NUMBER(val, min, max)`| Tests for the value being a numeric value (integer or floating point). Also, if passed as a parameter, tests that the value is equal or greater than the `min` value. Also, if passed as a parameter, tests that the value is less than or equal to the `max` value. |
+|`.INTEGER(val, min, max)`| Tests for the value being an integer. Also, if passed as a parameter, tests that the value is equal or greater than the `min` value. Also, if passed as a parameter, tests that the value is less than or equal to the `max` value.|
+|`.CHANGED(objA, objB)`| Iterates through both objects to determine if keys and values (and sub-object keys, values, etc) are a match. Order of keys is not considered, just existance and value matching. |
+|`.LASTDAYOFMONTH(date)`| Returns true if the data is valid and if it is the last day of a month. This is useful to determine if a user entered a date that is expected as an expiration of a last day of month value.|
+|`.ONEOF()`         | Passes all values to the `B.isOneOf()` method.|
+|`.NOTONEOF()`      | Passes all values to the `B.isNotOneOf()` method. |
 
 ---
 
@@ -552,7 +544,7 @@ HTML:
 `frm.get()` - If get is used with no fieldName parameter, it will return a Javascript object with key value pairs for all form elements. For example, in the example, this would return:<br>
 `{ fname:'', lname:'', gen:'X', reg:'N', prog:false }`
 
-`frm.set(fld, val...)` - Sets the form value for one or more fields in the form.
+`frm.set(fld, val...)` - Sets the form value for one or more fields in the form. You may set multiple form fields in one statement by passing pairs of values - you MUST pass 2 values per form field. The first must be a string... the 2nd of the pair must match the type of field being set (string or boolean, etc).
 
 `frm.reset()` - resets the form using normal Javascript.
 
